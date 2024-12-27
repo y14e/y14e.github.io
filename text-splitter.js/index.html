@@ -58,7 +58,7 @@ window.addEventListener('DOMContentLoaded', () => {
   ts3 = new TextSplitter(document.querySelector('[data-text-splitter="3"]'), { concatChar: true, wordSegmenter: true });
   ts4 = new TextSplitter(document.querySelector('[data-text-splitter="4"]'), { lineBreakingRules: false, wordSegmenter: true });
 });
-document.addEventListener('click', () => {
+document.addEventListener('dblclick', () => {
   ts1.revert();
   ts2.revert();
   ts3.revert();
