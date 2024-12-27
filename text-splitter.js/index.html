@@ -43,23 +43,23 @@ a {
 <br><br><br><br><br>
 <p data-text-splitter="2">🐻<b style="color: #66c;">Lorem ipsum</b> dolor <b style="color: #c69;">sit amet</b>, consectetur <b style="color: #f96;">adipiscing elit</b>, sed do eiusmod tempor (incididunt) ut labore et <a href="#">dolore magna</a> aliqua. Ut enim ad [minim veniam], quis nostrud {exercitation} ullamco laboris nisi ut aliquip ex ea “commodo consequat”. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. No word break rule.🐻‍❄️</p>
 <br><br><br><br><br>
-<p data-text-splitter="3">🐻波瀾も曲折もない<b style="color: #66c;">単調な生活</b>を続けて来た時、私は<b style="color: #c69;">少なからず</b>、驚きました……。鄭寧に――重ねて、<b style="color: #f96;">そりゃご心配</b>ですね（笑々）といったまま、<a href="#">腕組みをしてくれ</a>といいました。えゝ来ました。日本人、ことに「『日本』の若い女」は、そんな【利害の念】に頭を悩ます余地がなかった。そうすると過去が指し示す路を今まで通り積み重ねて行かせようとした昼の中に異様な調子をもって生れた性格の相違から出て来いという意味も籠っているのは詰らん人間に限るといった。🐻‍❄️</p>
+<p data-text-splitter="3">🐻波瀾も1日1善曲折もない<b style="color: #66c;">単調な生活</b>を続けて来た時、私は<b style="color: #c69;">少なからず</b>、驚きました……。鄭寧に――重ねて、<b style="color: #f96;">そりゃご心配</b>ですね（笑々）といったまま、<a href="#">腕組みをしてくれ</a>といいました。えゝ来ました。日本人、Lorem ipsum dolor sit amet、ことに「『日本』の若い女」は、そんな【利害の念】に頭を悩ます余地がなかった。そうすると過去が指し示す路を今まで通り積み重ねて行かせようとした昼の中に異様な調子をもって生れた性格の相違から出て来いという意味も籠っているのは詰らん人間に限るといった。🐻‍❄️</p>
 <br><br><br><br><br>
-<p data-text-splitter="4">🐻波瀾も曲折もない<b style="color: #66c;">単調な生活</b>を続けて来た時、私は<b style="color: #c69;">少なからず</b>、驚きました……。鄭寧に――重ねて、<b style="color: #f96;">そりゃご心配</b>ですね（笑々）といったまま、<a href="#">腕組みをしてくれ</a>といいました。えゝ来ました。日本人、ことに「『日本』の若い女」は、そんな【利害の念】に頭を悩ます余地がなかった。そうすると過去が指し示す路を今まで通り積み重ねて行かせようとした昼の中に異様な調子をもって生れた性格の相違から出て来いという意味も籠っているのは詰らん人間に限るといった。禁則処理なし。🐻‍❄️</p>
+<p data-text-splitter="4">🐻波瀾も曲折もない<b style="color: #66c;">単調な生活</b>を続けて来た時、私は<b style="color: #c69;">少なからず</b>、驚きました……。鄭寧に――重ねて、<b style="color: #f96;">そりゃご心配</b>ですね（笑々）といったまま、<a href="#">腕組みをしてくれ</a>といいました。えゝ来ました。日本人、Lorem ipsum dolor sit amet、ことに「『日本』の若い女」は、そんな【利害の念】に頭を悩ます余地がなかった。そうすると過去が指し示す路を今まで通り積み重ねて行かせようとした昼の中に異様な調子をもって生れた性格の相違から出て来いという意味も籠っているのは詰らん人間に限るといった。禁則処理なし。🐻‍❄️</p>
 <script type="module">
 import TextSplitter from './text-splitter.js';
 window.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-text-splitter="1"]').forEach(a => {
-    new TextSplitter(a);
+    new TextSplitter(a, { concatChar: true });
   });
   document.querySelectorAll('[data-text-splitter="2"]').forEach(a => {
-    new TextSplitter(a, { lineBreak: false });
+    new TextSplitter(a, { lineBreakingRules: false });
   });
   document.querySelectorAll('[data-text-splitter="3"]').forEach(a => {
     new TextSplitter(a, { concatChar: true });
   });
   document.querySelectorAll('[data-text-splitter="4"]').forEach(a => {
-    new TextSplitter(a, { lineBreak: false });
+    new TextSplitter(a, { lineBreakingRules: false });
   });
 });
 window.addEventListener('load', () => {
