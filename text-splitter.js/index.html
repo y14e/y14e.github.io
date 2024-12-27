@@ -56,7 +56,7 @@ window.addEventListener('DOMContentLoaded', () => {
     new TextSplitter(a, { lineBreak: false });
   });
   document.querySelectorAll('[data-text-splitter="3"]').forEach(a => {
-    new TextSplitter(a, { concatChar: true, wordBreak: true });
+    new TextSplitter(a, { concatChar: true });
   });
   document.querySelectorAll('[data-text-splitter="4"]').forEach(a => {
     new TextSplitter(a, { lineBreak: false });
