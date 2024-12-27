@@ -20,10 +20,10 @@ body {
   transition-delay: calc(var(--word-index) / var(--word-length) * 3s);
   transition-duration: 0.3s;
   transition-property: opacity, transform;
-  transform: scale(0.8) translateX(-2.4rem);
+  transform: translateX(-2em) scale(0.8);
   .is-animate & {
     opacity: 1;
-    transform: scale(1) translateX(0);
+    transform: translateX(0) scale(1);
   }
 }
 a {
