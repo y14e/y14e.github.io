@@ -21,7 +21,7 @@ class TextSplitter {
       this.lbr(c, 'word');
     }
     const d = this.split('char');
-    if (this.defaults.lineBreakingRules !== false && this.defaults.concatChar !== true) {
+    if (this.defaults.lineBreakingRules !== false && this.defaults.concatChar === true) {
       this.lbr(d, 'char');
     }
     b.setProperty('--word-length', c.length);
