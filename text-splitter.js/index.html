@@ -56,10 +56,10 @@ window.addEventListener('DOMContentLoaded', () => {
     new TextSplitter(a, { lineBreakingRules: false });
   });
   document.querySelectorAll('[data-text-splitter="3"]').forEach(a => {
-    new TextSplitter(a, { concatChar: true });
+    new TextSplitter(a, { concatChar: true, wordSegmenter: true });
   });
   document.querySelectorAll('[data-text-splitter="4"]').forEach(a => {
-    new TextSplitter(a, { lineBreakingRules: false });
+    new TextSplitter(a, { lineBreakingRules: false, wordSegmenter: true });
   });
 });
 window.addEventListener('load', () => {
