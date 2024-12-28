@@ -220,7 +220,7 @@ window.addEventListener('DOMContentLoaded', () => {
     new Tabs(a);
   });
   document.querySelectorAll('[data-tabs-manual]').forEach(a => {
-    new Tabs(a, { activation: 'manual' });
+    new Tabs(a, { autoActivation: false });
   });
 });
 </script>
