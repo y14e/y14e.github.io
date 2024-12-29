@@ -55,7 +55,7 @@ let ts1, ts2, ts3, ts4;
 window.addEventListener('DOMContentLoaded', () => {
   ts1 = new TextSplitter(document.querySelector('[data-text-splitter="1"]'));
   ts2 = new TextSplitter(document.querySelector('[data-text-splitter="2"]'), { lineBreakingRules: false });
-  ts3 = new TextSplitter(document.querySelector('[data-text-splitter="3"]'), { concatChar: true, wordSegmenter: true });
+  ts3 = new TextSplitter(document.querySelector('[data-text-splitter="3"]'), { concatChar: true });
   ts4 = new TextSplitter(document.querySelector('[data-text-splitter="4"]'), { lineBreakingRules: false, wordSegmenter: true });
 });
 document.addEventListener('dblclick', () => {
