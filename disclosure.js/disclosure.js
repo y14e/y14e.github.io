@@ -59,8 +59,8 @@ class Disclosure {
     if (this.element.querySelector('[data-disclosure-transitioning]')) {
       return;
     }
-    const details = event.currentTarget.parentElement;
-    this.toggle(details, !details.open);
+    const detail = event.currentTarget.parentElement;
+    this.toggle(detail, !detail.open);
   }
   keydown(event) {
     const key = event.key;
