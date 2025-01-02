@@ -14,15 +14,23 @@ class Disclosure {
       });
   }
   toggle(detail, open) {
+    detail.dataset.disclosureTransitioning = '';
     const name = detail.name;
+    if (name) {
+      detail.removeAttribute('name');
+      const opened = document.querySelector(`details[name="${name}"][open]`);
+      if (open && opened && opened !== detail) {
+        this.toggle(opened, false);
+      }
+    }
+    if (open) {
+      detail.open = true;
+    } else {
+      detail.dataset.disclosureClosing = '';
+    }
     const summary = detail.querySelector('summary');
     const content = summary.nextElementSibling;
-    const opened = document.querySelector(`details[name="${name}"][open]`);
-    detail.open = true;
     const height = `${content.scrollHeight}px`;
-    if (opened) {
-      opened.open = true;
-    }
     content.addEventListener('transitionend', function once(event) {
       if (event.propertyName !== 'max-height') {
         return;
@@ -38,15 +46,6 @@ class Disclosure {
       content.style.maxHeight = content.style.overflow = '';
       this.removeEventListener('transitionend', once);
     });
-    detail.dataset.disclosureTransitioning = '';
-    if (name) {
-      detail.removeAttribute('name');
-    }
-    if (open) {
-      detail.open = true;
-    } else {
-      detail.dataset.disclosureClosing = '';
-    }
     content.style.maxHeight = open ? 0 : height;
     content.style.overflow = 'clip';
     requestAnimationFrame(() => {
@@ -54,9 +53,6 @@ class Disclosure {
         content.style.maxHeight = open ? height : 0;
       });
     });
-    if (open && opened && opened !== detail) {
-      this.toggle(opened, false);
-    }
   }
   click(event) {
     event.preventDefault();
