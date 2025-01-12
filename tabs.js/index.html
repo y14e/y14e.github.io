@@ -132,7 +132,7 @@ document.querySelectorAll('[role="tablist"]').forEach(list => {
   new ResizeObserver(() => {
     indicator();
   }).observe(document.documentElement);
-  new MutationObserver(a => {
+  new MutationObserver(() => {
     indicator();
   }).observe(list, {
     attributes: true,
