@@ -7,11 +7,11 @@ class Disclosure {
   }
   initialize() {
     this.summaries.forEach(summary => {
-      summary.addEventListener('click', event => {
-        this.click(event);
+      summary.addEventListener('click', e => {
+        this.click(e);
       });
-      summary.addEventListener('keydown', event => {
-        this.keydown(event);
+      summary.addEventListener('keydown', e => {
+        this.keydown(e);
       });
     });
   }
@@ -33,8 +33,8 @@ class Disclosure {
     const summary = details.querySelector('summary');
     const content = summary.nextElementSibling;
     const height = `${content.scrollHeight}px`;
-    content.addEventListener('transitionend', function once(event) {
-      if (event.propertyName !== 'max-height') {
+    content.addEventListener('transitionend', function once(e) {
+      if (e.propertyName !== 'max-height') {
         return;
       }
       delete details.dataset.disclosureTransitioning;
@@ -56,20 +56,20 @@ class Disclosure {
       });
     });
   }
-  click(event) {
-    event.preventDefault();
+  click(e) {
+    e.preventDefault();
     if (this.element.querySelector('[data-disclosure-transitioning]')) {
       return;
     }
-    const detail = event.currentTarget.parentElement;
+    const detail = e.currentTarget.parentElement;
     this.toggle(detail, !detail.open);
   }
-  keydown(event) {
-    const { key } = event;
+  keydown(e) {
+    const { key } = e;
     if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) {
       return;
     }
-    event.preventDefault();
+    e.preventDefault();
     const index = [...this.summaries].indexOf(document.activeElement);
     const length = this.summaries.length;
     this.summaries[key === 'ArrowUp' ? (index - 1 < 0 ? length - 1 : index - 1) : key === 'ArrowDown' ? (index + 1) % length : key === 'Home' ? 0 : length - 1].focus();

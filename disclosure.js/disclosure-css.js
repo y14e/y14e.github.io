@@ -7,17 +7,17 @@ class Disclosure {
   }
   initialize() {
     this.summaries.forEach(summary => {
-      summary.addEventListener('keydown', event => {
-        this.keydown(event);
+      summary.addEventListener('keydown', e => {
+        this.keydown(e);
       });
     });
   }
-  keydown(event) {
-    const { key } = event;
+  keydown(e) {
+    const { key } = e;
     if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) {
       return;
     }
-    event.preventDefault();
+    e.preventDefault();
     const index = [...this.summaries].indexOf(document.activeElement);
     const length = this.summaries.length;
     this.summaries[key === 'ArrowUp' ? (index - 1 < 0 ? length - 1 : index - 1) : key === 'ArrowDown' ? (index + 1) % length : key === 'Home' ? 0 : length - 1].focus();
