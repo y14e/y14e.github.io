@@ -1,0 +1,103 @@
+@import 'https://cdn.jsdelivr.net/npm/destyle.css@4.0.1/destyle.min.css';
+@import 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+JP:wght@100..900&display=swap';
+:root {
+  font-size: min(calc(100vw / 960 * 10), 10px);
+}
+body {
+  font: 1.6rem / 1.5 Inter, 'Noto Sans JP', sans-serif;
+  padding: 3.2rem;
+}
+[role='tablist'] {
+  --a: 0.4rem;
+  --r1: 0.8rem;
+  --r2: 0.8rem;
+  display: flex;
+  font-weight: bold;
+  gap: 1.6rem;
+  padding-inline: 3.2rem;
+  text-align: center;
+  &::before {
+    background: #000;
+    content: '';
+    display: block;
+    height: var(--a);
+    left: 0;
+    right: 0;
+    position: absolute;
+  }
+  &:has(+ [role='tabpanel']) {
+    &::before {
+      bottom: 0;
+    }
+    [role='tabpanel'] & {
+      margin-top: 3.2rem;
+    }
+  }
+  [role='tabpanel'] + &::before {
+    top: 0;
+  }
+}
+[role='tab'] {
+  background: rgb(0 0 0 / 0.2);
+  border-inline: var(--r2) solid #0000;
+  flex: 1;
+  margin-inline: calc(-1 * var(--r2));
+  padding: 1.6rem;
+  transition-duration: 0.3s;
+  transition-property: background, color;
+  [role='tablist']:has(+ [role='tabpanel']) & {
+    border-top-left-radius: calc(var(--r1) + var(--r2)) var(--r1);
+    border-top-right-radius: calc(var(--r1) + var(--r2)) var(--r1);
+    mask: radial-gradient(var(--r2) at var(--r2) 0, #0000 calc(100% - 0.5px), #000 calc(100% + 0.5px)) calc(-1 * var(--r2)) calc(100% - var(--a)) / 100% var(--r2) repeat-x, padding-box conic-gradient(#000 0 0);
+  }
+  [role='tabpanel'] + [role='tablist'] & {
+    border-bottom-left-radius: calc(var(--r1) + var(--r2)) var(--r1);
+    border-bottom-right-radius: calc(var(--r1) + var(--r2)) var(--r1);
+    mask: radial-gradient(var(--r2) at var(--r2) 100%, #0000 calc(100% - 0.5px), #000 calc(100% + 0.5px)) calc(-1 * var(--r2)) var(--a) / 100% var(--r2) repeat-x, padding-box conic-gradient(#000 0 0);
+  }
+  &[aria-selected='true'] {
+    background: #000;
+    color: #fff;
+  }
+  &[aria-selected='false']:hover {
+    background: rgb(0 0 0 / 0.3);
+  }
+  &:focus-visible {
+    outline: none;
+    position: relative;
+    &::before {
+      content: '';
+      inset: 2px;
+      outline: auto;
+      position: absolute;
+    }
+  }
+}
+[role='tabpanel'] {
+  background: rgb(0 0 0 / 0.1);
+  &:not([hidden]) {
+    padding: 3.2rem;
+  }
+}
+
+/* indicator */
+[role='tablist'] {
+  position: relative;
+  &::after {
+    background: linear-gradient(100deg, #0000, #66c, #c69, #f96 50%, #0000);
+    content: '';
+    display: block;
+    height: var(--a);
+    left: calc(var(--indicator-left) + 1.6rem + var(--r2));
+    position: absolute;
+    transition-duration: 0.3s;
+    transition-property: left, width;
+    width: calc(var(--indicator-width) - 3.2rem - var(--r2) * 2);
+  }
+  &:has(+ [role='tabpanel'])::after {
+    bottom: 0;
+  }
+  [role='tabpanel'] + &::after {
+    top: 0;
+  }
+}
