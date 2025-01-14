@@ -8,10 +8,10 @@ class Disclosure {
   initialize() {
     this.summaries.forEach(summary => {
       summary.addEventListener('click', e => {
-        this.click(e);
+        this.handleClick(e);
       });
       summary.addEventListener('keydown', e => {
-        this.keydown(e);
+        this.handleKeyDown(e);
       });
     });
   }
@@ -56,7 +56,7 @@ class Disclosure {
       });
     });
   }
-  click(e) {
+  handleClick(e) {
     e.preventDefault();
     if (this.element.querySelector('[data-disclosure-transitioning]')) {
       return;
@@ -64,7 +64,7 @@ class Disclosure {
     const detail = e.currentTarget.parentElement;
     this.toggle(detail, !detail.open);
   }
-  keydown(e) {
+  handleKeyDown(e) {
     const { key } = e;
     if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) {
       return;

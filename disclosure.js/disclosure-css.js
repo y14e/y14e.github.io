@@ -8,11 +8,11 @@ class Disclosure {
   initialize() {
     this.summaries.forEach(summary => {
       summary.addEventListener('keydown', e => {
-        this.keydown(e);
+        this.handleKeyDown(e);
       });
     });
   }
-  keydown(e) {
+  handleKeyDown(e) {
     const { key } = e;
     if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) {
       return;
