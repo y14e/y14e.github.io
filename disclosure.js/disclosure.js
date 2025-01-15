@@ -15,17 +15,17 @@ class Disclosure {
       });
     });
   }
-  toggle(details, open) {
+  toggle(details, isOpen) {
     details.dataset.disclosureTransitioning = '';
     const name = details.name;
     if (name) {
       details.removeAttribute('name');
       const opened = document.querySelector(`details[name="${name}"][open]`);
-      if (open && opened && opened !== details) {
+      if (isOpen && opened && opened !== details) {
         this.toggle(opened, false);
       }
     }
-    if (open) {
+    if (isOpen) {
       details.open = true;
     } else {
       details.dataset.disclosureClosing = '';
@@ -41,18 +41,18 @@ class Disclosure {
       if (name) {
         details.name = name;
       }
-      if (!open) {
+      if (!isOpen) {
         details.open = false;
         delete details.dataset.disclosureClosing;
       }
       content.style.maxHeight = content.style.overflow = '';
       this.removeEventListener('transitionend', once);
     });
-    content.style.maxHeight = open ? 0 : height;
+    content.style.maxHeight = isOpen ? 0 : height;
     content.style.overflow = 'clip';
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        content.style.maxHeight = open ? height : 0;
+        content.style.maxHeight = isOpen ? height : 0;
       });
     });
   }
