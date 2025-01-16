@@ -16,8 +16,8 @@ class Disclosure {
     });
   }
   toggle(details, isOpen) {
-    details.dataset.disclosureTransitioning = '';
-    const name = details.name;
+    details.setAttribute('data-disclosure-transitioning', '');
+    const name = details.getAttribute('name');
     if (name) {
       details.removeAttribute('name');
       const opened = document.querySelector(`details[name="${name}"][open]`);
@@ -26,9 +26,9 @@ class Disclosure {
       }
     }
     if (isOpen) {
-      details.open = true;
+      details.setAttribute('open', '');
     } else {
-      details.dataset.disclosureClosing = '';
+      details.setAttribute('data-disclosure-closing', '');
     }
     const summary = details.querySelector('summary');
     const content = summary.nextElementSibling;
@@ -37,13 +37,13 @@ class Disclosure {
       if (e.propertyName !== 'max-height') {
         return;
       }
-      delete details.dataset.disclosureTransitioning;
+      details.removeAttribute('data-disclosure-transitioning');
       if (name) {
-        details.name = name;
+        details.setAttribute('name', name);
       }
       if (!isOpen) {
-        details.open = false;
-        delete details.dataset.disclosureClosing;
+        details.removeAttribute('open');
+        details.removeAttribute('data-disclosure-closing');
       }
       content.style.maxHeight = content.style.overflow = '';
       this.removeEventListener('transitionend', once);
@@ -62,7 +62,7 @@ class Disclosure {
       return;
     }
     const detail = e.currentTarget.parentElement;
-    this.toggle(detail, !detail.open);
+    this.toggle(detail, !detail.hasAttribute('open'));
   }
   handleKeyDown(e) {
     const { key } = e;
