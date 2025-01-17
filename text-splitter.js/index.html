@@ -19,16 +19,16 @@ const ts1 = new TextSplitter(document.querySelector('[data-text-splitter="1"]'))
 const ts2 = new TextSplitter(document.querySelector('[data-text-splitter="2"]'), { lineBreakingRules: false });
 const ts3 = new TextSplitter(document.querySelector('[data-text-splitter="3"]'), { concatChar: true });
 const ts4 = new TextSplitter(document.querySelector('[data-text-splitter="4"]'), { lineBreakingRules: false, wordSegmenter: true });
+window.addEventListener('load', () => {
+  document.querySelectorAll('[data-text-splitter]').forEach(element => {
+    element.classList.add('is-animate');
+  });
+});
 document.addEventListener('dblclick', () => {
   ts1.revert();
   ts2.revert();
   ts3.revert();
   ts4.revert();
-});
-window.addEventListener('load', () => {
-  document.querySelectorAll('[data-text-splitter]').forEach(a => {
-    a.classList.add('is-animate');
-  });
 });
 </script>
 </body>
