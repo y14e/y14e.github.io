@@ -5,6 +5,7 @@ class Disclosure {
     this.summaries = this.element.querySelectorAll(`summary${NOT_NESTED}`);
     this.initialize();
   }
+
   initialize() {
     this.summaries.forEach(summary => {
       summary.addEventListener('keydown', e => {
@@ -12,6 +13,7 @@ class Disclosure {
       });
     });
   }
+
   handleKeyDown(e) {
     const { key } = e;
     if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) {

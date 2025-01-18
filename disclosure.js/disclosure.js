@@ -5,6 +5,7 @@ class Disclosure {
     this.summaries = this.element.querySelectorAll(`summary${NOT_NESTED}`);
     this.initialize();
   }
+
   initialize() {
     this.summaries.forEach(summary => {
       summary.addEventListener('click', e => {
@@ -15,6 +16,7 @@ class Disclosure {
       });
     });
   }
+
   toggle(details, isOpen) {
     details.dataset.disclosureTransitioning = '';
     const name = details.name;
@@ -56,6 +58,7 @@ class Disclosure {
       });
     });
   }
+
   handleClick(e) {
     e.preventDefault();
     if (this.element.querySelector('[data-disclosure-transitioning]')) {
@@ -64,6 +67,7 @@ class Disclosure {
     const detail = e.currentTarget.parentElement;
     this.toggle(detail, !detail.open);
   }
+
   handleKeyDown(e) {
     const { key } = e;
     if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) {
