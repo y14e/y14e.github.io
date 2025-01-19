@@ -93,8 +93,8 @@ body {
 }
 [data-tabs='vertical'] {
   display: grid;
-  grid-template-areas: '. panel .';
-  grid-template-columns: 15rem 1fr 15rem;
+  grid-template-areas: '. panel';
+  grid-template-columns: 15rem 1fr;
   [role='tabpanel'] & {
     margin-top: 3.2rem;
   }
