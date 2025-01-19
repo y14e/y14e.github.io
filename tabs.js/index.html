@@ -137,6 +137,7 @@ document.querySelectorAll('[role="tablist"]').forEach(list => {
   }).observe(list, {
     attributes: true,
     attributeFilter: ['aria-selected'],
+    subtree: true,
   });
 });
 </script>
