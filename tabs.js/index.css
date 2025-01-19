@@ -14,47 +14,19 @@ body {
   display: flex;
   font-weight: bold;
   gap: 1.6rem;
-  padding-inline: 3.2rem;
   text-align: center;
   &::before {
     background: #000;
     content: '';
     display: block;
-    height: var(--a);
-    left: 0;
-    right: 0;
     position: absolute;
-  }
-  &:has(+ [role='tabpanel']) {
-    &::before {
-      bottom: 0;
-    }
-    [role='tabpanel'] & {
-      margin-top: 3.2rem;
-    }
-  }
-  [role='tabpanel'] + &::before {
-    top: 0;
   }
 }
 [role='tab'] {
   background: rgb(0 0 0 / 0.2);
-  border-inline: var(--r2) solid #0000;
-  flex: 1;
-  margin-inline: calc(-1 * var(--r2));
   padding: 1.6rem;
   transition-duration: 0.3s;
   transition-property: background, color;
-  [role='tablist']:has(+ [role='tabpanel']) & {
-    border-top-left-radius: calc(var(--r1) + var(--r2)) var(--r1);
-    border-top-right-radius: calc(var(--r1) + var(--r2)) var(--r1);
-    mask: radial-gradient(var(--r2) at var(--r2) 0, #0000 calc(100% - 0.5px), #000 calc(100% + 0.5px)) calc(-1 * var(--r2)) calc(100% - var(--a)) / 100% var(--r2) repeat-x, padding-box conic-gradient(#000 0 0);
-  }
-  [role='tabpanel'] + [role='tablist'] & {
-    border-bottom-left-radius: calc(var(--r1) + var(--r2)) var(--r1);
-    border-bottom-right-radius: calc(var(--r1) + var(--r2)) var(--r1);
-    mask: radial-gradient(var(--r2) at var(--r2) 100%, #0000 calc(100% - 0.5px), #000 calc(100% + 0.5px)) calc(-1 * var(--r2)) var(--a) / 100% var(--r2) repeat-x, padding-box conic-gradient(#000 0 0);
-  }
   &[aria-selected='true'] {
     background: #000;
     color: #fff;
@@ -74,9 +46,88 @@ body {
   }
 }
 [role='tabpanel'] {
-  background: rgb(0 0 0 / 0.1);
   &:not([hidden]) {
+    background: rgb(0 0 0 / 0.1);
     padding: 3.2rem;
+  }
+  &[hidden] {
+    position: relative;
+    z-index: -1;
+  }
+}
+[data-tabs]:not([data-tabs='vertical']) {
+  & > [role='tablist'] {
+    padding-inline: 3.2rem;
+    &::before {
+      height: var(--a);
+      left: 0;
+      right: 0;
+    }
+    &:has(+ [role='tabpanel']) {
+      &::before {
+        bottom: 0;
+      }
+      [role='tabpanel'] & {
+        margin-top: 3.2rem;
+      }
+    }
+    [role='tabpanel'] + &::before {
+      top: 0;
+    }
+    [role='tab'] {
+      border-inline: var(--r2) solid #0000;
+      flex: 1;
+      margin-inline: calc(-1 * var(--r2));
+      [role='tablist']:has(+ [role='tabpanel']) & {
+        border-top-left-radius: calc(var(--r1) + var(--r2)) var(--r1);
+        border-top-right-radius: calc(var(--r1) + var(--r2)) var(--r1);
+        mask: radial-gradient(var(--r2) at var(--r2) 0, #0000 calc(100% - 0.5px), #000 calc(100% + 0.5px)) calc(-1 * var(--r2)) calc(100% - var(--a)) / 100% var(--r2) repeat-x, padding-box conic-gradient(#000 0 0);
+      }
+      [role='tabpanel'] + [role='tablist'] & {
+        border-bottom-left-radius: calc(var(--r1) + var(--r2)) var(--r1);
+        border-bottom-right-radius: calc(var(--r1) + var(--r2)) var(--r1);
+        mask: radial-gradient(var(--r2) at var(--r2) 100%, #0000 calc(100% - 0.5px), #000 calc(100% + 0.5px)) calc(-1 * var(--r2)) var(--a) / 100% var(--r2) repeat-x, padding-box conic-gradient(#000 0 0);
+      }
+    }
+  }
+}
+[data-tabs='vertical'] {
+  display: grid;
+  grid-template-areas: '. panel';
+  grid-template-columns: 15rem 1fr;
+  [role='tabpanel'] & {
+    margin-top: 3.2rem;
+  }
+  & > [role='tablist'] {
+    align-self: center;
+    flex-direction: column;
+    height: 100%;
+    padding-block: 3.2rem;
+    &::before {
+      bottom: 0;
+      top: 0;
+      width: var(--a);
+    }
+    &:has(+ [role='tabpanel'])::before {
+      right: 0;
+    }
+    [role='tab'] {
+      border-block: var(--r2) solid #0000;
+      margin-block: calc(-1 * var(--r2));
+      [role='tablist']:has(+ [role='tabpanel']) & {
+        border-bottom-left-radius: var(--r1) calc(var(--r1) + var(--r2));
+        border-top-left-radius: var(--r1) calc(var(--r1) + var(--r2));
+        mask: radial-gradient(var(--r2) at 0 var(--r2), #0000 calc(100% - 0.5px), #000 calc(100% + 0.5px)) calc(100% - var(--a)) calc(-1 * var(--r2)) / var(--r2) 100% repeat-y, padding-box conic-gradient(#000 0 0);
+      }
+      [role='tabpanel'] + [role='tablist'] & {
+        border-bottom-right-radius: var(--r1) calc(var(--r1) + var(--r2));
+        border-top-right-radius: var(--r1) calc(var(--r1) + var(--r2));
+        mask: radial-gradient(var(--r2) at 100% var(--r2), #0000 calc(100% - 0.5px), #000 calc(100% + 0.5px)) var(--a) calc(-1 * var(--r2)) / var(--r2) 100% repeat-y, conic-gradient(#000 0 0) padding-box;
+      }
+    }
+  }
+  & > [role='tabpanel'] {
+    grid-area: panel;
   }
 }
 
@@ -84,20 +135,39 @@ body {
 [role='tablist'] {
   position: relative;
   &::after {
-    background: linear-gradient(100deg, #0000, #66c, #c69, #f96 50%, #0000);
     content: '';
     display: block;
-    height: var(--a);
-    left: calc(var(--indicator-left) + 1.6rem + var(--r2));
     position: absolute;
     transition-duration: 0.3s;
+  }
+}
+[data-tabs]:not([data-tabs='vertical']) > [role='tablist'] {
+  &::after {
+    background: linear-gradient(100deg, #0000, #66c, #c69, #f96 50%, #0000);
+    height: var(--a);
+    left: calc(var(--indicator-start) + 1.6rem + var(--r2));
     transition-property: left, width;
-    width: calc(var(--indicator-width) - 3.2rem - var(--r2) * 2);
+    width: calc(var(--indicator-size) - 3.2rem - var(--r2) * 2);
   }
   &:has(+ [role='tabpanel'])::after {
     bottom: 0;
   }
   [role='tabpanel'] + &::after {
     top: 0;
+  }
+}
+[data-tabs='vertical'] > [role='tablist'] {
+  &::after {
+    background: linear-gradient(190deg, #0000, #66c, #c69, #f96 50%, #0000);
+    width: var(--a);
+    top: calc(var(--indicator-start) + 1.6rem + var(--r2));
+    transition-property: top, height;
+    height: calc(var(--indicator-size) - 3.2rem - var(--r2) * 2);
+  }
+  &:has(+ [role='tabpanel'])::after {
+    right: 0;
+  }
+  [role='tabpanel'] + &::after {
+    left: 0;
   }
 }

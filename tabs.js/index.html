@@ -70,29 +70,24 @@
   </div>
 </div>
 <br><br><br><br><br>
-<div data-tabs>
+<div data-tabs="vertical">
   <div role="tablist" aria-orientation="vertical">
-    <button role="tab" aria-selected="false">Tab 1 (vertical)</button>
-    <button role="tab" aria-selected="true">Tab 2 (vertical)</button>
-    <button role="tab" aria-selected="false">Tab 3 (vertical)</button>
-  </div>
-  <div role="tabpanel" hidden="until-found">
-    検索 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    <button role="tab" aria-selected="true">Tab 1<br>(vertical)</button>
+    <button role="tab" aria-selected="false">Tab 2<br>(vertical)</button>
+    <button role="tab" aria-selected="false">Tab 3<br>(vertical)</button>
   </div>
   <div role="tabpanel">
+    検索 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  </div>
+  <div role="tabpanel" hidden="until-found">
     けんさく Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
   </div>
   <div role="tabpanel" hidden="until-found">
     森田健作 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
   </div>
-  <div role="tablist" aria-orientation="vertical">
-    <button role="tab" aria-selected="false">Tab 1 (vertical)</button>
-    <button role="tab" aria-selected="true">Tab 2 (vertical)</button>
-    <button role="tab" aria-selected="false">Tab 3 (vertical)</button>
-  </div>
 </div>
 <br><br><br><br><br>
-<div data-tabs-manual>
+<div data-tabs="manual">
   <div role="tablist">
     <button role="tab" aria-selected="true">Tab 1 (manual)</button>
     <button role="tab" aria-selected="false">Tab 2 (manual)</button>
@@ -115,19 +110,21 @@
 </div>
 <script type="module">
 import Tabs from './tabs.js';
-document.querySelectorAll('[data-tabs]').forEach(element => {
+document.querySelectorAll('[data-tabs]:not([data-tabs="manual"])').forEach(element => {
   new Tabs(element);
 });
-document.querySelectorAll('[data-tabs-manual]').forEach(element => {
+document.querySelectorAll('[data-tabs="manual"]').forEach(element => {
   new Tabs(element, { autoActivation: false });
 });
 </script>
 <script>
 document.querySelectorAll('[role="tablist"]').forEach(list => {
   const indicator = () => {
+    const isHorizontal = list.getAttribute('aria-orientation') !== 'vertical';
+    const start =  isHorizontal ? 'left' : 'top';
     const rect = list.querySelector('[aria-selected="true"]').getBoundingClientRect();
-    list.style.setProperty('--indicator-left', `${rect.left - list.getBoundingClientRect().left}px`);
-    list.style.setProperty('--indicator-width', `${rect.width}px`);
+    list.style.setProperty('--indicator-start', `${rect[start] - list.getBoundingClientRect()[start]}px`);
+    list.style.setProperty('--indicator-size', `${rect[isHorizontal ? 'width' : 'height']}px`);
   };
   new ResizeObserver(() => {
     indicator();
