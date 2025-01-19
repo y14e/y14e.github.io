@@ -121,8 +121,8 @@ document.querySelectorAll('[data-tabs="manual"]').forEach(element => {
 document.querySelectorAll('[role="tablist"]').forEach(list => {
   const indicator = () => {
     const isHorizontal = list.getAttribute('aria-orientation') !== 'vertical';
-    const start =  isHorizontal ? 'left' : 'top';
     const rect = list.querySelector('[aria-selected="true"]').getBoundingClientRect();
+    const start =  isHorizontal ? 'left' : 'top';
     list.style.setProperty('--indicator-start', `${rect[start] - list.getBoundingClientRect()[start]}px`);
     list.style.setProperty('--indicator-size', `${rect[isHorizontal ? 'width' : 'height']}px`);
   };
