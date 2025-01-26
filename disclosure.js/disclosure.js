@@ -35,7 +35,7 @@ class Disclosure {
     const summary = details.querySelector('summary');
     const content = summary.nextElementSibling;
     const height = `${content.scrollHeight}px`;
-    content.addEventListener('transitionend', function _once(e) {
+    content.addEventListener('transitionend', function handleTransitionEnd(e) {
       if (e.propertyName !== 'max-height') {
         return;
       }
@@ -48,7 +48,7 @@ class Disclosure {
         delete details.dataset.disclosureClosing;
       }
       content.style.maxHeight = content.style.overflow = '';
-      this.removeEventListener('transitionend', _once);
+      this.removeEventListener('transitionend', handleTransitionEnd);
     });
     content.style.maxHeight = isOpen ? '0' : height;
     content.style.overflow = 'clip';
