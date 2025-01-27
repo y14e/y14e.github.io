@@ -17,14 +17,14 @@ class Disclosure {
     });
   }
 
-  toggle(details, isOpen) {
+  state(details, isOpen) {
     details.dataset.disclosureTransitioning = '';
     const name = details.name;
     if (name) {
       details.removeAttribute('name');
       const opened = document.querySelector(`details[name="${name}"][open]`);
       if (isOpen && opened && opened !== details) {
-        this.toggle(opened, false);
+        this.close(opened);
       }
     }
     if (isOpen) {
@@ -64,8 +64,7 @@ class Disclosure {
     if (this.element.querySelector('[data-disclosure-transitioning]')) {
       return;
     }
-    const detail = e.currentTarget.parentElement;
-    this.toggle(detail, !detail.open);
+    this.toggle(e.currentTarget.parentElement);
   }
 
   handleKeyDown(e) {
@@ -77,6 +76,18 @@ class Disclosure {
     const index = [...this.summaries].indexOf(document.activeElement);
     const length = this.summaries.length;
     this.summaries[key === 'ArrowUp' ? (index - 1 < 0 ? length - 1 : index - 1) : key === 'ArrowDown' ? (index + 1) % length : key === 'Home' ? 0 : length - 1].focus();
+  }
+
+  open(details) {
+    this.state(details, true);
+  }
+
+  close(details) {
+    this.state(details, false);
+  }
+
+  toggle(details) {
+    this.state(details, !details.open);
   }
 }
 
