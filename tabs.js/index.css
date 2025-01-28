@@ -96,7 +96,7 @@ body {
 }
 [data-tabs='vertical'] {
   display: grid;
-  grid-template-areas: '. panel';
+  grid-template-areas: '. content';
   grid-template-columns: 15rem 1fr;
   [role='tabpanel'] & {
     margin-top: 3.2rem;
@@ -130,7 +130,7 @@ body {
     }
   }
   & > :where([role='tablist'] + div) {
-    grid-area: panel;
+    grid-area: content;
     min-height: 100%;
   }
 }
