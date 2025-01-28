@@ -8,8 +8,8 @@ class Disclosure {
 
   initialize() {
     this.summaries.forEach(summary => {
-      summary.addEventListener('keydown', e => {
-        this.handleKeyDown(e);
+      summary.addEventListener('keydown', event => {
+        this.handleKeyDown(event);
       });
     });
   }
@@ -18,12 +18,12 @@ class Disclosure {
     details.open = isOpen;
   }
 
-  handleKeyDown(e) {
-    const { key } = e;
+  handleKeyDown(event) {
+    const { key } = event;
     if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) {
       return;
     }
-    e.preventDefault();
+    event.preventDefault();
     const index = [...this.summaries].indexOf(document.activeElement);
     const length = this.summaries.length;
     this.summaries[key === 'ArrowUp' ? (index - 1 < 0 ? length - 1 : index - 1) : key === 'ArrowDown' ? (index + 1) % length : key === 'Home' ? 0 : length - 1].focus();
