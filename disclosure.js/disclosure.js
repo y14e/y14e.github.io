@@ -50,8 +50,10 @@ class Disclosure {
       content.style.maxHeight = content.style.overflow = '';
       this.removeEventListener('transitionend', handleTransitionEnd);
     });
-    content.style.maxHeight = isOpen ? '0' : height;
-    content.style.overflow = 'clip';
+    content.style.cssText += `
+      max-height: ${isOpen ? '0' : height};
+      overflow: clip;
+    `;
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         content.style.maxHeight = isOpen ? height : '0';
