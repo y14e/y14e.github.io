@@ -148,6 +148,9 @@ document.querySelectorAll('[data-tabs="manual"]').forEach(element => {
 <script>
 document.querySelectorAll('[role="tablist"]').forEach(list => {
   const indicator = () => {
+    if (!list.offsetParent) {
+      return;
+    }
     const isHorizontal = list.getAttribute('aria-orientation') !== 'vertical';
     const rect = list.querySelector('[aria-selected="true"]').getBoundingClientRect();
     const start =  isHorizontal ? 'left' : 'top';
