@@ -43,6 +43,7 @@ class Tabs {
         this.handleClick(event);
       });
     });
+    [...this.tabs].find(tab => tab.ariaSelected === 'true').click();
     this.panels.forEach((panel, i) => {
       panel.setAttribute('aria-labelledby', `${panel.getAttribute('aria-labelledby') || ''} ${this.tabs[i].id}`.trim());
       if (panel.hidden) {
