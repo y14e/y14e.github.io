@@ -24,7 +24,6 @@ body {
   & + div {
     background: rgb(0 0 0 / 0.1);
     position: relative;
-    transition: 0.3s height;
   }
 }
 [role='tab'] {
