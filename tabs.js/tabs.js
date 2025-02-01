@@ -31,9 +31,6 @@ class Tabs {
       if (this.options.avoidDuplicates && i > 0) {
         list.ariaHidden = 'true';
       }
-      list.addEventListener('keydown', event => {
-        this.handleKeyDown(event);
-      });
     });
     const generateId = () => {
       return Math.random().toString(36).slice(-8);
@@ -46,6 +43,9 @@ class Tabs {
       tab.tabIndex = tab.ariaSelected === 'true' ? 0 : -1;
       tab.addEventListener('click', event => {
         this.handleClick(event);
+      });
+      tab.addEventListener('keydown', event => {
+        this.handleKeyDown(event);
       });
     });
     this.panels.forEach((panel, i) => {
@@ -65,7 +65,7 @@ class Tabs {
   }
 
   handleKeyDown(event) {
-    const list = event.currentTarget;
+    const list = event.currentTarget.closest(this.options.selector.list);
     const isHorizontal = list.ariaOrientation !== 'vertical';
     const previous = `Arrow${isHorizontal ? 'Left' : 'Up'}`;
     const next = `Arrow${isHorizontal ? 'Right' : 'Down'}`;
