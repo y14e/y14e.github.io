@@ -59,6 +59,9 @@ class Tabs {
 
   handleClick(event) {
     event.preventDefault();
+    if (this.element.hasAttribute('data-tabs-animating')) {
+      return;
+    }
     this.activate(event.currentTarget);
   }
 
@@ -72,6 +75,9 @@ class Tabs {
       return;
     }
     event.preventDefault();
+    if (this.element.hasAttribute('data-tabs-animating')) {
+      return;
+    }
     const active = document.activeElement;
     if ([' ', 'Enter'].includes(key)) {
       active.click();
