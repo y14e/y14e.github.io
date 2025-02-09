@@ -23,7 +23,6 @@ body {
   }
   & + div {
     background: rgb(0 0 0 / 0.1);
-    position: relative;
   }
 }
 [role='tab'] {
@@ -55,16 +54,8 @@ body {
   &:not([hidden]) {
     padding: 3.2rem;
   }
-  [data-tabs-animating] > div > & {
-    left: 0;
-    position: absolute;
-    top: 0;
-  }
   &[hidden] {
     opacity: 0;
-    [data-tabs-animating] > div > & {
-      content-visibility: visible;
-    }
   }
 }
 [data-tabs]:not([data-tabs='vertical']) {
