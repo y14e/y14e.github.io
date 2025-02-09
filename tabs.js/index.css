@@ -50,19 +50,20 @@ body {
   }
 }
 [role='tabpanel'] {
-  padding: 3.2rem;
   transition: 0.3s opacity;
+  [data-tabs-animating] > div > &,
+  &:not([hidden]) {
+    padding: 3.2rem;
+  }
   [data-tabs-animating] > div > & {
     left: 0;
     position: absolute;
     top: 0;
   }
   &[hidden] {
-    display: none;
     opacity: 0;
     [data-tabs-animating] > div > & {
       content-visibility: visible;
-      display: block;
     }
   }
 }
