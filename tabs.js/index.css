@@ -171,10 +171,10 @@ body {
 [data-tabs='vertical'] > [role='tablist'] {
   &::after {
     background: linear-gradient(190deg, #0000, #66c, #c69, #f96 50%, #0000);
-    width: var(--a);
+    height: calc(var(--indicator-size) - 3.2rem - var(--r2) * 2);
     top: calc(var(--indicator-start) + 1.6rem + var(--r2));
     transition-property: top, height;
-    height: calc(var(--indicator-size) - 3.2rem - var(--r2) * 2);
+    width: var(--a);
   }
   &:has(+ div)::after {
     right: 0;

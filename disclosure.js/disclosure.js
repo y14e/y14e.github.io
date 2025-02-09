@@ -15,12 +15,8 @@ class Disclosure {
 
   initialize() {
     this.summaries.forEach(summary => {
-      summary.addEventListener('click', event => {
-        this.handleClick(event);
-      });
-      summary.addEventListener('keydown', event => {
-        this.handleKeyDown(event);
-      });
+      summary.addEventListener('click', event => this.handleClick(event));
+      summary.addEventListener('keydown', event => this.handleKeyDown(event));
     });
   }
 
@@ -31,9 +27,7 @@ class Disclosure {
     if (name) {
       details.removeAttribute('name');
       const opened = document.querySelector(`details[name="${name}"][open]`);
-      if (isOpen && opened && opened !== details) {
-        this.close(opened);
-      }
+      if (isOpen && opened && opened !== details) this.close(opened);
     }
     if (isOpen) {
       details.open = true;
@@ -46,9 +40,7 @@ class Disclosure {
     content.style.overflow = 'clip';
     content.animate({ maxHeight: [isOpen ? '0' : height, isOpen ? height : '0'] }, { duration: this.options.animation.duration, easing: this.options.animation.easing }).addEventListener('finish', () => {
       delete element.dataset.disclosureAnimating;
-      if (name) {
-        details.name = name;
-      }
+      if (name) details.name = name;
       if (!isOpen) {
         details.open = false;
         delete details.dataset.disclosureClosing;
@@ -59,17 +51,13 @@ class Disclosure {
 
   handleClick(event) {
     event.preventDefault();
-    if (this.element.hasAttribute('data-disclosure-animating')) {
-      return;
-    }
+    if (this.element.hasAttribute('data-disclosure-animating')) return;
     this.toggle(event.currentTarget.parentElement);
   }
 
   handleKeyDown(event) {
     const { key } = event;
-    if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) {
-      return;
-    }
+    if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) return;
     event.preventDefault();
     const index = [...this.summaries].indexOf(document.activeElement);
     const length = this.summaries.length;
