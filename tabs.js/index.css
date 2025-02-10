@@ -49,13 +49,9 @@ body {
   }
 }
 [role='tabpanel'] {
-  transition: 0.3s opacity;
   [data-tabs-animating] > div > &,
   &:not([hidden]) {
     padding: 3.2rem;
-  }
-  &[hidden] {
-    opacity: 0;
   }
 }
 [data-tabs]:not([data-tabs='vertical']) {
@@ -163,10 +159,10 @@ body {
 [data-tabs='vertical'] > [role='tablist'] {
   &::after {
     background: linear-gradient(190deg, #0000, #66c, #c69, #f96 50%, #0000);
-    height: calc(var(--indicator-size) - 3.2rem - var(--r2) * 2);
+    width: var(--a);
     top: calc(var(--indicator-start) + 1.6rem + var(--r2));
     transition-property: top, height;
-    width: var(--a);
+    height: calc(var(--indicator-size) - 3.2rem - var(--r2) * 2);
   }
   &:has(+ div)::after {
     right: 0;
