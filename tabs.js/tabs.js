@@ -95,10 +95,8 @@ class Tabs {
     [...this.panels].forEach(panel => {
       panel.style.cssText += `
         content-visibility: visible;
-        left: 0;
         opacity: ${panel.id === id ? 1 : 0};
         position: absolute;
-        top: 0;
       `;
     });
     const hidden = panel.hidden;
@@ -109,7 +107,7 @@ class Tabs {
       delete element.dataset.tabsAnimating;
       this.content.style.height = this.content.style.overflow = this.content.style.position = '';
       [...this.panels].forEach(panel => {
-        panel.style.contentVisibility = panel.style.left = panel.style.position = panel.style.top = '';
+        panel.style.contentVisibility = panel.style.position = '';
       });
     });
     [...this.panels].forEach(panel => {

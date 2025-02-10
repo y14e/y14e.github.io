@@ -49,8 +49,7 @@ body {
   }
 }
 [role='tabpanel'] {
-  opacity: 1;
-  transition: 1s opacity;
+  transition: 0.3s opacity;
   [data-tabs-animating] > div > &,
   &:not([hidden]) {
     padding: 3.2rem;
