@@ -78,9 +78,11 @@ class Tabs {
   }
 
   activate(tab) {
+    const id = tab.getAttribute('aria-controls');
+    const panel = document.getElementById(id);
+    if (!panel.hidden) return;
     const element = this.element;
     element.dataset.tabsAnimating = '';
-    const id = tab.getAttribute('aria-controls');
     [...this.tabs].forEach(tab => {
       const isSelected = tab.getAttribute('aria-controls') === id;
       tab.setAttribute('aria-selected', String(isSelected));
@@ -93,15 +95,21 @@ class Tabs {
     [...this.panels].forEach(panel => {
       panel.style.cssText += `
         content-visibility: visible;
+        left: 0;
         opacity: ${panel.id === id ? 1 : 0};
         position: absolute;
+        top: 0;
       `;
     });
-    this.content.animate({ height: [`${[...this.panels].find(panel => !panel.hasAttribute('hidden')).scrollHeight}px`, `${document.getElementById(id).scrollHeight}px`] }, { duration: this.options.animation.duration, easing: this.options.animation.easing }).addEventListener('finish', () => {
+    const hidden = panel.hidden;
+    panel.hidden = false;
+    const height = `${panel.scrollHeight}px`;
+    panel.setAttribute('hidden', hidden);
+    this.content.animate({ height: [`${[...this.panels].find(panel => !panel.hidden).scrollHeight}px`, height] }, { duration: this.options.animation.duration, easing: this.options.animation.easing }).addEventListener('finish', () => {
       delete element.dataset.tabsAnimating;
       this.content.style.height = this.content.style.overflow = this.content.style.position = '';
       [...this.panels].forEach(panel => {
-        panel.style.contentVisibility = panel.style.position = '';
+        panel.style.contentVisibility = panel.style.left = panel.style.position = panel.style.top = '';
       });
     });
     [...this.panels].forEach(panel => {
