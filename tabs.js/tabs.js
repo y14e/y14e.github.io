@@ -90,7 +90,7 @@ class Tabs {
     });
     this.content.style.cssText += `
       overflow: clip;
-      position: relative;
+      position: relative; // Fix for WebKit
     `;
     [...this.panels].forEach(panel => {
       panel.style.position = 'absolute';
