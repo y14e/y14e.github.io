@@ -138,6 +138,8 @@ body {
     content: '';
     display: block;
     position: absolute;
+  }
+  &[data-indicator-initialized]::after {
     transition-duration: 0.3s;
   }
 }

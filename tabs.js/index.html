@@ -156,6 +156,9 @@ document.querySelectorAll('[role="tablist"]').forEach(list => {
     const start =  isHorizontal ? 'left' : 'top';
     list.style.setProperty('--indicator-start', `${rect[start] - list.getBoundingClientRect()[start]}px`);
     list.style.setProperty('--indicator-size', `${rect[isHorizontal ? 'width' : 'height']}px`);
+    if (!list.hasAttribute('data-indicator-initialized')) {
+      list.dataset.indicatorInitialized = '';
+    }
   };
   new ResizeObserver(() => {
     indicator();
