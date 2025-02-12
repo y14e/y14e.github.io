@@ -18,6 +18,7 @@ details {
       transition-behavior: allow-discrete;
       transition-duration: 0.3s;
       transition-property: content-visibility, height;
+      will-change: height;
     }
     &[open]::details-content {
       height: auto;
