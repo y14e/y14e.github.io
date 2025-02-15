@@ -10,7 +10,7 @@ class Disclosure {
     this.summaries.forEach(summary => summary.addEventListener('keydown', event => this.handleKeyDown(event)));
   }
 
-  state(details, isOpen) {
+  toggle(details, isOpen) {
     details.open = isOpen;
   }
 
@@ -24,15 +24,11 @@ class Disclosure {
   }
 
   open(details) {
-    this.state(details, true);
+    this.toggle(details, true);
   }
 
   close(details) {
-    this.state(details, false);
-  }
-
-  toggle(details) {
-    this.state(details, !details.open);
+    this.toggle(details, false);
   }
 }
 

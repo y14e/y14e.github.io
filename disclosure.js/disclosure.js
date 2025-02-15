@@ -23,7 +23,7 @@ class Disclosure {
     });
   }
 
-  state(details, isOpen) {
+  toggle(details, isOpen) {
     const element = this.element;
     element.dataset.disclosureAnimating = '';
     const name = details.name;
@@ -58,7 +58,8 @@ class Disclosure {
   handleClick(event) {
     event.preventDefault();
     if (this.element.hasAttribute('data-disclosure-animating')) return;
-    this.toggle(event.currentTarget.parentElement);
+    const details = event.currentTarget.parentElement;
+    this.toggle(details, !details.open);
   }
 
   handleKeyDown(event) {
@@ -71,15 +72,11 @@ class Disclosure {
   }
 
   open(details) {
-    this.state(details, true);
+    this.toggle(details, true);
   }
 
   close(details) {
-    this.state(details, false);
-  }
-
-  toggle(details) {
-    this.state(details, !details.open);
+    this.toggle(details, false);
   }
 }
 
