@@ -8,6 +8,9 @@ class Disclosure {
         ...options?.animation,
       },
     };
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      this.options.animation.duration = 0;
+    }
     const NOT_NESTED = ':not(:scope summary + * *)';
     this.summaries = this.element.querySelectorAll(`summary${NOT_NESTED}:not([aria-disabled="true"])`);
     this.initialize();
