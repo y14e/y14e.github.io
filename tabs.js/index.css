@@ -49,16 +49,9 @@ body {
   }
 }
 [role='tabpanel'] {
-  transition: 0.6s transform;
-  transform: translateX(3.2rem);
-  will-change: transform;
   [data-tabs-animating] > div > &,
   &:not([hidden]) {
     padding: 3.2rem;
-  }
-  &:not([hidden]) {
-    padding: 3.2rem;
-    transform: translateX(0);
   }
 }
 [data-tabs]:not([data-tabs='vertical']) {
