@@ -11,7 +11,11 @@ class Disclosure {
   }
 
   toggle(details, isOpen) {
-    details.open = isOpen;
+    if (isOpen) {
+      details.setAttribute('open', '');
+    } else {
+      details.removeAttribute('open');
+    }
   }
 
   handleKeyDown(event) {
