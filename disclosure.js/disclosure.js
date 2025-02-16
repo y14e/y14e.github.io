@@ -40,11 +40,10 @@ class Disclosure {
     const summary = details.querySelector('summary');
     const content = summary.nextElementSibling;
     const height = `${content.scrollHeight}px`;
-    content.style.overflow = 'clip';
-    const willChange = new Set(window.getComputedStyle(content).willChange.split(','));
-    willChange.delete('auto');
-    willChange.add('max-height');
-    content.style.willChange = [...willChange].join(',');
+    content.style.cssText += `
+      overflow: clip;
+      will-change: ${[...new Set(window.getComputedStyle(content).getPropertyValue('will-change').split(',')).add('max-height').values()].filter(value => value !== 'auto').join(',')};
+    `;
     content.animate({ maxHeight: [isOpen ? '0' : height, isOpen ? height : '0'] }, { duration: this.options.animation.duration, easing: this.options.animation.easing }).addEventListener('finish', () => {
       element.removeAttribute('data-disclosure-animating');
       if (name) details.name = name;
