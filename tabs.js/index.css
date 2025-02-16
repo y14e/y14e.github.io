@@ -147,7 +147,7 @@ body {
   &::after {
     background: linear-gradient(100deg, #0000, #66c, #c69, #f96 50%, #0000);
     height: var(--a);
-    left: calc(var(--indicator-start) + 1.6rem + var(--r2));
+    left: calc(var(--indicator-offset) + 1.6rem + var(--r2));
     transition-property: left, width;
     width: calc(var(--indicator-size) - 3.2rem - var(--r2) * 2);
   }
@@ -162,7 +162,7 @@ body {
   &::after {
     background: linear-gradient(190deg, #0000, #66c, #c69, #f96 50%, #0000);
     width: var(--a);
-    top: calc(var(--indicator-start) + 1.6rem + var(--r2));
+    top: calc(var(--indicator-offset) + 1.6rem + var(--r2));
     transition-property: top, height;
     height: calc(var(--indicator-size) - 3.2rem - var(--r2) * 2);
   }

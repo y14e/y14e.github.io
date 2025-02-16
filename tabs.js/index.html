@@ -138,39 +138,23 @@
 </div>
 <script type="module">
 import Tabs from './tabs.js';
-document.querySelectorAll('[data-tabs]:not([data-tabs="manual"])').forEach(element => {
-  new Tabs(element);
-});
-document.querySelectorAll('[data-tabs="manual"]').forEach(element => {
-  new Tabs(element, { autoActivation: false });
-});
+document.querySelectorAll('[data-tabs]:not([data-tabs="manual"])').forEach(element => new Tabs(element));
+document.querySelectorAll('[data-tabs="manual"]').forEach(element => new Tabs(element, { autoActivation: false }));
 </script>
 <script>
 document.querySelectorAll('[role="tablist"]').forEach(list => {
-  const indicator = () => {
-    if (!list.offsetParent) {
-      return;
-    }
+  const setIndicator = () => {
+    if (!list.checkVisibility()) return;
     const isHorizontal = list.getAttribute('aria-orientation') !== 'vertical';
     const rect = list.querySelector('[aria-selected="true"]').getBoundingClientRect();
-    const start =  isHorizontal ? 'left' : 'top';
-    list.style.setProperty('--indicator-start', `${rect[start] - list.getBoundingClientRect()[start]}px`);
+    const offset =  isHorizontal ? 'left' : 'top';
+    list.style.setProperty('--indicator-offset', `${rect[offset] - list.getBoundingClientRect()[offset]}px`);
     list.style.setProperty('--indicator-size', `${rect[isHorizontal ? 'width' : 'height']}px`);
-    if (!list.hasAttribute('data-indicator-initialized')) {
-      list.dataset.indicatorInitialized = '';
-    }
+    if (!list.hasAttribute('data-indicator-initialized')) list.setAttribute('data-indicator-initialized', '');
   };
-  new ResizeObserver(() => {
-    indicator();
-  }).observe(document.documentElement);
-  new MutationObserver(() => {
-    indicator();
-  }).observe(list, {
-    attributes: true,
-    attributeFilter: ['aria-selected'],
-    subtree: true,
-  });
-  indicator();
+  new ResizeObserver(() => setIndicator()).observe(document.documentElement);
+  new MutationObserver(() => setIndicator()).observe(list, { attributes: true, attributeFilter: ['aria-selected'], subtree: true });
+  setIndicator();
 });
 </script>
 </body>
