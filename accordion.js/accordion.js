@@ -56,7 +56,6 @@ class Accordion {
     const willChange = new Set(window.getComputedStyle(panel).willChange.split(','));
     willChange.delete('auto');
     willChange.add('max-height');
-    console.log(willChange);
     panel.style.willChange = [...willChange].join(',');
     panel.animate({ maxHeight: [isOpen ? '0' : height, isOpen ? height : '0'] }, { duration: this.options.animation.duration, easing: this.options.animation.easing }).addEventListener('finish', () => {
       element.removeAttribute('data-accordion-animating');
