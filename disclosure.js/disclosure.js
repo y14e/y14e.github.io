@@ -49,7 +49,7 @@ class Disclosure {
         details.removeAttribute('open');
         details.removeAttribute('data-disclosure-closing');
       }
-      ['max-height', 'overflow', 'will-change'].forEach(property => content.style.removeProperty(property));
+      ['max-height', 'overflow', 'will-change'].forEach(name => content.style.removeProperty(name));
     });
   }
 
