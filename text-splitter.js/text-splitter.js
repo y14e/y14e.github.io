@@ -63,7 +63,7 @@ class TextSplitter {
   }
 
   nobr(node = this.dom) {
-    if (node.nodeType === 3) {
+    if (node.nodeType === Node.TEXT_NODE) {
       const text = node.textContent;
       const matches = [...text.matchAll(NOBR_REGEXP)];
       if (matches.length === 0) return;
@@ -88,8 +88,8 @@ class TextSplitter {
   split(by, node = this.dom) {
     const list = this[`${by}s`];
     [...node.childNodes].forEach(node => {
-      if (node.nodeType === 3) {
-        const segments = [...new Intl.Segmenter(node.parentNode.closest('[lang]').getAttribute('lang') || document.documentElement.getAttribute('lang') || 'en', by === 'word' && this.props.wordSegmenter ? { granularity: 'word' } : {}).segment(node.textContent.replace(/[\r\n\t]/g, '').replace(/\s{2,}/g, ' '))];
+      if (node.nodeType === Node.TEXT_NODE) {
+        const segments = [...new Intl.Segmenter(node.parentNode.closest('[lang]')?.getAttribute('lang') || document.documentElement.getAttribute('lang') || 'en', by === 'word' && this.props.wordSegmenter ? { granularity: 'word' } : {}).segment(node.textContent.replace(/[\r\n\t]/g, '').replace(/\s{2,}/g, ' '))];
         segments.forEach(segment => {
           const element = document.createElement('span');
           const text = segment.segment || ' ';
@@ -99,7 +99,7 @@ class TextSplitter {
           node.before(element);
         });
         node.remove();
-      } else if (by === 'word' && node.nodeType === 1 && node.hasAttribute('data-_nobr_')) {
+      } else if (by === 'word' && node.nodeType === Node.ELEMENT_NODE && node.hasAttribute('data-_nobr_')) {
         node.removeAttribute('data-_nobr_');
         node.setAttribute('data-word', node.textContent);
         list.push(node);
@@ -114,7 +114,7 @@ class TextSplitter {
     let previous = null;
     for (let i = 0; i < list.length; i++) {
       const item = list[i];
-      if (previous && previous.textContent.trim() && LBR_PROHIBIT_START_REGEXP.test([...new Intl.Segmenter(item.closest('[lang]').getAttribute('lang') || document.documentElement.getAttribute('lang') || 'en').segment(item.textContent)].shift().segment)) {
+      if (previous && previous.textContent.trim() && LBR_PROHIBIT_START_REGEXP.test([...new Intl.Segmenter(item.closest('[lang]')?.getAttribute('lang') || document.documentElement.getAttribute('lang') || 'en').segment(item.textContent)].shift().segment)) {
         previous.setAttribute(`data-${by}`, (previous.textContent += item.textContent));
         item.remove();
         list.splice(i, 1);
