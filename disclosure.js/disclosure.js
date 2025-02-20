@@ -11,6 +11,7 @@ class Disclosure {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) this.props.animation.duration = 0;
     const NOT_NESTED = ':not(:scope summary + * *)';
     this.summaries = this.element.querySelectorAll(`summary${NOT_NESTED}:not([aria-disabled="true"])`);
+    if (!this.summaries.length) return;
     this.initialize();
   }
 
@@ -62,9 +63,24 @@ class Disclosure {
     const { key } = event;
     if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) return;
     event.preventDefault();
-    const index = [...this.summaries].indexOf(document.activeElement);
+    const position = [...this.summaries].indexOf(document.activeElement);
     const length = this.summaries.length;
-    this.summaries[key === 'ArrowUp' ? (index - 1 < 0 ? length - 1 : index - 1) : key === 'ArrowDown' ? (index + 1) % length : key === 'Home' ? 0 : length - 1].focus();
+    let index = position;
+    switch (key) {
+      case 'ArrowUp':
+        index = (position - 1 + length) % length;
+        break;
+      case 'ArrowDown':
+        index = (position + 1) % length;
+        break;
+      case 'Home':
+        index = 0;
+        break;
+      case 'End':
+        index = length - 1;
+        break;
+    }
+    this.summaries[index].focus();
   }
 
   open(details) {
