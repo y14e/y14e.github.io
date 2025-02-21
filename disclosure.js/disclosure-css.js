@@ -9,6 +9,7 @@ class Disclosure {
 
   initialize() {
     this.summaries.forEach(summary => summary.addEventListener('keydown', event => this.handleKeyDown(event)));
+    this.element.setAttribute('data-disclosure-initialized', '');
   }
 
   toggle(details, isOpen) {
