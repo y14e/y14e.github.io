@@ -55,13 +55,12 @@ class Tabs {
     });
 
     // Fix for WebKit
+    console.log(window.getComputedStyle(this.content).getPropertyValue('min-height'));
     if (!['auto', '0px'].includes(window.getComputedStyle(this.content).getPropertyValue('min-height'))) {
       this.panels.forEach(panel => {
         new ResizeObserver(() => {
           if (panel.hasAttribute('hidden')) return;
-          window.requestAnimationFrame(() => {
-            panel.closest(this.props.selector.content).style.setProperty('height', `${panel.scrollHeight}px`);
-          });
+          window.requestAnimationFrame(() => panel.closest(this.props.selector.content).style.setProperty('height', `${panel.scrollHeight}px`));
         }).observe(panel);
       });
     }
