@@ -13,7 +13,7 @@ class Disclosure {
     this.details = this.element.querySelectorAll(`details${NOT_NESTED}`);
     this.summaries = this.element.querySelectorAll(`summary${NOT_NESTED}`);
     this.contents = this.element.querySelectorAll(`summary${NOT_NESTED} + *`);
-    if (!this.summaries.length) return;
+    if (!this.details.length || !this.details.length || !this.contents.length) return;
     this.initialize();
   }
 
