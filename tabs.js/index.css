@@ -139,7 +139,7 @@ body {
     display: block;
     position: absolute;
   }
-  &[data-indicator-initialized]::after {
+  &[data-tabs-indicator-initialized]::after {
     transition-duration: 0.3s;
   }
 }

@@ -150,7 +150,7 @@ document.querySelectorAll('[role="tablist"]').forEach(list => {
     const offset =  isHorizontal ? 'left' : 'top';
     list.style.setProperty('--indicator-offset', `${rect[offset] - list.getBoundingClientRect()[offset]}px`);
     list.style.setProperty('--indicator-size', `${rect[isHorizontal ? 'width' : 'height']}px`);
-    if (!list.hasAttribute('data-indicator-initialized')) list.setAttribute('data-indicator-initialized', '');
+    if (!list.hasAttribute('data-tabs-indicator-initialized')) list.setAttribute('data-tabs-indicator-initialized', '');
   };
   new ResizeObserver(() => setIndicator()).observe(document.documentElement);
   new MutationObserver(() => setIndicator()).observe(list, { attributes: true, attributeFilter: ['aria-selected'], subtree: true });
