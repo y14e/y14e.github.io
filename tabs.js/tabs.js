@@ -55,7 +55,6 @@ class Tabs {
     });
 
     // Fix for WebKit
-    console.log(window.getComputedStyle(this.content).getPropertyValue('min-height'));
     if (!['auto', '0px'].includes(window.getComputedStyle(this.content).getPropertyValue('min-height'))) {
       this.panels.forEach(panel => {
         new ResizeObserver(() => {
