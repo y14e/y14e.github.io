@@ -1,17 +1,17 @@
 class Disclosure {
-  constructor(element) {
-    this.element = element;
+  constructor(root) {
+    this.root = root;
     const NOT_NESTED = ':not(:scope summary + * *)';
-    this.details = this.element.querySelectorAll(`details${NOT_NESTED}`);
-    this.summaries = this.element.querySelectorAll(`summary${NOT_NESTED}`);
-    this.contents = this.element.querySelectorAll(`summary${NOT_NESTED} + *`);
+    this.details = this.root.querySelectorAll(`details${NOT_NESTED}`);
+    this.summaries = this.root.querySelectorAll(`summary${NOT_NESTED}`);
+    this.contents = this.root.querySelectorAll(`summary${NOT_NESTED} + *`);
     if (!this.details.length || !this.details.length || !this.contents.length) return;
     this.initialize();
   }
 
   initialize() {
     this.summaries.forEach(summary => summary.addEventListener('keydown', event => this.handleKeyDown(event)));
-    this.element.setAttribute('data-disclosure-initialized', '');
+    this.root.setAttribute('data-disclosure-initialized', '');
   }
 
   toggle(details, isOpen) {
