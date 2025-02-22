@@ -11,6 +11,7 @@
     <button role="tab" aria-selected="true">Tab 1</button>
     <button role="tab" aria-selected="false">Tab 2</button>
     <button role="tab" aria-selected="false">Tab 3</button>
+    <span data-tabs-indicator><span></span></span>
   </div>
   <div>
     <div role="tabpanel">
@@ -23,6 +24,7 @@
           <button role="tab" aria-selected="true">Nested tab 2-1</button>
           <button role="tab" aria-selected="false">Nested tab 2-2</button>
           <button role="tab" aria-selected="false">Nested tab 2-3</button>
+          <span data-tabs-indicator><span></span></span>
         </div>
         <div>
           <div role="tabpanel">
@@ -38,6 +40,7 @@
                 <button role="tab" aria-selected="false">More nested tab 2-3-1</button>
                 <button role="tab" aria-selected="true">More nested tab 2-3-2</button>
                 <button role="tab" aria-selected="false">More nested tab 2-3-3</button>
+                <span data-tabs-indicator><span></span></span>
               </div>
               <div>
                 <div role="tabpanel" hidden="until-found">
@@ -54,6 +57,7 @@
                 <button role="tab" aria-selected="false">More nested tab 2-3-1</button>
                 <button role="tab" aria-selected="true">More nested tab 2-3-2</button>
                 <button role="tab" aria-selected="false">More nested tab 2-3-3</button>
+                <span data-tabs-indicator><span></span></span>
               </div>
             </div>
           </div>
@@ -62,6 +66,7 @@
           <button role="tab" aria-selected="true">Nested tab 2-1</button>
           <button role="tab" aria-selected="false">Nested tab 2-2</button>
           <button role="tab" aria-selected="false">Nested tab 2-3</button>
+          <span data-tabs-indicator><span></span></span>
         </div>
       </div>
     </div>
@@ -73,6 +78,7 @@
     <button role="tab" aria-selected="true">Tab 1</button>
     <button role="tab" aria-selected="false">Tab 2</button>
     <button role="tab" aria-selected="false">Tab 3</button>
+    <span data-tabs-indicator><span></span></span>
   </div>
 </div>
 <br><br><br><br><br>
@@ -81,6 +87,7 @@
     <button role="tab" aria-selected="false">Tab 1 (manual)</button>
     <button role="tab" aria-selected="false">Tab 2 (manual)</button>
     <button role="tab" aria-selected="true">Tab 3 (manual)</button>
+    <span data-tabs-indicator><span></span></span>
   </div>
   <div>
     <div role="tabpanel" hidden="until-found">
@@ -97,6 +104,7 @@
     <button role="tab" aria-selected="false">Tab 1 (manual)</button>
     <button role="tab" aria-selected="false">Tab 2 (manual)</button>
     <button role="tab" aria-selected="true">Tab 3 (manual)</button>
+    <span data-tabs-indicator><span></span></span>
   </div>
 </div>
 <br><br><br><br><br>
@@ -105,6 +113,7 @@
     <button role="tab" aria-selected="true">Tab 1<br>(vertical)</button>
     <button role="tab" aria-selected="false">Tab 2<br>(vertical)</button>
     <button role="tab" aria-selected="false">Tab 3<br>(vertical)</button>
+    <span data-tabs-indicator><span></span></span>
   </div>
   <div>
     <div role="tabpanel">
@@ -120,6 +129,7 @@
           <button role="tab" aria-selected="true">Nested tab 3-1<br>(vertical)</button>
           <button role="tab" aria-selected="false">Nested tab 3-2<br>(vertical)</button>
           <button role="tab" aria-selected="false">Nested tab 3-3<br>(vertical)</button>
+          <span data-tabs-indicator><span></span></span>
         </div>
         <div>
           <div role="tabpanel">
@@ -140,20 +150,6 @@
 import Tabs from './tabs.js';
 document.querySelectorAll('[data-tabs]:not([data-tabs="manual"])').forEach(element => new Tabs(element));
 document.querySelectorAll('[data-tabs="manual"]').forEach(element => new Tabs(element, { autoActivation: false }));
-</script>
-<script>
-document.querySelectorAll('[role="tablist"]').forEach(list => {
-  const setIndicator = () => {
-    if (!list.checkVisibility()) return;
-    const isHorizontal = list.getAttribute('aria-orientation') !== 'vertical';
-    const rect = list.querySelector('[aria-selected="true"]').getBoundingClientRect();
-    const offset =  isHorizontal ? 'left' : 'top';
-    list.style.setProperty('--indicator-offset', `${rect[offset] - list.getBoundingClientRect()[offset]}px`);
-    list.style.setProperty('--indicator-size', `${rect[isHorizontal ? 'width' : 'height']}px`);
-  };
-  new ResizeObserver(() => setIndicator()).observe(list);
-  new MutationObserver(() => setIndicator()).observe(list, { attributes: true, attributeFilter: ['aria-selected'], subtree: true });
-});
 </script>
 </body>
 </html>
