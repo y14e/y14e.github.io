@@ -150,9 +150,8 @@ document.querySelectorAll('[role="tablist"]').forEach(list => {
     list.style.setProperty('--indicator-offset', `${rect[offset] - list.getBoundingClientRect()[offset]}px`);
     list.style.setProperty('--indicator-size', `${rect[isHorizontal ? 'width' : 'height']}px`);
   };
-  window.addEventListener('resize', setIndicator);
+  new ResizeObserver(() => setIndicator()).observe(list);
   new MutationObserver(() => setIndicator()).observe(list, { attributes: true, attributeFilter: ['aria-selected'], subtree: true });
-  setIndicator();
 });
 </script>
 </body>
