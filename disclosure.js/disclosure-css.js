@@ -26,25 +26,25 @@ class Disclosure {
     const { key } = event;
     if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) return;
     event.preventDefault();
-    const summaries = [...this.summaries].filter(summary => !summary.hasAttribute('aria-disabled'));
-    const position = summaries.indexOf(document.activeElement);
-    const length = summaries.length;
-    let index = position;
+    const focusables = [...this.summaries].filter(summary => !summary.hasAttribute('aria-disabled'));
+    const activeIndex = focusables.indexOf(document.activeElement);
+    const length = focusables.length;
+    let newIndex = activeIndex;
     switch (key) {
       case 'ArrowUp':
-        index = (position - 1 + length) % length;
+        newIndex = (activeIndex - 1 + length) % length;
         break;
       case 'ArrowDown':
-        index = (position + 1) % length;
+        newIndex = (activeIndex + 1) % length;
         break;
       case 'Home':
-        index = 0;
+        newIndex = 0;
         break;
       case 'End':
-        index = length - 1;
+        newIndex = length - 1;
         break;
     }
-    summaries[index].focus();
+    focusables[newIndex].focus();
   }
 
   open(details) {
