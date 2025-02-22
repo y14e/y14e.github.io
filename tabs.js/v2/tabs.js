@@ -53,7 +53,7 @@ class Tabs {
         list.style.setProperty('position', 'relative');
         indicator.style.setProperty('display', 'block');
         indicator.style.setProperty('position', 'absolute');
-        new TabsIndicator(indicator, list);
+        new TabsIndicator(indicator, list, this.props);
       });
     }
     this.panels.forEach((panel, i) => {
@@ -170,9 +170,10 @@ class Tabs {
 }
 
 class TabsIndicator {
-  constructor(element, list) {
+  constructor(element, list, props) {
     this.element = element;
     this.list = list;
+    this.props = props;
     this.initialize();
   }
 
@@ -188,7 +189,7 @@ class TabsIndicator {
     const position = isHorizontal ? 'left' : 'top';
     const size = isHorizontal ? 'width' : 'height';
     this.element.style.setProperty('will-change', [...new Set(window.getComputedStyle(this.element).getPropertyValue('will-change').split(',')).add(position).add(size).values()].filter(value => value !== 'auto').join(','));
-    this.element.animate({ [position]: `${rect[position] - this.list.getBoundingClientRect()[position]}px`, [size]: `${rect[size]}px` }, { duration: 300, easing: 'ease', fill: 'forwards' }).addEventListener('finish', () => this.element.style.removeProperty('will-change'));
+    this.element.animate({ [position]: `${rect[position] - this.list.getBoundingClientRect()[position]}px`, [size]: `${rect[size]}px` }, { duration: this.props.animation.duration, easing: this.props.animation.easing, fill: 'forwards' }).addEventListener('finish', () => this.element.style.removeProperty('will-change'));
   }
 }
 
