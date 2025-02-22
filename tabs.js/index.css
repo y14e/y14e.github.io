@@ -27,6 +27,7 @@ body {
 }
 [role='tab'] {
   background: rgb(0 0 0 / 0.2);
+  display: block;
   padding: 1.6rem;
   transition-duration: 0.3s;
   transition-property: background, color;
@@ -139,8 +140,8 @@ body {
 }
 [data-tabs]:not([data-tabs='vertical']) > [role='tablist'] {
   [data-tabs-indicator] {
-    padding-inline: calc(1.6rem + var(--r2));
     height: var(--a);
+    padding-inline: calc(1.6rem + var(--r2));
     span {
       background: linear-gradient(100deg, #0000, #66c, #c69, #f96 50%, #0000);
     }
