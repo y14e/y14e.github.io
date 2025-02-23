@@ -67,15 +67,15 @@ class Disclosure {
     if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) return;
     event.preventDefault();
     const focusables = [...this.summaries].filter(summary => !summary.hasAttribute('aria-disabled'));
-    const activeIndex = focusables.indexOf(document.activeElement);
+    const currentIndex = focusables.indexOf(document.activeElement);
     const length = focusables.length;
-    let newIndex = activeIndex;
+    let newIndex = currentIndex;
     switch (key) {
       case 'ArrowUp':
-        newIndex = (activeIndex - 1 + length) % length;
+        newIndex = (currentIndex - 1 + length) % length;
         break;
       case 'ArrowDown':
-        newIndex = (activeIndex + 1) % length;
+        newIndex = (currentIndex + 1) % length;
         break;
       case 'Home':
         newIndex = 0;
