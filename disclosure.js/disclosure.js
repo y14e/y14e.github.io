@@ -32,7 +32,7 @@ class Disclosure {
     if (name) {
       details.removeAttribute('name');
       const opened = document.querySelector(`details[name="${name}"][open]`);
-      if (isOpen && opened) this.close(opened);
+      if (isOpen && opened && opened !== details) this.close(opened);
     }
     if (isOpen) {
       details.setAttribute('open', '');
