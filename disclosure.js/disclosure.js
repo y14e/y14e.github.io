@@ -46,7 +46,7 @@ class Disclosure {
     const height = `${content.scrollHeight}px`;
     content.style.setProperty('overflow', 'clip');
     content.style.setProperty('will-change', [...new Set(window.getComputedStyle(content).getPropertyValue('will-change').split(',')).add('max-height').values()].filter(value => value !== 'auto').join(','));
-    content.animate({ maxHeight: [isOpen ? '0' : height, isOpen ? height : '0'] }, { duration: this.settings.animation.duration, easing: this.settings.animation.easing }).addEventListener('finish', () => {
+    content.animate({ maxHeight: isOpen ? ['0', height] : [height, '0'] }, { duration: this.settings.animation.duration, easing: this.settings.animation.easing }).addEventListener('finish', () => {
       root.removeAttribute('data-disclosure-animating');
       if (name) details.setAttribute('name', name);
       if (!isOpen) {
