@@ -65,7 +65,7 @@ summary {
     }
   }
   details:is(:not([open]), [data-disclosure-closing]) &:hover {
-    background: rgb(0 0 0 / 0.3);
+    background: rgb(0 0 0 / 0.2);
   }
   & + div {
     & > div {
