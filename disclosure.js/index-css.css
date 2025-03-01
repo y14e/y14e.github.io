@@ -8,6 +8,7 @@ body {
   padding: 3.2rem;
 }
 details {
+  background: rgb(0 0 0 / 0.1);
   border-radius: 0.8rem;
   overflow: hidden;
   @supports selector(::details-content) {
@@ -81,7 +82,6 @@ summary {
     background: rgb(0 0 0 / 0.3);
   }
   & + div {
-    background: rgb(0 0 0 / 0.1);
     padding: 3.2rem;
   }
 }
