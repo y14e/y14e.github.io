@@ -9,7 +9,7 @@ class Accordion {
         panel: '[data-accordion-header] + *',
       },
       animation: {
-        duration: 1000,
+        duration: 300,
         easing: 'ease',
       },
     };
