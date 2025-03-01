@@ -69,6 +69,6 @@ body {
     }
   }
   &[aria-expanded='false']:hover {
-    background: rgb(0 0 0 / 0.3);
+    background: rgb(0 0 0 / 0.2);
   }
 }

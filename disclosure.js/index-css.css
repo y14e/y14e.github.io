@@ -79,7 +79,7 @@ summary {
     }
   }
   details:not([open]) > &:hover {
-    background: rgb(0 0 0 / 0.3);
+    background: rgb(0 0 0 / 0.2);
   }
   & + div {
     padding: 3.2rem;
