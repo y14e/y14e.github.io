@@ -41,11 +41,11 @@ class Disclosure {
     } else {
       details.setAttribute('data-disclosure-closing', '');
     }
+    details.style.setProperty('overflow', 'clip');
+    details.style.setProperty('will-change', [...new Set(window.getComputedStyle(details).getPropertyValue('will-change').split(',')).add('height').values()].filter(value => value !== 'auto').join(','));
     const summary = details.querySelector('summary');
     const min = `${summary.scrollHeight}px`;
     const max = `${parseInt(min) + summary.nextElementSibling.scrollHeight}px`;
-    details.style.setProperty('overflow', 'clip');
-    details.style.setProperty('will-change', [...new Set(window.getComputedStyle(details).getPropertyValue('will-change').split(',')).add('height').values()].filter(value => value !== 'auto').join(','));
     details.animate({ height: isOpen ? [min, max] : [max, min] }, { duration: this.settings.animation.duration, easing: this.settings.animation.easing }).addEventListener('finish', () => {
       root.removeAttribute('data-disclosure-animating');
       if (name) details.setAttribute('name', name);

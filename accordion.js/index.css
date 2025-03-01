@@ -8,6 +8,7 @@ body {
   padding: 3.2rem;
 }
 [data-accordion] > div {
+  background: rgb(0 0 0 / 0.1);
   border-radius: 0.8rem;
   overflow: hidden;
   & & {
@@ -21,7 +22,6 @@ body {
   font-weight: bold;
   user-select: none;
   & + div {
-    background: rgb(0 0 0 / 0.1);
     & > div {
       padding: 3.2rem;
     }
