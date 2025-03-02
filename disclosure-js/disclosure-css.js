@@ -26,7 +26,7 @@ class Disclosure {
     const { key } = event;
     if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) return;
     event.preventDefault();
-    const focusables = [...this.summaries].filter(summary => !summary.hasAttribute('aria-disabled'));
+    const focusables = [...this.summaries].filter(summary => summary.getAttribute('aria-disabled') !== 'true');
     const currentIndex = focusables.indexOf(document.activeElement);
     const length = focusables.length;
     let newIndex = currentIndex;
