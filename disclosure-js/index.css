@@ -54,7 +54,7 @@ summary {
     transition: 0.3s rotate;
     width: 1.6rem;
   }
-  details[data-disclosure-open='true'] > & {
+  details:is([open]:not([data-disclosure-open]), [data-disclosure-open='true']) > & {
     background: #000;
     color: #fff;
     &::before {
