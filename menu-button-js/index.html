@@ -14,8 +14,9 @@ body {
 }
 
 [data-menu-button] {
+  display: inline-block;
   & + & {
-    margin-top: 1.6rem;
+    margin-left: 1.6rem;
   }
 }
 [data-menu-button-trigger] {
@@ -43,8 +44,9 @@ body {
   padding: 0.4rem;
   position: absolute;
   opacity: 0;
-  transition: 0.3s all;
   transform: translateY(-0.8rem);
+  transition-duration: 0.3s;
+  transition-property: opacity, transform, visibility;
   visibility: hidden;
   z-index: 1000;
   [aria-expanded="true"] + & {
@@ -76,8 +78,8 @@ body {
     <li role="menuitem">LINE</li>
     <li role="menuitem">YouTube</li>
   </ul>
-</div>
-<div data-menu-button>
+</div><!--
+--><div data-menu-button>
   <button data-menu-button-trigger>Menu</button>
   <ul role="menu">
     <li role="menuitem">Lorem</li>
@@ -94,8 +96,8 @@ body {
     <li role="menuitem">tempor</li>
     <li role="menuitem">incididunt</li>
   </ul>
-</div>
-<div data-menu-button>
+</div><!--
+--><div data-menu-button>
   <button data-menu-button-trigger>Menu</button>
   <div role="menu">
     <button role="menuitem">Home</button>
@@ -109,8 +111,8 @@ body {
     <button role="menuitem">Not service</button>
     <button role="menuitem">Sample</button>
   </div>
-</div>
-<div data-menu-button>
+</div><!--
+--><div data-menu-button>
   <button data-menu-button-trigger>Menu</button>
   <ul role="menu">
     <li role="presentation"><a role="menuitem" href="/">Home</a></li>

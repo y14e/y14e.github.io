@@ -16,13 +16,6 @@ class MenuButton {
     this.menu = this.root.querySelector(`${this.settings.selector.menu}${NOT_NESTED}`);
     this.items = this.root.querySelectorAll(`${this.settings.selector.item}${NOT_NESTED}`);
     this.itemsByInitial = {};
-    [...this.items].forEach(item => {
-      const initial = item.textContent.trim().charAt(0).toLowerCase();
-      if (/[a-z]/i.test(initial)) {
-        item.setAttribute('aria-keyshortcuts', initial);
-        (this.itemsByInitial[initial] ||= []).push(item);
-      }
-    });
     this.initialize();
   }
 
@@ -38,7 +31,14 @@ class MenuButton {
     this.trigger.addEventListener('keydown', event => this.handleTriggerKeyDown(event));
     this.menu.setAttribute('aria-labelledby', this.trigger.getAttribute('id'));
     this.menu.addEventListener('keydown', event => this.handleMenuKeyDown(event));
-    this.items.forEach(item => item.setAttribute('tabindex', '-1'));
+    this.items.forEach(item => {
+      const initial = item.textContent.trim().charAt(0).toLowerCase();
+      if (/[a-z]/.test(initial)) {
+        item.setAttribute('aria-keyshortcuts', initial);
+        (this.itemsByInitial[initial] ||= []).push(item);
+      }
+      item.setAttribute('tabindex', '-1');
+    });
   }
 
   handleFocusOut(event) {
@@ -48,7 +48,15 @@ class MenuButton {
   handleClick(event) {
     event.preventDefault();
     this.toggle(this.trigger.getAttribute('aria-expanded') !== 'true');
-    if (this.trigger.getAttribute('aria-expanded') === 'true') this.items[0].focus();
+    if (this.trigger.getAttribute('aria-expanded') === 'true') {
+      const animations = this.menu.getAnimations();
+      const item = this.items[0];
+      if (animations.length) {
+        Promise.all(animations.map(animation => animation.finished)).then(() => item.focus());
+      } else {
+        item.focus();
+      }
+    }
   }
 
   handleTriggerKeyDown(event) {
@@ -57,15 +65,12 @@ class MenuButton {
     event.preventDefault();
     if (['ArrowUp', 'ArrowDown'].includes(key)) {
       this.toggle(true);
-      const targetItem = this.items[key === 'ArrowUp' ? this.items.length - 1 : 0];
-      if (this.menu.getAnimations().length) {
-        const handleTransitionEnd = () => {
-          targetItem.focus();
-          this.menu.removeEventListener('transitionend', handleTransitionEnd);
-        };
-        this.menu.addEventListener('transitionend', handleTransitionEnd);
+      const animations = this.menu.getAnimations();
+      const item = this.items[key === 'ArrowUp' ? this.items.length - 1 : 0];
+      if (animations.length) {
+        Promise.all(animations.map(animation => animation.finished)).then(() => item.focus());
       } else {
-        targetItem.focus();
+        item.focus();
       }
       return;
     }
@@ -75,7 +80,8 @@ class MenuButton {
   handleMenuKeyDown(event) {
     const { key } = event;
     const isAlpha = value => /^[a-z]$/i.test(value);
-    if (!([' ', 'Enter', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'Escape'].includes(key) || (event.shiftKey && key === 'Tab') || (isAlpha(key) && this.itemsByInitial[key.toLowerCase()]))) return;
+    const isFocusable = item => item.getAttribute('aria-disabled') !== 'true' && !item.hasAttribute('disabled');
+    if (!([' ', 'Enter', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'Escape'].includes(key) || (event.shiftKey && key === 'Tab') || (isAlpha(key) && this.itemsByInitial[key.toLowerCase()]?.filter(item => isFocusable(item)).length))) return;
     event.preventDefault();
     const active = document.activeElement;
     if ([' ', 'Enter'].includes(key)) {
@@ -83,7 +89,7 @@ class MenuButton {
       return;
     }
     if (['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) {
-      const focusables = [...this.items].filter(items => items.getAttribute('aria-disabled') !== 'true' && !items.hasAttribute('disabled'));
+      const focusables = [...this.items].filter(item => isFocusable(item));
       const currentIndex = focusables.indexOf(active);
       const length = focusables.length;
       let newIndex = currentIndex;
@@ -105,9 +111,9 @@ class MenuButton {
       return;
     }
     if (isAlpha(key)) {
-      const focusablesByInitial = this.itemsByInitial[key.toLowerCase()].filter(items => items.getAttribute('aria-disabled') !== 'true' && !items.hasAttribute('disabled'));
-      const focusables = [...this.items].filter(items => items.getAttribute('aria-disabled') !== 'true' && !items.hasAttribute('disabled'));
-      const index = focusablesByInitial.findIndex(item => focusables.indexOf(item) > focusables.indexOf(document.activeElement));
+      const focusablesByInitial = this.itemsByInitial[key.toLowerCase()].filter(item => isFocusable(item));
+      const focusables = [...this.items].filter(item => isFocusable(item));
+      const index = focusablesByInitial.findIndex(item => focusables.indexOf(item) > focusables.indexOf(active));
       focusablesByInitial[index !== -1 ? index : 0].focus();
       return;
     }
