@@ -53,7 +53,7 @@ class Disclosure {
     content.removeAttribute('hidden');
     animation = this.animations[index] = details.animate({ height: [height, `${details.querySelector('summary').scrollHeight + (isOpen ? content.scrollHeight : 0)}px`] }, { duration: this.settings.animation.duration, easing: this.settings.animation.easing });
     animation.addEventListener('finish', () => {
-      animation = null;
+      this.animations[index] = null;
       if (name) details.setAttribute('name', details.getAttribute('data-disclosure-name'));
       if (!isOpen) details.removeAttribute('open');
       ['height', 'overflow', 'will-change'].forEach(name => details.style.removeProperty(name));
