@@ -16,6 +16,7 @@ class Disclosure {
     this.summaries = this.root.querySelectorAll(`summary${NOT_NESTED}`);
     this.contents = this.root.querySelectorAll(`summary${NOT_NESTED} + *`);
     if (!this.detailses.length || !this.summaries.length || !this.contents.length) return;
+    this.animations = Array(this.detailses.length).fill(null);
     this.initialize();
   }
 
@@ -45,12 +46,14 @@ class Disclosure {
     if (isOpen) details.setAttribute('open', '');
     details.style.setProperty('overflow', 'clip');
     details.style.setProperty('will-change', [...new Set(window.getComputedStyle(details).getPropertyValue('will-change').split(',')).add('height').values()].filter(value => value !== 'auto').join(','));
-    if (details._animation) details._animation.cancel();
+    const index = [...this.detailses].indexOf(details);
+    let animation = this.animations[index];
+    if (animation) animation.cancel();
     const content = details.querySelector('summary + *');
     content.removeAttribute('hidden');
-    details._animation = details.animate({ height: [height, `${details.querySelector('summary').scrollHeight + (isOpen ? content.scrollHeight : 0)}px`] }, { duration: this.settings.animation.duration, easing: this.settings.animation.easing });
-    details._animation.addEventListener('finish', () => {
-      details._animation = null;
+    animation = this.animations[index] = details.animate({ height: [height, `${details.querySelector('summary').scrollHeight + (isOpen ? content.scrollHeight : 0)}px`] }, { duration: this.settings.animation.duration, easing: this.settings.animation.easing });
+    animation.addEventListener('finish', () => {
+      animation = null;
       if (name) details.setAttribute('name', details.getAttribute('data-disclosure-name'));
       if (!isOpen) details.removeAttribute('open');
       ['height', 'overflow', 'will-change'].forEach(name => details.style.removeProperty(name));
