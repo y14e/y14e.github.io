@@ -137,6 +137,14 @@ class MenuButton {
   toggle(isOpen) {
     this.trigger.setAttribute('aria-expanded', String(isOpen));
   }
+
+  open() {
+    this.toggle(true);
+  }
+
+  close() {
+    this.toggle(false);
+  }
 }
 
 export default MenuButton;

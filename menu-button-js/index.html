@@ -125,12 +125,12 @@ body {
 import MenuButton from './menu-button.js';
 window.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-menu-button]').forEach(a => {
-    new MenuButton(a);
-  });
-  document.querySelectorAll('[role="menuitem"]').forEach(a => {
-    a.addEventListener('click', e => {
-      console.log(a.textContent);
-      a.closest('[data-menu-button]').dispatchEvent(new Event('focusout'));
+    const myMenuButton = new MenuButton(a);
+    a.querySelectorAll('[role="menuitem"]').forEach(b => {
+      b.addEventListener('click', e => {
+        console.log(b.textContent);
+        myMenuButton.close();
+      });
     });
   });
 });

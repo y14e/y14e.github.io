@@ -15,6 +15,7 @@ class Disclosure {
   }
 
   toggle(details, isOpen) {
+    if (details.hasAttribute('open') === isOpen) return;
     if (isOpen) {
       details.setAttribute('open', '');
     } else {

@@ -35,6 +35,7 @@ class Disclosure {
   }
 
   toggle(details, isOpen) {
+    if ((details.getAttribute('data-disclosure-open') === 'true') === isOpen) return;
     const name = details.getAttribute('data-disclosure-name');
     if (name) {
       details.removeAttribute('name');
