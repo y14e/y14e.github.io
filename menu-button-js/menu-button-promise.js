@@ -17,6 +17,7 @@ class MenuButton {
     this.items = this.root.querySelectorAll(`${this.settings.selector.item}${NOT_NESTED}`);
     if (!this.trigger || !this.menu || !this.items.length) return;
     this.itemsByInitial = {};
+    this.animation = Promise.resolve();
     this.initialize();
   }
 
@@ -59,6 +60,12 @@ class MenuButton {
       this.close();
       return;
     }
+
+    // Fix for WebKit
+    window.setTimeout(() => {
+      const active = document.activeElement;
+      if (active && !this.root.contains(active)) this.close();
+    }, 100);
   }
 
   handleClick(event) {
@@ -66,10 +73,11 @@ class MenuButton {
     const isOpen = this.trigger.getAttribute('aria-expanded') !== 'true';
     this.toggle(isOpen);
     if (isOpen) {
-      window.requestAnimationFrame(() => {
-        window.requestAnimationFrame(() => {
-          this.items[0].focus();
-        });
+      this.animation = this.animation.then(async () => {
+        try {
+          await Promise.all(this.menu.getAnimations().map(animation => animation.finished));
+        } catch (error) {}
+        this.items[0].focus();
       });
     }
   }
@@ -79,11 +87,12 @@ class MenuButton {
     if (!['ArrowUp', 'ArrowDown', 'Escape'].includes(key)) return;
     event.preventDefault();
     if (['ArrowUp', 'ArrowDown'].includes(key)) {
-      this.open();
-      window.requestAnimationFrame(() => {
-        window.requestAnimationFrame(() => {
-          this.items[key === 'ArrowUp' ? this.items.length - 1 : 0].focus();
-        });
+      this.animation = this.animation.then(async () => {
+        this.open();
+        try {
+          await Promise.all(this.menu.getAnimations().map(animation => animation.finished));
+        } catch (error) {}
+        this.items[key === 'ArrowUp' ? this.items.length - 1 : 0].focus();
       });
       return;
     }
@@ -130,6 +139,7 @@ class MenuButton {
       return;
     }
     this.close();
+    this.trigger.focus();
   }
 
   open() {

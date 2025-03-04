@@ -2,136 +2,45 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<style>
-@import "https://cdn.jsdelivr.net/npm/destyle.css@4.0.1/destyle.min.css";
-@import "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+JP:wght@100..900&display=swap";
-:root {
-  font-size: min(calc(100vw / 960 * 10), 10px);
-}
-body {
-  font: 1.6rem / 1.5 Inter, "Noto Sans JP", sans-serif;
-  padding: 3.2rem;
-}
-
-[data-menu-button] {
-  display: inline-block;
-  & + & {
-    margin-left: 1.6rem;
-  }
-}
-[data-menu-button-trigger] {
-  display: inline-block;
-  background: rgb(0 0 0 / 0.2);
-  border-radius: 0.8rem;
-  padding: 1.6rem;
-  position: relative;
-  transition-duration: 0.3s;
-  transition-property: background, color;
-  &[aria-expanded="true"] {
-    background: #000;
-    color: #fff;
-  }
-  &:not([aria-expanded="true"]):hover {
-    background: rgb(0 0 0 / 0.3);
-  }
-}
-[role="menu"] {
-  background: #fff;
-  box-shadow: 0 0.1rem 0.3rem rgb(0 0 0 / 0.1), 0 0.8rem 2.4rem rgb(0 0 0 / 0.1);
-  border-radius: 0.8rem;
-  margin-top: 0.4rem;
-  overflow: hidden;
-  padding: 0.4rem;
-  position: absolute;
-  opacity: 0;
-  transform: translateY(-0.4rem);
-  transition-duration: 0.3s;
-  transition-property: opacity, transform, visibility;
-  visibility: hidden;
-  z-index: 1000;
-  [aria-expanded="true"] + & {
-    opacity: 1;
-    transform: translateY(0);
-    visibility: visible;
-  }
-}
-[role="menuitem"] {
-  background: rgb(0 0 0 / 0);
-  border-radius: 0.4rem;
-  cursor: pointer;
-  display: block;
-  width: 100%;
-  padding: 0.8rem 1.6rem;
-  &:hover {
-    background: rgb(0 0 0 / 0.1);
-  }
-}
-</style>
+<title>menu-button.js</title>
+<link rel="stylesheet" href="./index.css">
 </head>
 <body>
 <div data-menu-button>
-  <button data-menu-button-trigger>Share</button>
-  <ul role="menu">
-    <li role="menuitem">X</li>
-    <li role="menuitem">Facebook</li>
-    <li role="menuitem">Instagram</li>
-    <li role="menuitem">LINE</li>
-    <li role="menuitem">YouTube</li>
-  </ul>
-</div><!--
---><div data-menu-button>
-  <button data-menu-button-trigger>Menu</button>
+  <button data-menu-button-trigger>Button</button>
   <ul role="menu">
     <li role="menuitem">Lorem</li>
-    <li role="menuitem">ipsum</li>
-    <li role="menuitem">dolor</li>
-    <li role="menuitem">sit</li>
-    <li role="menuitem">amet</li>
-    <li role="menuitem">consectetur</li>
-    <li role="menuitem">adipiscing</li>
-    <li role="menuitem">elit</li>
-    <li role="menuitem">sed</li>
-    <li role="menuitem">do</li>
-    <li role="menuitem">eiusmod</li>
-    <li role="menuitem">tempor</li>
-    <li role="menuitem">incididunt</li>
+    <li role="menuitem">Ipsum</li>
+    <li role="menuitem">Dolor</li>
+    <li role="menuitem" aria-disabled="true">Disabled</li>
+    <li role="menuitem">Sit</li>
+    <li role="menuitem">Amet</li>
+    <li role="menuitem">Consectetur</li>
+    <li role="menuitem">Adipiscing</li>
+    <li role="menuitem">Elit</li>
   </ul>
 </div><!--
 --><div data-menu-button>
-  <button data-menu-button-trigger>Menu</button>
-  <div role="menu">
-    <button role="menuitem">Home</button>
-    <button role="menuitem">About</button>
-    <button role="menuitem">Service</button>
-    <button role="menuitem">Service 1</button>
-    <button role="menuitem">Service 2</button>
-    <button role="menuitem">Service 3</button>
-    <button role="menuitem">Service 4</button>
-    <button role="menuitem">Service 5</button>
-    <button role="menuitem">Not service</button>
-    <button role="menuitem">Sample</button>
-  </div>
-</div><!--
---><div data-menu-button>
-  <button data-menu-button-trigger>Menu</button>
+  <button data-menu-button-trigger>Button</button>
   <ul role="menu">
-    <li role="presentation"><a role="menuitem" href="/">Home</a></li>
-    <li role="presentation"><a role="menuitem" href="/about">About</a></li>
-    <li role="presentation"><a role="menuitem" href="/service">Service</a></li>
-    <li role="presentation"><a role="menuitem" href="/sample">Sample</a></li>
+    <li role="presentation"><a role="menuitem" href="#target">Lorem</a></li>
+    <li role="presentation"><a role="menuitem" href="#target">Ipsum</a></li>
+    <li role="presentation"><a role="menuitem" href="#target">Dolor</a></li>
+    <li role="presentation"><a role="menuitem" href="#target" aria-disabled="true">Disabled</a></li>
+    <li role="presentation"><a role="menuitem" href="#target">Sit</a></li>
+    <li role="presentation"><a role="menuitem" href="#target">Amet</a></li>
+    <li role="presentation"><a role="menuitem" href="#target">Consectetur</a></li>
+    <li role="presentation"><a role="menuitem" href="#target">Adipiscing</a></li>
+    <li role="presentation"><a role="menuitem" href="#target">Elit</a></li>
   </ul>
 </div>
+<div id="target"></div>
 <script type="module">
 import MenuButton from './menu-button.js';
 window.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-menu-button]').forEach(a => {
     const myMenuButton = new MenuButton(a);
-    a.querySelectorAll('[role="menuitem"]').forEach(b => {
-      b.addEventListener('click', e => {
-        console.log(b.textContent);
-        myMenuButton.close();
-      });
-    });
+    a.querySelectorAll('[role="menuitem"]').forEach(b => b.addEventListener('click', () => myMenuButton.close()));
   });
 });
 </script>
