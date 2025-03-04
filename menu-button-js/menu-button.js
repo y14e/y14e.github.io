@@ -21,7 +21,9 @@ class MenuButton {
   }
 
   initialize() {
-    document.addEventListener('mousedown', event => this.handleMouseDown(event));
+    document.addEventListener('mousedown', event => {
+      if (!this.root.contains(event.target) && this.trigger.getAttribute('aria-expanded') === 'true') this.close();
+    });
     this.root.addEventListener('focusout', event => this.handleFocusOut(event));
     const id = Math.random().toString(36).slice(-8);
     this.trigger.setAttribute('id', this.trigger.getAttribute('id') || `menu-button-trigger-${id}`);
@@ -48,10 +50,6 @@ class MenuButton {
     this.trigger.setAttribute('aria-expanded', String(isOpen));
   }
 
-  handleMouseDown(event) {
-    if (!this.root.contains(event.target) && this.trigger.getAttribute('aria-expanded') === 'true') this.close();
-  }
-
   handleFocusOut(event) {
     if (this.trigger.getAttribute('aria-expanded') !== 'true') return;
     const target = event.relatedTarget;
@@ -63,15 +61,9 @@ class MenuButton {
 
   handleClick(event) {
     event.preventDefault();
-    const isOpen = this.trigger.getAttribute('aria-expanded') !== 'true';
-    this.toggle(isOpen);
-    if (isOpen) {
-      window.requestAnimationFrame(() => {
-        window.requestAnimationFrame(() => {
-          this.items[0].focus();
-        });
-      });
-    }
+    const isOpen = this.trigger.getAttribute('aria-expanded') === 'true';
+    this.toggle(!isOpen);
+    if (!isOpen) window.requestAnimationFrame(() => window.requestAnimationFrame(() => this.items[0].focus()));
   }
 
   handleTriggerKeyDown(event) {
@@ -80,11 +72,7 @@ class MenuButton {
     event.preventDefault();
     if (['ArrowUp', 'ArrowDown'].includes(key)) {
       this.open();
-      window.requestAnimationFrame(() => {
-        window.requestAnimationFrame(() => {
-          this.items[key === 'ArrowUp' ? this.items.length - 1 : 0].focus();
-        });
-      });
+      window.requestAnimationFrame(() => window.requestAnimationFrame(() => this.items[key === 'ArrowUp' ? this.items.length - 1 : 0].focus()));
       return;
     }
     this.close();
