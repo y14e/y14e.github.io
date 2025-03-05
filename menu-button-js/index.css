@@ -9,7 +9,7 @@ body {
   gap: 1.6rem;
   padding: 3.2rem;
 }
-[data-menu-trigger] {
+[data-menu-button-trigger] {
   align-items: center;
   background: rgb(0 0 0 / 0.2);
   border-radius: 0.4rem;
@@ -52,12 +52,13 @@ body {
   position: absolute;
   transform: translateY(-0.4rem);
   transition-duration: 0.3s;
-  transition-property: opacity, transform;
+  transition-property: opacity, transform, visibility;
   visibility: hidden;
   z-index: 1000;
   [aria-expanded='true'] + & {
     opacity: 1;
     transform: translateY(0);
+    transition-property: opacity, transform;
     visibility: visible;
   }
 }

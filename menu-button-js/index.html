@@ -2,12 +2,12 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>menu.js</title>
+<title>menu-button.js</title>
 <link rel="stylesheet" href="./index.css">
 </head>
 <body>
-<div data-menu>
-  <button data-menu-trigger>Button</button>
+<div data-menu-button>
+  <button data-menu-button-trigger>Button</button>
   <ul role="menu">
     <li role="menuitem">Lorem</li>
     <li role="menuitem">Ipsum</li>
@@ -20,8 +20,8 @@
     <li role="menuitem">Elit</li>
   </ul>
 </div>
-<div data-menu>
-  <button data-menu-trigger>Button</button>
+<div data-menu-button>
+  <button data-menu-button-trigger>Button</button>
   <ul role="menu">
     <li role="none"><a role="menuitem" href="#anchor">Lorem</a></li>
     <li role="none"><a role="menuitem" href="#anchor">Ipsum</a></li>
@@ -36,12 +36,12 @@
 </div>
 <div id="anchor"></div>
 <script type="module">
-import Menu from './menu.js';
-document.querySelectorAll('[data-menu]').forEach(element => {
-  const myMenu = new Menu(element);
+import MenuButton from './menu-button.js';
+document.querySelectorAll('[data-menu-button]').forEach(element => {
+  const myMenuButton = new MenuButton(element);
   element.querySelectorAll('[role="menuitem"]').forEach(item => item.addEventListener('click', () => {
     console.log(item.textContent);
-    myMenu.close();
+    myMenuButton.close();
   }));
 });
 </script>
