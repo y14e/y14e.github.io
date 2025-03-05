@@ -70,11 +70,12 @@ body {
   display: block;
   outline-offset: -2px;
   padding: 0.8rem 1.6rem;
-  &:hover {
-    background: rgb(0 0 0 / 0.1);
-  }
+  transition: 0.3s background;
   &[aria-disabled='true'] {
     opacity: 0.5;
     pointer-events: none;
+  }
+  &:hover {
+    background: rgb(0 0 0 / 0.1);
   }
 }
