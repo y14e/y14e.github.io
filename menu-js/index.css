@@ -7,7 +7,6 @@ body {
   font: 1.6rem / 1.5 Inter, 'Noto Sans JP', sans-serif;
   padding: 3.2rem;
 }
-
 [data-menu] {
   display: inline-block;
   & + & {
@@ -52,9 +51,9 @@ body {
   display: flex;
   flex-direction: column;
   margin-top: 0.4rem;
+  opacity: 0;
   overflow: hidden;
   position: absolute;
-  opacity: 0;
   transform: translateY(-0.4rem);
   transition-duration: 0.3s;
   transition-property: opacity, transform, visibility;
