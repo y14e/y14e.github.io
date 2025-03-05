@@ -18,25 +18,23 @@
     <li role="menuitem">Consectetur</li>
     <li role="menuitem">Adipiscing</li>
     <li role="menuitem">Elit</li>
-    <li role="menuitem" aria-disabled="true">Disabled</li>
-  </ul>
-</div><!--
---><div data-menu>
-  <button data-menu-trigger>Button</button>
-  <ul role="menu">
-    <li role="presentation"><a role="menuitem" href="#target">Lorem</a></li>
-    <li role="presentation"><a role="menuitem" href="#target">Ipsum</a></li>
-    <li role="presentation"><a role="menuitem" href="#target">Dolor</a></li>
-    <li role="presentation"><a role="menuitem" href="#target" aria-disabled="true">Disabled</a></li>
-    <li role="presentation"><a role="menuitem" href="#target">Sit</a></li>
-    <li role="presentation"><a role="menuitem" href="#target">Amet</a></li>
-    <li role="presentation"><a role="menuitem" href="#target">Consectetur</a></li>
-    <li role="presentation"><a role="menuitem" href="#target">Adipiscing</a></li>
-    <li role="presentation"><a role="menuitem" href="#target">Elit</a></li>
-    <li role="presentation"><a role="menuitem" href="#target" aria-disabled="true">Disabled</a></li>
   </ul>
 </div>
-<div id="target"></div>
+<div data-menu>
+  <button data-menu-trigger>Button</button>
+  <ul role="menu">
+    <li role="none"><a role="menuitem" href="#anchor">Lorem</a></li>
+    <li role="none"><a role="menuitem" href="#anchor">Ipsum</a></li>
+    <li role="none"><a role="menuitem" href="#anchor">Dolor</a></li>
+    <li role="none"><a role="menuitem" href="#anchor" aria-disabled="true">Disabled</a></li>
+    <li role="none"><a role="menuitem" href="#anchor">Sit</a></li>
+    <li role="none"><a role="menuitem" href="#anchor">Amet</a></li>
+    <li role="none"><a role="menuitem" href="#anchor">Consectetur</a></li>
+    <li role="none"><a role="menuitem" href="#anchor">Adipiscing</a></li>
+    <li role="none"><a role="menuitem" href="#anchor">Elit</a></li>
+  </ul>
+</div>
+<div id="anchor"></div>
 <script type="module">
 import Menu from './menu.js';
 document.querySelectorAll('[data-menu]').forEach(element => {

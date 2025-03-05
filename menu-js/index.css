@@ -4,14 +4,10 @@
   font-size: min(calc(100vw / 960 * 10), 10px);
 }
 body {
+  display: flex;
   font: 1.6rem / 1.5 Inter, 'Noto Sans JP', sans-serif;
+  gap: 1.6rem;
   padding: 3.2rem;
-}
-[data-menu] {
-  display: inline-block;
-  & + & {
-    margin-left: 1.6rem;
-  }
 }
 [data-menu-trigger] {
   align-items: center;
