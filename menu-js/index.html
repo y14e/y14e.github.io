@@ -2,12 +2,12 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>menu-button.js</title>
+<title>menu.js</title>
 <link rel="stylesheet" href="./index.css">
 </head>
 <body>
-<div data-menu-button>
-  <button data-menu-button-trigger>Button</button>
+<div data-menu>
+  <button data-menu-button>Button</button>
   <ul role="menu">
     <li role="menuitem">Lorem</li>
     <li role="menuitem">Ipsum</li>
@@ -19,8 +19,8 @@
     <li role="menuitem">Elit</li>
   </ul>
 </div>
-<div data-menu-button>
-  <button data-menu-button-trigger>Button</button>
+<div data-menu>
+  <button data-menu-button>Button</button>
   <ul role="menu">
     <li role="menuitem" aria-disabled="true">Lorem (disabled)</li>
     <li role="menuitem">Ipsum</li>
@@ -32,8 +32,32 @@
     <li role="menuitem" aria-disabled="true">Elit (disabled)</li>
   </ul>
 </div>
-<div data-menu-button>
-  <button data-menu-button-trigger>Button</button>
+<div data-menu>
+  <button data-menu-button>Button</button>
+  <ul role="menu">
+    <li role="none"><a role="menuitem" href="#anchor">Lorem</a></li>
+    <li role="none"><a role="menuitem" href="#anchor">Ipsum</a></li>
+    <li role="none"><a role="menuitem" href="#anchor" aria-disabled="true">Dolor (disabled)</a></li>
+    <li role="none"><a role="menuitem" href="#anchor">Sit</a></li>
+    <li role="none"><a role="menuitem" href="#anchor">Amet</a></li>
+    <li role="none"><a role="menuitem" href="#anchor">Consectetur</a></li>
+    <li role="none"><a role="menuitem" href="#anchor">Adipiscing</a></li>
+    <li role="none"><a role="menuitem" href="#anchor">Elit</a></li>
+  </ul>
+</div>
+<div data-menu="no-button">
+  <ul role="menu">
+    <li role="menuitem" aria-disabled="true">Lorem (disabled)</li>
+    <li role="menuitem">Ipsum</li>
+    <li role="menuitem">Dolor</li>
+    <li role="menuitem">Sit</li>
+    <li role="menuitem">Amet</li>
+    <li role="menuitem">Consectetur</li>
+    <li role="menuitem">Adipiscing</li>
+    <li role="menuitem" aria-disabled="true">Elit (disabled)</li>
+  </ul>
+</div>
+<div data-menu="no-button">
   <ul role="menu">
     <li role="none"><a role="menuitem" href="#anchor">Lorem</a></li>
     <li role="none"><a role="menuitem" href="#anchor">Ipsum</a></li>
@@ -47,14 +71,14 @@
 </div>
 <a id="anchor"></a>
 <script type="module">
-import MenuButton from './menu-button.js';
-document.querySelectorAll('[data-menu-button]').forEach(element => {
-  const myMenuButton = new MenuButton(element);
+import Menu from './menu.js';
+document.querySelectorAll('[data-menu]').forEach(element => {
+  const myMenu = new Menu(element);
   element.querySelectorAll('[role="menuitem"]').forEach(item => item.addEventListener('click', () => {
     console.log(item.textContent);
-    myMenuButton.close();
+    myMenu.close();
   }));
-  window.addEventListener('blur', () => myMenuButton.close());
+  window.addEventListener('blur', () => myMenu.close());
 });
 </script>
 </body>
