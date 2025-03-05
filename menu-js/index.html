@@ -2,12 +2,12 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>menu-button.js</title>
+<title>menu.js</title>
 <link rel="stylesheet" href="./index.css">
 </head>
 <body>
-<div data-menu-button>
-  <button data-menu-button-trigger>Button</button>
+<div data-menu>
+  <button data-menu-trigger>Button</button>
   <ul role="menu">
     <li role="menuitem">Lorem</li>
     <li role="menuitem">Ipsum</li>
@@ -20,8 +20,8 @@
     <li role="menuitem">Elit</li>
   </ul>
 </div><!--
---><div data-menu-button>
-  <button data-menu-button-trigger>Button</button>
+--><div data-menu>
+  <button data-menu-trigger>Button</button>
   <ul role="menu">
     <li role="presentation"><a role="menuitem" href="#target">Lorem</a></li>
     <li role="presentation"><a role="menuitem" href="#target">Ipsum</a></li>
@@ -36,12 +36,13 @@
 </div>
 <div id="target"></div>
 <script type="module">
-import MenuButton from './menu-button.js';
-window.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('[data-menu-button]').forEach(a => {
-    const myMenuButton = new MenuButton(a);
-    a.querySelectorAll('[role="menuitem"]').forEach(b => b.addEventListener('click', () => myMenuButton.close()));
-  });
+import Menu from './menu.js';
+document.querySelectorAll('[data-menu]').forEach(element => {
+  const myMenu = new Menu(element);
+  element.querySelectorAll('[role="menuitem"]').forEach(item => item.addEventListener('click', () => {
+    console.log(item.textContent);
+    myMenu.close();
+  }));
 });
 </script>
 </body>

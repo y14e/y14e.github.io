@@ -8,13 +8,13 @@ body {
   padding: 3.2rem;
 }
 
-[data-menu-button] {
+[data-menu] {
   display: inline-block;
   & + & {
     margin-left: 1.6rem;
   }
 }
-[data-menu-button-trigger] {
+[data-menu-trigger] {
   align-items: center;
   background: rgb(0 0 0 / 0.2);
   border-radius: 0.4rem;
