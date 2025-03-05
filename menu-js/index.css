@@ -9,6 +9,9 @@ body {
   gap: 1.6rem;
   padding: 3.2rem;
 }
+[data-menu] {
+  display: inline-block;
+}
 [data-menu-button] {
   align-items: center;
   background: rgb(0 0 0 / 0.2);
@@ -71,6 +74,7 @@ body {
     transition-duration: 0.3s;
     transition-property: opacity, transform, visibility;
     visibility: hidden;
+    z-index: calc(infinity);
     [aria-expanded='true'] + & {
       opacity: 1;
       transform: translateY(0);
