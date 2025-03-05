@@ -43,6 +43,7 @@ document.querySelectorAll('[data-menu-button]').forEach(element => {
     console.log(item.textContent);
     myMenuButton.close();
   }));
+  window.addEventListener('blur', () => myMenuButton.close());
 });
 </script>
 </body>
