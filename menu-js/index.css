@@ -52,7 +52,7 @@ body {
   position: absolute;
   transform: translateY(-0.4rem);
   transition-duration: 0.3s;
-  transition-property: opacity, transform, visibility;
+  transition-property: opacity, transform;
   visibility: hidden;
   z-index: 1000;
   [aria-expanded='true'] + & {
