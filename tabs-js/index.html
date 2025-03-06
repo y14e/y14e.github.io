@@ -149,7 +149,7 @@
 <script type="module">
 import Tabs from './tabs.js';
 document.querySelectorAll('[data-tabs]:not([data-tabs="manual"])').forEach(element => new Tabs(element));
-document.querySelectorAll('[data-tabs="manual"]').forEach(element => new Tabs(element, { autoActivation: false }));
+document.querySelectorAll('[data-tabs="manual"]').forEach(element => new Tabs(element, { manual: true }));
 </script>
 </body>
 </html>
