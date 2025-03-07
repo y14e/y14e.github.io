@@ -146,7 +146,7 @@ body {
 [data-tabs]:not([data-tabs='vertical']) > [role='tablist'] {
   [data-tabs-indicator] {
     height: var(--a);
-    padding-inline: calc(1.6rem + var(--r2));
+    padding-inline: calc(0.8rem + var(--r2));
     &::before {
       background: linear-gradient(100deg, #0000, #66c, #c69, #f96 50%, #0000);
     }
@@ -160,7 +160,7 @@ body {
 }
 [data-tabs='vertical'] > [role='tablist'] {
   [data-tabs-indicator] {
-    padding-block: calc(1.6rem + var(--r2));
+    padding-block: calc(0.8rem + var(--r2));
     width: var(--a);
     &::before {
       background: linear-gradient(190deg, #0000, #66c, #c69, #f96 50%, #0000);
