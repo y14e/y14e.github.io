@@ -8,22 +8,26 @@
 <body>
 <div data-tabs>
   <div role="tablist">
-    <button role="tab" aria-selected="true">Tab 1</button>
-    <button role="tab" aria-selected="false">Tab 2</button>
-    <button role="tab" aria-selected="false">Tab 3</button>
+    <button role="tab" aria-selected="true">Tab</button>
+    <button role="tab" aria-selected="false" disabled>Tab (disabled)</button>
+    <button role="tab" aria-selected="false">Tab</button>
+    <button role="tab" aria-selected="false">Tab</button>
     <span data-tabs-indicator></span>
   </div>
   <div>
     <div role="tabpanel">
       検索 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </div>
+    <div role="tabpanel" hidden>
+      Disabled Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </div>
     <div role="tabpanel" hidden="until-found">
       けんさく Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
       <div data-tabs>
         <div role="tablist">
-          <button role="tab" aria-selected="true">Nested tab 2-1</button>
-          <button role="tab" aria-selected="false">Nested tab 2-2</button>
-          <button role="tab" aria-selected="false">Nested tab 2-3</button>
+          <button role="tab" aria-selected="true">Nested</button>
+          <button role="tab" aria-selected="false">Nested</button>
+          <button role="tab" aria-selected="false">Nested</button>
           <span data-tabs-indicator></span>
         </div>
         <div>
@@ -37,9 +41,9 @@
             森田健作 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
             <div data-tabs>
               <div role="tablist">
-                <button role="tab" aria-selected="false">More nested tab 2-3-1</button>
-                <button role="tab" aria-selected="true">More nested tab 2-3-2</button>
-                <button role="tab" aria-selected="false">More nested tab 2-3-3</button>
+                <button role="tab" aria-selected="false">More nested</button>
+                <button role="tab" aria-selected="true">More nested</button>
+                <button role="tab" aria-selected="false">More nested</button>
                 <span data-tabs-indicator></span>
               </div>
               <div>
@@ -54,18 +58,18 @@
                 </div>
               </div>
               <div role="tablist">
-                <button role="tab" aria-selected="false">More nested tab 2-3-1</button>
-                <button role="tab" aria-selected="true">More nested tab 2-3-2</button>
-                <button role="tab" aria-selected="false">More nested tab 2-3-3</button>
+                <button role="tab" aria-selected="false">More nested</button>
+                <button role="tab" aria-selected="true">More nested</button>
+                <button role="tab" aria-selected="false">More nested</button>
                 <span data-tabs-indicator></span>
               </div>
             </div>
           </div>
         </div>
         <div role="tablist">
-          <button role="tab" aria-selected="true">Nested tab 2-1</button>
-          <button role="tab" aria-selected="false">Nested tab 2-2</button>
-          <button role="tab" aria-selected="false">Nested tab 2-3</button>
+          <button role="tab" aria-selected="true">Nested</button>
+          <button role="tab" aria-selected="false">Nested</button>
+          <button role="tab" aria-selected="false">Nested</button>
           <span data-tabs-indicator></span>
         </div>
       </div>
@@ -75,23 +79,28 @@
     </div>
   </div>
   <div role="tablist">
-    <button role="tab" aria-selected="true">Tab 1</button>
-    <button role="tab" aria-selected="false">Tab 2</button>
-    <button role="tab" aria-selected="false">Tab 3</button>
+    <button role="tab" aria-selected="true">Tab</button>
+    <button role="tab" aria-selected="false" disabled>Tab (disabled)</button>
+    <button role="tab" aria-selected="false">Tab</button>
+    <button role="tab" aria-selected="false">Tab</button>
     <span data-tabs-indicator></span>
   </div>
 </div>
 <br><br><br><br><br>
 <div data-tabs="manual">
   <div role="tablist">
-    <button role="tab" aria-selected="false">Tab 1 (manual)</button>
-    <button role="tab" aria-selected="false">Tab 2 (manual)</button>
-    <button role="tab" aria-selected="true">Tab 3 (manual)</button>
+    <button role="tab" aria-selected="false">Manual</button>
+    <button role="tab" aria-selected="false" disabled>Manual (disabled)</button>
+    <button role="tab" aria-selected="false">Manual</button>
+    <button role="tab" aria-selected="true">Manual</button>
     <span data-tabs-indicator></span>
   </div>
   <div>
     <div role="tabpanel" hidden="until-found">
       検索 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </div>
+    <div role="tabpanel" hidden>
+      Disabled Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </div>
     <div role="tabpanel" hidden="until-found">
       けんさく Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -101,23 +110,28 @@
     </div>
   </div>
   <div role="tablist">
-    <button role="tab" aria-selected="false">Tab 1 (manual)</button>
-    <button role="tab" aria-selected="false">Tab 2 (manual)</button>
-    <button role="tab" aria-selected="true">Tab 3 (manual)</button>
+    <button role="tab" aria-selected="false">Manual</button>
+    <button role="tab" aria-selected="false" disabled>Manual (disabled)</button>
+    <button role="tab" aria-selected="false">Manual</button>
+    <button role="tab" aria-selected="true">Manual</button>
     <span data-tabs-indicator></span>
   </div>
 </div>
 <br><br><br><br><br>
 <div data-tabs="vertical">
   <div role="tablist" aria-orientation="vertical">
-    <button role="tab" aria-selected="true">Tab 1<br>(vertical)</button>
-    <button role="tab" aria-selected="false">Tab 2<br>(vertical)</button>
-    <button role="tab" aria-selected="false">Tab 3<br>(vertical)</button>
+    <button role="tab" aria-selected="true">Vertical</button>
+    <button role="tab" aria-selected="false" disabled>Vertical<br>(disabled)</button>
+    <button role="tab" aria-selected="false">Vertical</button>
+    <button role="tab" aria-selected="false">Vertical</button>
     <span data-tabs-indicator></span>
   </div>
   <div>
     <div role="tabpanel">
       検索 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </div>
+    <div role="tabpanel" hidden>
+      Disabled Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
     </div>
     <div role="tabpanel" hidden="until-found">
       けんさく Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -126,9 +140,9 @@
       森田健作 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
       <div data-tabs="vertical">
         <div role="tablist" aria-orientation="vertical">
-          <button role="tab" aria-selected="true">Nested tab 3-1<br>(vertical)</button>
-          <button role="tab" aria-selected="false">Nested tab 3-2<br>(vertical)</button>
-          <button role="tab" aria-selected="false">Nested tab 3-3<br>(vertical)</button>
+          <button role="tab" aria-selected="true">Nested</button>
+          <button role="tab" aria-selected="false">Nested</button>
+          <button role="tab" aria-selected="false">Nested</button>
           <span data-tabs-indicator></span>
         </div>
         <div>

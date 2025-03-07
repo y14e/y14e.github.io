@@ -35,6 +35,9 @@ body {
     background: #000;
     color: #fff;
   }
+  &:is([aria-disabled='true'], [disabled]) {
+    color: rgb(0 0 0 / 0.35);
+  }
   &[aria-selected='false']:hover {
     background: rgb(0 0 0 / 0.3);
   }
@@ -114,6 +117,7 @@ body {
     [role='tab'] {
       border-block: var(--r2) solid #0000;
       margin-block: calc(-1 * var(--r2));
+      min-height: calc(2lh + 1.6rem * 2 + var(--r2) * 2);
       [role='tablist']:has(+ div) & {
         border-bottom-left-radius: var(--r1) calc(var(--r1) + var(--r2));
         border-top-left-radius: var(--r1) calc(var(--r1) + var(--r2));
