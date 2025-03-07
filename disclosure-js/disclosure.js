@@ -1,6 +1,6 @@
 class Disclosure {
   constructor(root, options) {
-    this.root = root;
+    this.rootElement = root;
     this.defaults = {
       animation: {
         duration: 300,
@@ -11,46 +11,57 @@ class Disclosure {
       animation: { ...this.defaults.animation, ...options?.animation },
     };
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) this.settings.animation.duration = 0;
-    const NOT_NESTED = ':not(:scope summary + * *)';
-    this.detailses = this.root.querySelectorAll(`details${NOT_NESTED}`);
-    this.summaries = this.root.querySelectorAll(`summary${NOT_NESTED}`);
-    this.contents = this.root.querySelectorAll(`summary${NOT_NESTED} + *`);
-    if (!this.detailses.length || !this.summaries.length || !this.contents.length) return;
-    this.animations = Array(this.detailses.length).fill(null);
+    let NOT_NESTED = ':not(:scope summary + * *)';
+    this.detailsElements = this.rootElement.querySelectorAll(`details${NOT_NESTED}`);
+    this.summaryElements = this.rootElement.querySelectorAll(`summary${NOT_NESTED}`);
+    this.contentElements = this.rootElement.querySelectorAll(`summary${NOT_NESTED} + *`);
+    if (!this.detailsElements.length || !this.summaryElements.length || !this.contentElements.length) return;
+    this.animations = Array(this.detailsElements.length).fill(null);
     this.initialize();
   }
 
   initialize() {
-    this.detailses.forEach(details => {
+    this.detailsElements.forEach(details => {
       if (details.hasAttribute('name')) details.setAttribute('data-disclosure-name', details.getAttribute('name'));
-      const setData = () => details.setAttribute('data-disclosure-open', String(details.hasAttribute('open')));
+      let setData = () => details.setAttribute('data-disclosure-open', String(details.hasAttribute('open')));
       new MutationObserver(setData).observe(details, { attributeFilter: ['open'] });
       setData();
     });
-    this.summaries.forEach(summary => {
+    this.summaryElements.forEach(summary => {
+      if (!this.isFocusable(summary.parentElement)) {
+        summary.setAttribute('tabindex', '-1');
+        summary.style.setProperty('pointer-events', 'none');
+      }
       summary.addEventListener('click', event => this.handleSummaryClick(event));
       summary.addEventListener('keydown', event => this.handleSummaryKeyDown(event));
     });
-    this.root.setAttribute('data-disclosure-initialized', '');
+    this.contentElements.forEach(content => {
+      if (!this.isFocusable(content.parentElement)) content.setAttribute('hidden', '');
+    });
+    this.rootElement.setAttribute('data-disclosure-initialized', '');
+  }
+
+  isFocusable(element) {
+    return element.getAttribute('aria-disabled') !== 'true';
   }
 
   toggle(details, isOpen) {
     if ((details.getAttribute('data-disclosure-open') === 'true') === isOpen) return;
-    const name = details.getAttribute('data-disclosure-name');
+    let name = details.getAttribute('data-disclosure-name');
     if (name) {
       details.removeAttribute('name');
-      const opened = document.querySelector(`details[data-disclosure-name="${name}"][data-disclosure-open="true"]`);
+      let opened = document.querySelector(`details[data-disclosure-name="${name}"][data-disclosure-open="true"]`);
       if (isOpen && opened && opened !== details) this.close(opened);
     }
     details.setAttribute('data-disclosure-open', String(isOpen));
-    const height = `${details.offsetHeight}px`;
+    let height = `${details.offsetHeight}px`;
     if (isOpen) details.setAttribute('open', '');
     details.style.setProperty('overflow', 'clip');
     details.style.setProperty('will-change', [...new Set(window.getComputedStyle(details).getPropertyValue('will-change').split(',')).add('height').values()].filter(value => value !== 'auto').join(','));
-    const index = [...this.detailses].indexOf(details);
+    let index = [...this.detailsElements].indexOf(details);
     let animation = this.animations[index];
     if (animation) animation.cancel();
-    const content = details.querySelector('summary + *');
+    let content = details.querySelector('summary + *');
     content.removeAttribute('hidden');
     animation = this.animations[index] = details.animate({ height: [height, `${details.querySelector('summary').scrollHeight + (isOpen ? content.scrollHeight : 0)}px`] }, { duration: this.settings.animation.duration, easing: this.settings.animation.easing });
     animation.addEventListener('finish', () => {
@@ -63,17 +74,17 @@ class Disclosure {
 
   handleSummaryClick(event) {
     event.preventDefault();
-    const details = event.currentTarget.parentElement;
+    let details = event.currentTarget.parentElement;
     this.toggle(details, details.getAttribute('data-disclosure-open') !== 'true');
   }
 
   handleSummaryKeyDown(event) {
-    const { key } = event;
+    let { key } = event;
     if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) return;
     event.preventDefault();
-    const nonDisabledSummaries = [...this.summaries].filter(summary => summary.getAttribute('aria-disabled') !== 'true');
-    const currentIndex = nonDisabledSummaries.indexOf(document.activeElement);
-    const length = nonDisabledSummaries.length;
+    let focusableSummaries = [...this.summaryElements].filter(summary => this.isFocusable(summary.parentElement));
+    let currentIndex = focusableSummaries.indexOf(document.activeElement);
+    let length = focusableSummaries.length;
     let newIndex = currentIndex;
     switch (key) {
       case 'ArrowUp':
@@ -89,7 +100,7 @@ class Disclosure {
         newIndex = length - 1;
         break;
     }
-    nonDisabledSummaries[newIndex].focus();
+    focusableSummaries[newIndex].focus();
   }
 
   open(details) {

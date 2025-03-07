@@ -1,17 +1,30 @@
 class Disclosure {
   constructor(root) {
-    this.root = root;
+    this.rootElement = root;
     const NOT_NESTED = ':not(:scope summary + * *)';
-    this.detailses = this.root.querySelectorAll(`details${NOT_NESTED}`);
-    this.summaries = this.root.querySelectorAll(`summary${NOT_NESTED}`);
-    this.contents = this.root.querySelectorAll(`summary${NOT_NESTED} + *`);
-    if (!this.detailses.length || !this.summaries.length || !this.contents.length) return;
+    this.detailsElements = this.rootElement.querySelectorAll(`details${NOT_NESTED}`);
+    this.summaryElements = this.rootElement.querySelectorAll(`summary${NOT_NESTED}`);
+    this.contentElements = this.rootElement.querySelectorAll(`summary${NOT_NESTED} + *`);
+    if (!this.detailsElements.length || !this.summaryElements.length || !this.contentElements.length) return;
     this.initialize();
   }
 
   initialize() {
-    this.summaries.forEach(summary => summary.addEventListener('keydown', event => this.handleSummaryKeyDown(event)));
-    this.root.setAttribute('data-disclosure-initialized', '');
+    this.summaryElements.forEach(summary => {
+      if (!this.isFocusable(summary.parentElement)) {
+        summary.setAttribute('tabindex', '-1');
+        summary.style.setProperty('pointer-events', 'none');
+      }
+      summary.addEventListener('keydown', event => this.handleSummaryKeyDown(event));
+    });
+    this.contentElements.forEach(content => {
+      if (!this.isFocusable(content.parentElement)) content.setAttribute('hidden', '');
+    });
+    this.rootElement.setAttribute('data-disclosure-initialized', '');
+  }
+
+  isFocusable(element) {
+    return element.getAttribute('aria-disabled') !== 'true';
   }
 
   toggle(details, isOpen) {
@@ -27,9 +40,9 @@ class Disclosure {
     const { key } = event;
     if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) return;
     event.preventDefault();
-    const nonDisabledSummaries = [...this.summaries].filter(summary => summary.getAttribute('aria-disabled') !== 'true');
-    const currentIndex = nonDisabledSummaries.indexOf(document.activeElement);
-    const length = nonDisabledSummaries.length;
+    const focusableSummaries = [...this.summaryElements].filter(this.isFocusable);
+    const currentIndex = focusableSummaries.indexOf(document.activeElement);
+    const length = focusableSummaries.length;
     let newIndex = currentIndex;
     switch (key) {
       case 'ArrowUp':
@@ -45,7 +58,7 @@ class Disclosure {
         newIndex = length - 1;
         break;
     }
-    nonDisabledSummaries[newIndex].focus();
+    focusableSummaries[newIndex].focus();
   }
 
   open(details) {

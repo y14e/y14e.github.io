@@ -54,7 +54,7 @@ summary {
     transition: 0.3s rotate;
     width: 1.6rem;
   }
-  details:is([open]:not([data-disclosure-open]), [data-disclosure-open='true']) > & {
+  details:is([data-disclosure-open='true'], :not([data-disclosure-open])[open]) > & {
     background: #000;
     color: #fff;
     &::before {
@@ -63,6 +63,10 @@ summary {
     &::after {
       rotate: 180deg;
     }
+  }
+  details[aria-disabled='true'] > & {
+    background: none;
+    color: rgb(0, 0, 0, 0.35);
   }
   details[data-disclosure-open='false'] > &:hover {
     background: rgb(0 0 0 / 0.2);

@@ -72,7 +72,7 @@ body {
     background: none;
     color: rgb(0, 0, 0, 0.35);
   }
-  &:not([aria-expanded='true']):not(:is([aria-disabled='true'], [disabled])):hover {
+  &:not([aria-expanded='true']):hover {
     background: rgb(0 0 0 / 0.2);
   }
 }
