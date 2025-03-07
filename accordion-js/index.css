@@ -27,7 +27,7 @@ body {
     }
   }
 }
-[data-accordion-trigger] {
+[data-accordion-button] {
   align-items: center;
   background: rgb(0 0 0 / 0.1);
   display: flex;
