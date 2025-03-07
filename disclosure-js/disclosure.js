@@ -28,7 +28,7 @@ class Disclosure {
       setData();
     });
     this.summaryElements.forEach(summary => {
-      if (!this.isFocusable(summary)) {
+      if (!this.isFocusable(summary.parentElement)) {
         summary.setAttribute('tabindex', '-1');
         summary.style.setProperty('pointer-events', 'none');
       }
@@ -36,13 +36,13 @@ class Disclosure {
       summary.addEventListener('keydown', event => this.handleSummaryKeyDown(event));
     });
     this.contentElements.forEach(content => {
-      if (!this.isFocusable(content.previousElementSibling)) content.setAttribute('hidden', '');
+      if (!this.isFocusable(content.parentElement)) content.setAttribute('hidden', '');
     });
     this.rootElement.setAttribute('data-disclosure-initialized', '');
   }
 
-  isFocusable(summary) {
-    return summary.parentElement.getAttribute('aria-disabled') !== 'true';
+  isFocusable(element) {
+    return element.getAttribute('aria-disabled') !== 'true' && !element.hasAttribute('disabled');
   }
 
   toggle(details, isOpen) {
@@ -82,7 +82,7 @@ class Disclosure {
     let { key } = event;
     if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) return;
     event.preventDefault();
-    let focusableSummaries = [...this.summaryElements].filter(this.isFocusable);
+    let focusableSummaries = [...this.summaryElements].filter(summary => this.isFocusable(summary.parentElement));
     let currentIndex = focusableSummaries.indexOf(document.activeElement);
     let length = focusableSummaries.length;
     let newIndex = currentIndex;
