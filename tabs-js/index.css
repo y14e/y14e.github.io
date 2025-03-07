@@ -97,7 +97,7 @@ body {
 [data-tabs='vertical'] {
   display: grid;
   grid-template-areas: '. content';
-  grid-template-columns: 16rem 1fr;
+  grid-template-columns: 15rem 1fr;
   [role='tabpanel'] & {
     margin-top: 3.2rem;
   }
