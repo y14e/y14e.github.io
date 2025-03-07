@@ -36,6 +36,7 @@ body {
     color: #fff;
   }
   &:is([aria-disabled='true'], [disabled]) {
+    background: rgb(0 0 0 / 0.1);
     color: rgb(0 0 0 / 0.35);
   }
   &[aria-selected='false']:hover {

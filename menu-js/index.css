@@ -24,7 +24,7 @@ body {
   outline-offset: -2px;
   padding: 0.8rem 1.6rem;
   position: relative;
-  transition-duration: 0.3s;
+  transition-duration: 0.15s;
   transition-property: background, color;
   &::after {
     background: currentColor;
@@ -40,6 +40,10 @@ body {
     &::after {
       rotate: 180deg;
     }
+  }
+  &:is([aria-disabled='true'], [disabled]) {
+    background: rgb(0 0 0 / 0.1);
+    color: rgb(0 0 0 / 0.35);
   }
   &:not([aria-expanded='true']):hover {
     background: rgb(0 0 0 / 0.3);
@@ -60,7 +64,7 @@ body {
   padding: 0.8rem 1.6rem;
   transition: 0.3s background;
   &[aria-disabled='true'] {
-    color: rgb(0 0 0 / 0.5);
+    color: rgb(0 0 0 / 0.35);
     pointer-events: none;
   }
   &:hover {
@@ -73,7 +77,7 @@ body {
     opacity: 0;
     position: absolute;
     transform: translateY(-0.4rem);
-    transition-duration: 0.3s;
+    transition-duration: 0.15s;
     transition-property: opacity, transform, visibility;
     visibility: hidden;
     z-index: calc(infinity);
