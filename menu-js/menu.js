@@ -36,7 +36,7 @@ class Menu {
       this.buttonElement.setAttribute('aria-controls', this.listElement.getAttribute('id'));
       this.buttonElement.setAttribute('aria-expanded', 'false');
       this.buttonElement.setAttribute('aria-haspopup', 'true');
-      this.buttonElement.setAttribute('tabindex', '0');
+      this.buttonElement.setAttribute('tabindex', this.isFocusable(this.buttonElement) ? '0' : '-1');
       if (!this.isFocusable(this.buttonElement)) this.buttonElement.style.setProperty('pointer-events', 'none');
       this.buttonElement.addEventListener('pointerover', event => this.handleButtonPointerOver(event));
       this.buttonElement.addEventListener('click', event => this.handleButtonClick(event));
