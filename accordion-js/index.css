@@ -68,7 +68,13 @@ body {
       rotate: 180deg;
     }
   }
-  &[aria-expanded='false']:hover {
+  &:is([aria-disabled='true'], [disabled]) {
+    color: rgb(0, 0, 0, 0.35);
+  }
+  &[aria-expanded='true']:is([aria-disabled='true'], [disabled]) {
+    color: rgb(255, 255, 255, 0.35);
+  }
+  &:not([aria-expanded='true']):not(:is([aria-disabled='true'], [disabled])):hover {
     background: rgb(0 0 0 / 0.2);
   }
 }
