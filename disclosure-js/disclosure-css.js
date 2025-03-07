@@ -10,7 +10,7 @@ class Disclosure {
   }
 
   initialize() {
-    this.summaries.forEach(summary => summary.addEventListener('keydown', event => this.handleKeyDown(event)));
+    this.summaries.forEach(summary => summary.addEventListener('keydown', event => this.handleSummaryKeyDown(event)));
     this.root.setAttribute('data-disclosure-initialized', '');
   }
 
@@ -23,13 +23,13 @@ class Disclosure {
     }
   }
 
-  handleKeyDown(event) {
+  handleSummaryKeyDown(event) {
     const { key } = event;
     if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(key)) return;
     event.preventDefault();
-    const focusables = [...this.summaries].filter(summary => summary.getAttribute('aria-disabled') !== 'true');
-    const currentIndex = focusables.indexOf(document.activeElement);
-    const length = focusables.length;
+    const nonDisabledSummaries = [...this.summaries].filter(summary => summary.getAttribute('aria-disabled') !== 'true');
+    const currentIndex = nonDisabledSummaries.indexOf(document.activeElement);
+    const length = nonDisabledSummaries.length;
     let newIndex = currentIndex;
     switch (key) {
       case 'ArrowUp':
@@ -45,7 +45,7 @@ class Disclosure {
         newIndex = length - 1;
         break;
     }
-    focusables[newIndex].focus();
+    nonDisabledSummaries[newIndex].focus();
   }
 
   open(details) {
