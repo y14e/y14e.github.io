@@ -14,6 +14,7 @@ body {
   display: flex;
   font-weight: bold;
   gap: 1.6rem;
+  position: relative;
   text-align: center;
   &::before {
     background: #000;
