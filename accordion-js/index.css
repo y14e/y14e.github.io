@@ -21,15 +21,8 @@ body {
 [data-accordion-header] {
   font-weight: bold;
   user-select: none;
-  & + * {
-    & > * {
-      opacity: 1;
-      padding: 3.2rem;
-      transition: 0.3s opacity;
-    }
-    &[hidden] > * {
-      opacity: 0;
-    }
+  & + * > * {
+    padding: 3.2rem;
   }
 }
 [data-accordion-button] {
