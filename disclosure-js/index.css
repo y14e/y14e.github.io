@@ -68,7 +68,7 @@ summary {
     background: none;
     color: rgb(0, 0, 0, 0.35);
   }
-  details:not([data-disclosure-open]) > &:hover {
+  details[data-disclosure-open='false'] > &:hover {
     background: rgb(0 0 0 / 0.2);
   }
   & + * > * {
@@ -76,7 +76,7 @@ summary {
     padding: 3.2rem;
     transition: 0.3s opacity;
   }
-  details[data-disclosure-open] > & + * > * {
+  details[data-disclosure-open='true'] > & + * > * {
     opacity: 1;
   }
 }
