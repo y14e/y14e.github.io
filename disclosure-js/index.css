@@ -68,12 +68,15 @@ summary {
     background: none;
     color: rgb(0, 0, 0, 0.35);
   }
-  details[data-disclosure-open='false'] > &:hover {
+  details:not([data-disclosure-open]) > &:hover {
     background: rgb(0 0 0 / 0.2);
   }
-  & + div {
-    & > div {
-      padding: 3.2rem;
-    }
+  & + * > * {
+    opacity: 0;
+    padding: 3.2rem;
+    transition: 0.3s opacity;
+  }
+  details[data-disclosure-open] > & + * > * {
+    opacity: 1;
   }
 }

@@ -15,14 +15,16 @@ details {
     &::details-content {
       height: 0;
       interpolate-size: allow-keywords;
+      opacity: 0;
       overflow: clip;
       transition-behavior: allow-discrete;
       transition-duration: 0.3s;
-      transition-property: content-visibility, height;
+      transition-property: content-visibility, height, opacity;
       will-change: height;
     }
     &[open]::details-content {
       height: auto;
+      opacity: 1;
     }
   }
   & & {
