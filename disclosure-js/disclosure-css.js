@@ -28,7 +28,6 @@ class Disclosure {
   }
 
   toggle(details, isOpen) {
-    if (details.hasAttribute('open') === isOpen) return;
     if (isOpen) {
       details.setAttribute('open', '');
     } else {
@@ -62,10 +61,12 @@ class Disclosure {
   }
 
   open(details) {
+    if (details.hasAttribute('open')) return;
     this.toggle(details, true);
   }
 
   close(details) {
+    if (!details.hasAttribute('open')) return;
     this.toggle(details, false);
   }
 }

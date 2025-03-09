@@ -46,7 +46,6 @@ class Disclosure {
   }
 
   toggle(details, isOpen) {
-    if ((details.getAttribute('data-disclosure-open') === 'true') === isOpen) return;
     let name = details.getAttribute('data-disclosure-name');
     if (name) {
       details.removeAttribute('name');
@@ -104,10 +103,12 @@ class Disclosure {
   }
 
   open(details) {
+    if (details.getAttribute('data-disclosure-open') === 'true') return;
     this.toggle(details, true);
   }
 
   close(details) {
+    if (details.getAttribute('data-disclosure-open') === 'false') return;
     this.toggle(details, false);
   }
 }
