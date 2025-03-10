@@ -7,7 +7,7 @@ body {
   font: 1.6rem / 1.5 Inter, 'Noto Sans JP', sans-serif;
   padding: 3.2rem;
 }
-[data-accordion] > div {
+[data-accordion] > * {
   background: rgb(0 0 0 / 0.1);
   border-radius: 0.8rem;
   overflow: hidden;
