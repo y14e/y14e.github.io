@@ -1,7 +1,7 @@
 @import 'https://cdn.jsdelivr.net/npm/destyle.css@4.0.1/destyle.min.css';
 @import 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+JP:wght@100..900&display=swap';
 :root {
-  font-size: 10px;
+  font-size: min(calc(100vw / 960 * 10), 10px);
 }
 body {
   font: 1.6rem / 1.5 Inter, 'Noto Sans JP', sans-serif;
@@ -22,7 +22,12 @@ body {
   font-weight: bold;
   user-select: none;
   & + * > * {
+    opacity: 1;
     padding: 3.2rem;
+    transition: 0.3s opacity;
+  }
+  &:has([aria-expanded='false']) + * > * {
+    opacity: 0;
   }
 }
 [data-accordion-button] {
