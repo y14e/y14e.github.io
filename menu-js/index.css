@@ -56,18 +56,18 @@ body {
   box-shadow: 0 0.1rem 0.4rem rgb(0 0 0 / 0.1), 0 0.8rem 1.6rem rgb(0 0 0 / 0.1);
   overflow: hidden;
   [data-menu-button] + & {
-    content-visibility: hidden;
     margin-top: 0.4rem;
     opacity: 0;
     position: absolute;
     transform: translateY(-0.4rem);
     transition-duration: 0.3s;
-    transition-property: content-visibility, opacity, transform;
+    transition-property: opacity, transform, visibility;
+    visibility: hidden;
     z-index: calc(infinity);
     [aria-expanded='true'] + & {
-      content-visibility: visible;
       opacity: 1;
       transform: translateY(0);
+      visibility: visible;
     }
   }
 }
