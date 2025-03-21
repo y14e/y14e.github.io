@@ -53,7 +53,7 @@ body {
 [role='menu'] {
   background: #fff;
   border-radius: 0.8rem;
-  box-shadow: 0 0.1rem 0.4rem rgb(0 0 0 / 0.1), 0 0.8rem 1.6rem rgb(0 0 0 / 0.1);
+  box-shadow: 0 0.1rem 0.3rem rgb(0 0 0 / 0.15), 0 0.8rem 1.6rem rgb(0 0 0 / 0.1);
   overflow: hidden;
   [data-menu-button] + & {
     display: none;
