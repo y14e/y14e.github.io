@@ -51,9 +51,10 @@ body {
   }
 }
 [role='menu'] {
-  background: #fff;
+  background: conic-gradient(#fff, #fff) padding-box, linear-gradient(rgb(0 0 0 / 0.1), rgb(0 0 0 / 0.2)) border-box;
+  border: transparent solid 0.1rem;
   border-radius: 0.8rem;
-  box-shadow: 0 0.1rem 0.3rem rgb(0 0 0 / 0.15), 0 0.8rem 1.6rem rgb(0 0 0 / 0.1);
+  box-shadow: 0 0.1rem 0.2rem rgb(0 0 0 / 0.1), 0 0.4rem 0.8rem rgb(0 0 0 / 0.1);
   overflow: hidden;
   [data-menu-button] + & {
     display: none;
