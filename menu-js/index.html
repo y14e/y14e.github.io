@@ -133,7 +133,7 @@
 </div>
 <a id="anchor"></a>
 <script type="module">
-import Menu from './menu.js';
+import { Menu } from './menu.js';
 document.querySelectorAll('[data-menu]').forEach(element => {
   const myMenu = new Menu(element);
   element.querySelectorAll('[role="menuitem"]').forEach(item => item.addEventListener('click', () => {
