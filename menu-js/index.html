@@ -136,11 +136,15 @@
 import { Menu } from './menu.js';
 document.querySelectorAll('[data-menu]').forEach(element => {
   const myMenu = new Menu(element);
-  element.querySelectorAll('[role="menuitem"]').forEach(item => item.addEventListener('click', () => {
-    console.log(item.textContent);
+  element.querySelectorAll('[role="menuitem"]').forEach(item => {
+    item.addEventListener('click', () => {
+      console.log(item.textContent);
+      myMenu.close();
+    });
+  });
+  window.addEventListener('blur', () => {
     myMenu.close();
-  }));
-  window.addEventListener('blur', () => myMenu.close());
+  });
 });
 </script>
 </body>
