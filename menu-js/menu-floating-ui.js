@@ -18,7 +18,7 @@ export class Menu {
         duration: 300,
       },
       floatingUi: {
-        middleware: [flip(), offset(4), shift()],
+        middleware: [flip({ padding: 4 }), offset(4), shift()],
         placement: 'bottom-start',
       },
     };
