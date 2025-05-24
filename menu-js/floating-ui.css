@@ -74,7 +74,8 @@ body {
   outline-offset: -2px;
   padding: 0.8rem 1.6rem;
   transition: 0.3s background;
-  &[aria-disabled='true'] {
+  width: 100%;
+  &:is([aria-disabled='true'], [disabled]) {
     color: rgb(0 0 0 / 0.35);
     pointer-events: none;
   }
