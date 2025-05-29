@@ -208,9 +208,17 @@
 </div>
 <a id="anchor"></a>
 <script type="module">
+import { flip, offset, shift } from 'https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.7.0/+esm';
 import { Menu } from './menu-floating-ui.js';
 document.querySelectorAll('[data-menu]').forEach(element => {
-  const myMenu = new Menu(element);
+  const myMenu = new Menu(element, {
+      floatingUi: {
+        middleware: [flip(), offset(4), shift()],
+      },
+      subMenuFloatingUi: {
+        middleware: [flip(), offset(-4), shift()],
+      },
+  });
   element.querySelectorAll('[role="menuitem"]:not([aria-haspopup])').forEach(item => {
     item.addEventListener('click', () => {
       console.log(item.textContent);
