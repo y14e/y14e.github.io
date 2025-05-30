@@ -213,10 +213,10 @@ import { Menu } from './menu-floating-ui.js';
 document.querySelectorAll('[data-menu]').forEach(element => {
   const myMenu = new Menu(element, {
     floatingUi: {
-      middleware: [flip(), offset(4), shift()],
+      middleware: [flip({ padding: 4 }), offset(4), shift()],
     },
     subMenuFloatingUi: {
-      middleware: [flip(), offset(-4), shift()],
+      middleware: [flip({ padding: -4 }), offset(-4), shift()],
     },
   });
   element.querySelectorAll('[role="menuitem"]:not([aria-haspopup])').forEach(item => {
