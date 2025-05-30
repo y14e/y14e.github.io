@@ -30,18 +30,15 @@ body {
   transition-property: background, color;
   &::after {
     background: currentColor;
-    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    clip-path: polygon(0 0, 20% 0, 50% 60%, 80% 0, 100% 0, 50% 100%);
     content: '';
-    height: 0.4rem;
+    height: 0.5rem;
     transition: 0.3s rotate;
-    width: 0.8rem;
+    width: 1rem;
   }
   &[aria-expanded='true'] {
     background: #000;
     color: #fff;
-    &::after {
-      rotate: 180deg;
-    }
   }
   &:is([aria-disabled='true'], [disabled]) {
     background: rgb(0 0 0 / 0.1);
@@ -90,11 +87,11 @@ body {
     position: relative;
     &::after {
       background: currentColor;
-      clip-path: polygon(0 0, 100% 50%, 0 100%);
+      clip-path: polygon(0 0, 100% 50%, 0 100%, 0 80%, 60% 50%, 0 20%);
       content: '';
-      height: 0.8rem;
+      height: 1rem;
       margin-left: auto;
-      width: 0.4rem;
+      width: 0.5rem;
     }
   }
   :first-child > & {

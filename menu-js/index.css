@@ -39,9 +39,6 @@ body {
   &[aria-expanded='true'] {
     background: #000;
     color: #fff;
-    &::after {
-      rotate: 180deg;
-    }
   }
   &:is([aria-disabled='true'], [disabled]) {
     background: rgb(0 0 0 / 0.1);
