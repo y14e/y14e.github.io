@@ -212,12 +212,12 @@ import { flip, offset, shift } from 'https://cdn.jsdelivr.net/npm/@floating-ui/d
 import { Menu } from './menu-floating-ui.js';
 document.querySelectorAll('[data-menu]').forEach(element => {
   const myMenu = new Menu(element, {
-      floatingUi: {
-        middleware: [flip(), offset(4), shift()],
-      },
-      subMenuFloatingUi: {
-        middleware: [flip(), offset(-4), shift()],
-      },
+    floatingUi: {
+      middleware: [flip(), offset(4), shift()],
+    },
+    subMenuFloatingUi: {
+      middleware: [flip(), offset(-4), shift()],
+    },
   });
   element.querySelectorAll('[role="menuitem"]:not([aria-haspopup])').forEach(item => {
     item.addEventListener('click', () => {
