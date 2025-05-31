@@ -68,10 +68,10 @@ body {
     z-index: 1;
   }
 }
-:has(> [role='menuitem']) {
+:has(> [role^='menuitem']) {
   position: relative;
 }
-[role='menuitem'] {
+[role^='menuitem'] {
   cursor: pointer;
   display: block;
   outline-offset: -2px;
