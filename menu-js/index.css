@@ -31,7 +31,6 @@ body {
     clip-path: polygon(0 0, 20% 0, 50% 60%, 80% 0, 100% 0, 50% 100%);
     content: '';
     height: 0.5rem;
-    transition: 0.3s rotate;
     width: 1rem;
   }
   &[aria-expanded='true'] {
