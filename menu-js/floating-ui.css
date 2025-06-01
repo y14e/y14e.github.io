@@ -29,7 +29,7 @@ body {
   &::after {
     aspect-ratio: 1;
     background: currentColor;
-    clip-path: polygon(0 30%, 20% 30%, 50% 60%, 80% 30%, 100% 30%, 50% 80%);
+    clip-path: polygon(0 30%, 25% 30%, 50% 55%, 75% 30%, 100% 30%, 50% 80%);
     content: '';
     width: 1rem;
   }
@@ -49,11 +49,12 @@ body {
   background: #fff;
   border-radius: 0.8rem;
   box-shadow: 0 0 0.2rem rgb(0 0 0 / 0.1), 0 0.4rem 0.8rem rgb(0 0 0 / 0.2);
+  padding-block: 0.8rem;
   white-space: nowrap;
   :is([data-menu-button], [aria-haspopup]) + & {
     display: none;
     position: absolute;
-    transform: translateY(-0.4rem);
+    transform: translateY(-0.8rem);
     transition: 0.3s transform;
     z-index: calc(infinity);
     [aria-expanded='true'] + & {
@@ -85,18 +86,10 @@ body {
     &::after {
       aspect-ratio: 1;
       background: currentColor;
-      clip-path: polygon(30% 100%, 30% 80%, 60% 50%, 30% 20%, 30% 0%, 80% 50%);
+      clip-path: polygon(30% 0%, 80% 50%, 30% 100%, 30% 75%, 55% 50%, 30% 25%);
       content: '';
       width: 1rem;
     }
-  }
-  :first-child > & {
-    border-top-left-radius: 0.7rem;
-    border-top-right-radius: 0.7rem;
-  }
-  :last-child > & {
-    border-bottom-left-radius: 0.7rem;
-    border-bottom-right-radius: 0.7rem;
   }
   &:is([aria-disabled='true'], [disabled]) {
     color: rgb(0 0 0 / 0.35);
