@@ -2,8 +2,8 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>menu-floating-ui.js</title>
-<link rel="stylesheet" href="./floating-ui.css">
+<title>menu.js</title>
+<link rel="stylesheet" href="./index.css">
 </head>
 <body>
 <div class="menu">
@@ -224,32 +224,9 @@
 </div>
 <a id="anchor"></a>
 <script type="module">
-import { flip, offset, shift } from 'https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.7.0/+esm';
-import { Menu } from './menu-floating-ui.js';
+import { Menu } from './menu.js';
 document.querySelectorAll('[data-menu]').forEach(element => {
-  const myMenu = new Menu(element, {
-    floatingUi: {
-      middleware: [
-        flip({
-          padding: 8,
-        }),
-        offset(8),
-        shift(),
-      ],
-    },
-    submenuFloatingUi: {
-      middleware: [
-        flip({
-          padding: -8,
-        }),
-        offset({
-          crossAxis: -8,
-          mainAxis: -8,
-        }),
-        shift(),
-      ],
-    },
-  });
+  const myMenu = new Menu(element);
   element.querySelectorAll('[role="menuitem"]:not([aria-haspopup])').forEach(item => {
     item.addEventListener('click', () => {
       console.log(item.textContent);
