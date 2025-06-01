@@ -44,23 +44,9 @@ summary {
   outline-offset: -2px;
   padding: 1.6rem;
   position: relative;
-  transition-duration: 0.3s;
-  transition-property: background, color;
   user-select: none;
   &::-webkit-details-marker {
     display: none;
-  }
-  &::before {
-    background: linear-gradient(100deg, #0000, #66c, #c69, #f96 50%, #0000);
-    bottom: 0;
-    content: '';
-    display: block;
-    height: 0.4rem;
-    left: 1.6rem;
-    opacity: 0;
-    position: absolute;
-    right: 1.6rem;
-    transition: 0.3s opacity;
   }
   &::after {
     background: currentColor;
@@ -73,9 +59,6 @@ summary {
   details[open] > & {
     background: #000;
     color: #fff;
-    &::before {
-      opacity: 1;
-    }
     &::after {
       rotate: 180deg;
     }

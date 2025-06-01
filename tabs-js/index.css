@@ -30,8 +30,6 @@ body {
   background: rgb(0 0 0 / 0.2);
   display: block;
   padding: 1.6rem;
-  transition-duration: 0.3s;
-  transition-property: background, color;
   &[aria-selected='true'] {
     background: #000;
     color: #fff;
