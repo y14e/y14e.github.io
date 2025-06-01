@@ -54,11 +54,10 @@ body {
   :is([data-menu-button], [aria-haspopup]) + & {
     display: none;
     position: absolute;
-    transform: translateY(-0.8rem);
     transition: 0.3s transform;
     z-index: calc(infinity);
-    [aria-expanded='true'] + & {
-      transform: translateY(0);
+    &:not([aria-expanded='true'] + &) {
+      transform: translateY(-0.8rem);
     }
   }
   [role='menu'] {
