@@ -103,3 +103,30 @@ body {
     background: rgb(0 0 0 / 0.1);
   }
 }
+:is([role='menuitemcheckbox'], [role='menuitemradio']) {
+  align-items: center;
+  display: flex;
+  gap: 0.8rem;
+  &::before {
+    aspect-ratio: 1;
+    background: currentColor;
+    content: '';
+    opacity: 0;
+    width: 1rem;
+  }
+  &[aria-checked='true']::before {
+    opacity: 1;
+  }
+}
+[role='menuitemcheckbox']::before {
+  clip-path: polygon(0 50%, 20% 50%, 32.5% 72.5%, 35% 75%, 80% 0, 100% 0, 40% 100%, 30% 100%);
+}
+[role='menuitemradio']::before {
+  clip-path: circle(30%);
+}
+[role='separator'] {
+  background: rgb(0 0 0 / 0.1);
+  border: 0;
+  height: 0.1rem;
+  margin: 0.8rem 1.6rem;
+}
