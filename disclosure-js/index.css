@@ -33,10 +33,10 @@ summary {
     display: none;
   }
   &::after {
+    aspect-ratio: 1;
     background: currentColor;
-    clip-path: polygon(0 0, 15% 0, 50% 70%, 85% 0, 100% 0, 50% 100%);
+    clip-path: polygon(0 25%, 15% 25%, 50% 60%, 85% 25%, 100% 25%, 50% 75%);
     content: '';
-    height: 0.8rem;
     transition: 0.3s rotate;
     width: 1.6rem;
   }

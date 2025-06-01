@@ -27,10 +27,10 @@ body {
   padding: 0.8rem 1.6rem;
   position: relative;
   &::after {
+    aspect-ratio: 1;
     background: currentColor;
-    clip-path: polygon(0 0, 20% 0, 50% 60%, 80% 0, 100% 0, 50% 100%);
+    clip-path: polygon(0 30%, 20% 30%, 50% 60%, 80% 30%, 100% 30%, 50% 80%);
     content: '';
-    height: 0.5rem;
     width: 1rem;
   }
   &[aria-expanded='true'] {
@@ -84,15 +84,15 @@ body {
     align-items: center;
     display: flex;
     gap: 0.8rem;
+    justify-content: space-between;
     padding: 0.8rem 1.6rem;
     position: relative;
     &::after {
+      aspect-ratio: 1;
       background: currentColor;
-      clip-path: polygon(0 0, 100% 50%, 0 100%, 0 80%, 60% 50%, 0 20%);
+      clip-path: polygon(30% 100%, 30% 80%, 60% 50%, 30% 20%, 30% 0%, 80% 50%);
       content: '';
-      height: 1rem;
-      margin-left: auto;
-      width: 0.5rem;
+      width: 1rem;
     }
   }
   :first-child > & {
