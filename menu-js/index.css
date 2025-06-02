@@ -47,7 +47,7 @@ body {
 }
 [role='menu'] {
   background: #fff;
-  border-radius: 0.8rem;
+  border-radius: 0.4rem;
   box-shadow: 0 0 0.2rem rgb(0 0 0 / 0.1), 0 0.4rem 0.8rem rgb(0 0 0 / 0.2);
   padding-block: 0.8rem;
   white-space: nowrap;

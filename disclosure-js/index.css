@@ -9,7 +9,7 @@ body {
 }
 details {
   background: rgb(0 0 0 / 0.1);
-  border-radius: 0.8rem;
+  border-radius: 0.4rem;
   overflow: hidden;
   & & {
     margin-top: 3.2rem;

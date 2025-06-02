@@ -9,11 +9,11 @@ body {
 }
 [role='tablist'] {
   --a: 0.4rem;
-  --r1: 0.8rem;
-  --r2: 0.8rem;
+  --r1: 0.4rem;
+  --r2: 0.4rem;
   display: flex;
   font-weight: bold;
-  gap: 1.6rem;
+  gap: 0.8rem;
   position: relative;
   text-align: center;
   &::before {
