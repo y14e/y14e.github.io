@@ -257,12 +257,9 @@ document.querySelectorAll('[data-menu]').forEach(element => {
     },
     submenuFloatingUi: {
       middleware: [
-        flip({
-          padding: -8,
-        }),
+        flip(),
         offset({
           crossAxis: -8,
-          mainAxis: -8,
         }),
         shift(),
       ],

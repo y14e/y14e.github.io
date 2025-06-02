@@ -65,7 +65,7 @@ body {
   }
   [role='menu'] {
     display: none;
-    left: calc(100% - 0.8rem);
+    left: 100%;
     top: -0.8rem;
     z-index: 1;
   }
