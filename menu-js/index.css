@@ -64,7 +64,7 @@ body {
       transform: scale(0.9);
     }
   }
-  [role='menu'] {
+  & & {
     display: none;
     left: 100%;
     top: -0.8rem;
@@ -130,8 +130,4 @@ body {
   border: 0;
   height: 0.1rem;
   margin: 0.8rem 1.6rem;
-}
-
-[inert] {
-  border: 2px solid red;
 }
