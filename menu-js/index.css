@@ -131,3 +131,7 @@ body {
   height: 0.1rem;
   margin: 0.8rem 1.6rem;
 }
+
+[inert] {
+  border: 2px solid red;
+}
