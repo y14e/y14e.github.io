@@ -55,7 +55,7 @@ body {
     display: none;
     position: absolute;
     transition: 0.3s transform;
-    transform-origin: 50% 50%;
+    transform-origin: 0 0;
     z-index: calc(infinity);
     [data-menu-button] + & {
       margin-top: 0.8rem;

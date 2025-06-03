@@ -247,22 +247,24 @@ import { Menu } from './menu-floating-ui.js';
 document.querySelectorAll('[data-menu]').forEach(element => {
   const myMenu = new Menu(element, {
     floatingUi: {
-      middleware: [
-        flip({
-          padding: 8,
-        }),
-        offset(8),
-        shift(),
-      ],
-    },
-    submenuFloatingUi: {
-      middleware: [
-        flip(),
-        offset({
-          alignmentAxis: -8,
-        }),
-        shift(),
-      ],
+      menu: {
+        middleware: [
+          flip({
+            padding: 8,
+          }),
+          offset(8),
+          shift(),
+        ],
+      },
+      submenu: {
+        middleware: [
+          flip(),
+          offset({
+            alignmentAxis: -8,
+          }),
+          shift(),
+        ],
+      },
     },
   });
   element.querySelectorAll('[role="menuitem"]:not([aria-haspopup])').forEach(item => {

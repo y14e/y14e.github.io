@@ -55,7 +55,6 @@ body {
     display: none;
     position: absolute;
     transition: 0.3s transform;
-    transform-origin: 50% 50%;
     z-index: calc(infinity);
     &:not([aria-expanded='true'] + &) {
       transform: scale(0.95);
