@@ -57,7 +57,7 @@ body {
     transition: 0.3s transform;
     z-index: calc(infinity);
     &:not([aria-expanded='true'] + &) {
-      transform: scale(0.95);
+      transform: scale(0.9);
     }
   }
   [role='menu'] {
