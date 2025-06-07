@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>focusable-element.js</title>
+<style>
+  p:nth-child(2) {
+    border: 2px solid red;
+    content-visibility: hidden;
+  }
+</style>
+</head>
+<body>
+  <input type="text" placeholder="テキスト入力">
+  <button>ぼたん</button>
+  <audio controls></audio>
+  <p contenteditable="false">para</p>
+<details>
+  <summary>詳細</summary>
+  <p>詳細の内容</p>
+</details>
+<script type="module">
+import { getFocusableElements, getPreviousFocusableElement, getNextFocusableElement } from './focusable-element.js';
+document.querySelectorAll('*').forEach(element => {
+  element.addEventListener('focus', (event) => {
+    console.log(`Focused on: ${document.activeElement.tagName}`);
+    console.log(`Next focusable: ${getNextFocusableElement(null, null)?.tagName || null}`);
+    console.log(`Previous focusable: ${getPreviousFocusableElement(null, null)?.tagName || null}`);
+  });
+})
+</script>
+</body>
+</html>
