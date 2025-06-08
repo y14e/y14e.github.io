@@ -30,7 +30,7 @@ body {
     opacity: 0;
   }
 }
-[data-accordion-button] {
+[data-accordion-trigger] {
   align-items: center;
   background: rgb(0 0 0 / 0.1);
   display: flex;
