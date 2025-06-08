@@ -61,10 +61,6 @@ body {
       transform: scale(0.9);
     }
   }
-  & & {
-    display: none;
-    z-index: 1;
-  }
 }
 :has(> [role^='menuitem']) {
   position: relative;
