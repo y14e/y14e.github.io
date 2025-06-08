@@ -4,6 +4,8 @@
   font-size: 10px;
 }
 body {
+  background: linear-gradient(90deg, rgb(230 245 255 / 0.5) 1px, transparent 1px), linear-gradient(180deg, rgb(230 245 255 / 0.5) 1px, transparent 1px);
+  background-size: 0.8rem 0.8rem;
   font: 1.6rem / 1.5 Inter, sans-serif;
   padding: 3.2rem;
 }
