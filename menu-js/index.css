@@ -27,7 +27,6 @@ body {
   gap: 0.8rem;
   outline-offset: -2px;
   padding: 0.8rem 1.6rem;
-  position: relative;
   &::after {
     aspect-ratio: 1;
     background: currentColor;
@@ -66,9 +65,6 @@ body {
   & & {
     display: none;
   }
-}
-:has(> [role^='menuitem']) {
-  position: relative;
 }
 [role^='menuitem'] {
   cursor: pointer;
