@@ -9,10 +9,13 @@ body {
   font: 3.6rem / 1.5 Inter, 'Noto Sans JP', sans-serif;
   padding: 3.2rem;
 }
+[data-text-splitter] {
+  margin: -0.2rem;
+}
 [data-word] {
   background: rgba(0, 0, 0, 0.1);
   border-radius: 0.8rem;
-  line-height: 1;
+  line-height: 1.25;
   &:not([data-whitespace]) {
     margin: 0.2rem;
     padding: 0.4rem 0.2rem;
