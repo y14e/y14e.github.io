@@ -299,29 +299,30 @@
 <script type="module">
 import { flip, offset, shift } from 'https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.7.0/+esm';
 import { Menu } from './menu.js';
-document.querySelectorAll('[data-menu]').forEach(element => {
-  const myMenu = new Menu(element, {
-    popover: {
-      menu: {
-        middleware: [
-          flip({
-            padding: 4,
-          }),
-          offset(4),
-          shift(),
-        ],
-      },
-      submenu: {
-        middleware: [
-          flip(),
-          offset({
-            alignmentAxis: -8,
-          }),
-          shift(),
-        ],
-      },
+const options = {
+  popover: {
+    menu: {
+      middleware: [
+        flip({
+          padding: 4,
+        }),
+        offset(4),
+        shift(),
+      ],
     },
-  });
+    submenu: {
+      middleware: [
+        flip(),
+        offset({
+          alignmentAxis: -8,
+        }),
+        shift(),
+      ],
+    },
+  },
+};
+document.querySelectorAll('[data-menu]').forEach(element => {
+  const myMenu = new Menu(element, options);
   element.querySelectorAll('[role="menuitem"]:not([aria-haspopup])').forEach(item => {
     item.addEventListener('click', () => {
       console.log(item.textContent);
