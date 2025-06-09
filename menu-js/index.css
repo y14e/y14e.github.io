@@ -15,7 +15,7 @@ body {
   flex-wrap: wrap;
   gap: 1.6rem;
 }
-[data-menu-trigger] {
+[data-menu] [data-menu-trigger] {
   align-items: center;
   background: rgb(0 0 0 / 0.2);
   border-radius: 0.4rem;
@@ -55,7 +55,7 @@ body {
     transition: 0.3s transform;
     transform-origin: 0 0;
     z-index: calc(infinity);
-    &:not([aria-expanded='true'] + &) {
+    &:not([aria-expanded='true'] + &):not([data-context-menu-open]) {
       transform: scale(0.9);
     }
   }
@@ -119,4 +119,11 @@ body {
   border: 0;
   height: 0.1rem;
   margin: 0.8rem 1.6rem;
+}
+[data-context-menu] [data-menu-trigger] {
+  border: 0.2rem solid rgb(0 0 0 / 0.1);
+  border-radius: 0.4rem;
+  cursor: context-menu;
+  padding: 9.8rem;
+  text-align: center;
 }
