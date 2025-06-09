@@ -389,6 +389,19 @@ const myMenuOptions = {
     },
   },
 };
+const myContextMenuOptions = {
+  popover: {
+    submenu: {
+      middleware: [
+        flip(),
+        offset({
+          alignmentAxis: -8,
+        }),
+        shift(),
+      ],
+    },
+  },
+};
 document.querySelectorAll('[data-menu]').forEach(element => {
   const myMenu = new Menu(element, myMenuOptions);
   element.querySelectorAll('[role="menuitem"]:not([aria-haspopup])').forEach(item => {
@@ -412,7 +425,7 @@ document.querySelectorAll('[data-menu]').forEach(element => {
   });
 });
 document.querySelectorAll('[data-context-menu]').forEach(element => {
-  const myMenu = new ContextMenu(element, myMenuOptions);
+  const myMenu = new ContextMenu(element, myContextMenuOptions);
   element.querySelectorAll('[role="menuitem"]:not([aria-haspopup])').forEach(item => {
     item.addEventListener('click', () => {
       console.log(item.textContent);
