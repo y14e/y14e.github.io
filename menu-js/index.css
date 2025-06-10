@@ -47,7 +47,7 @@ body {
   background: #fff;
   border-radius: 0.4rem;
   box-shadow: 0 0 0.2rem rgb(0 0 0 / 0.1), 0 0.4rem 0.8rem rgb(0 0 0 / 0.2);
-  padding-block: 0.8rem;
+  padding: 0.4rem;
   white-space: nowrap;
   :is([data-menu-trigger], [aria-haspopup]) + & {
     display: none;
@@ -64,6 +64,7 @@ body {
 }
 [role^='menuitem'] {
   cursor: pointer;
+  border-radius: 0.4rem;
   display: block;
   outline-offset: -2px;
   padding: 0.8rem 1.6rem;
@@ -88,8 +89,12 @@ body {
     color: rgb(0 0 0 / 0.35);
     pointer-events: none;
   }
-  &:is([aria-expanded='true'], :hover) {
+  &:hover {
     background: rgb(0 0 0 / 0.1);
+  }
+  &[aria-expanded='true'] {
+    background: #000;
+    color: #fff;
   }
 }
 :is([role='menuitemcheckbox'], [role='menuitemradio']) {
