@@ -298,7 +298,7 @@
 <br><br><br><br><br>
 <div class="menu">
   <div data-context-menu>
-    <div data-menu-trigger>Context menu<br>(Right click to open)</div>
+    <div data-menu-trigger>Context menu<br>(Right click)</div>
     <ul role="menu">
       <li role="none"><button role="menuitem">Lorem</button></li>
       <li role="none"><button role="menuitem">Ipsum</button>
@@ -342,7 +342,7 @@
     </ul>
   </div>
   <div data-context-menu>
-    <div data-menu-trigger>Context menu<br>(Right click to open)</div>
+    <div data-menu-trigger>Context menu<br>(Right click)</div>
     <div role="menu">
       <ul role="group">
         <li role="none"><button role="menuitemcheckbox" aria-checked="false">Checkbox lorem</button></li>
@@ -362,11 +362,20 @@
       </ul>
     </div>
   </div>
+  <div data-context-menu>
+    <div data-menu-trigger>Context menu<br>(Right click)</div>
+    <ul role="menu">
+      <li role="none"><a role="menuitem" href="#anchor">Lorem</a></li>
+      <li role="none"><a role="menuitem" href="#anchor">Ipsum</a></li>
+      <li role="none"><a role="menuitem" href="#anchor" aria-disabled="true">Dolor (disabled)</a></li>
+      <li role="none"><a role="menuitem" href="#anchor">Sit</a></li>
+    </ul>
+  </div>
 </div>
 <a id="anchor"></a>
 <script type="module">
 import { flip, offset, shift } from 'https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.7.0/+esm';
-import { Menu, ContextMenu } from './menu.js';
+import { Menu, ContextMenu } from './menu-ctx.js';
 const myMenuOptions = {
   popover: {
     menu: {

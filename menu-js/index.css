@@ -128,6 +128,8 @@ body {
   border: 0.2rem solid rgb(0 0 0 / 0.1);
   border-radius: 0.4rem;
   cursor: context-menu;
-  padding: 9.8rem;
+  padding: 15.6rem 7.6rem;
   text-align: center;
+  -webkit-user-select: none;
+  user-select: none;
 }
