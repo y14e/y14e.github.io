@@ -133,10 +133,9 @@ export class Tabs {
     }
     const tab = focusables[newIndex];
     tab.focus();
-    if (this.settings.manual) {
-      return;
+    if (!this.settings.manual) {
+      tab.click();
     }
-    tab.click();
   }
 
   handlePanelBeforeMatch(event) {

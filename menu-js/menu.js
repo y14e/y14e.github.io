@@ -60,8 +60,8 @@ export class Menu {
     this.listElement = this.rootElement.querySelector(this.settings.selector.list);
     this.itemElements = [...this.listElement.querySelectorAll(`${this.settings.selector.item}:not(:scope ${this.settings.selector.list} *)`)];
     this.itemElementsByInitial = {};
-    this.checkboxItemElements = this.itemElements.filter(item => item.role === 'menuitemcheckbox');
-    this.radioItemElements = this.itemElements.filter(item => item.role === 'menuitemradio');
+    this.checkboxItemElements = this.itemElements.filter(item => item.getAttribute('role') === 'menuitemcheckbox');
+    this.radioItemElements = this.itemElements.filter(item => item.getAttribute('role') === 'menuitemradio');
     this.radioItemElementsByGroup = new Map();
     this.animation = null;
     this.submenus = [];
@@ -91,7 +91,7 @@ export class Menu {
     this.itemElements.forEach(item => {
       const initial = item.textContent.trim().charAt(0).toLowerCase();
       if (/\S/.test(initial)) {
-        item.ariaKeyshortcuts = initial;
+        item.setAttribute('aria-keyshortcuts', initial);
         (this.itemElementsByInitial[initial] ||= []).push(item);
       }
     });
@@ -109,16 +109,16 @@ export class Menu {
     if (!this.isContextMenu && this.triggerElement) {
       const id = Math.random().toString(36).slice(-8);
       this.triggerElement.setAttribute('aria-controls', (this.listElement.id ||= `menu-list-${id}`));
-      this.triggerElement.ariaExpanded = 'false';
-      this.triggerElement.ariaHasPopup = 'menu';
-      this.triggerElement.id ||= `menu-trigger-${id}`;
-      this.triggerElement.tabIndex = this.isFocusable(this.triggerElement) && !this.isSubmenu ? 0 : -1;
+      this.triggerElement.setAttribute('aria-expanded', 'false');
+      this.triggerElement.setAttribute('aria-haspopup', 'menu');
+      this.triggerElement.setAttribute('id', this.triggerElement.getAttribute('id') || `menu-trigger-${id}`);
+      this.triggerElement.setAttribute('tabindex', this.isFocusable(this.triggerElement) && !this.isSubmenu ? '0' : '-1');
       if (!this.isFocusable(this.triggerElement)) {
         this.triggerElement.style.setProperty('pointer-events', 'none');
       }
       this.triggerElement.addEventListener('click', this.handleTriggerClick);
       this.triggerElement.addEventListener('keydown', this.handleTriggerKeyDown);
-      this.listElement.setAttribute('aria-labelledby', `${this.listElement.getAttribute('aria-labelledby') || ''} ${this.triggerElement.id}`.trim());
+      this.listElement.setAttribute('aria-labelledby', `${this.listElement.getAttribute('aria-labelledby') || ''} ${this.triggerElement.getAttribute('id')}`.trim());
     }
     this.itemElements.forEach(item => {
       item.addEventListener('keydown', this.handleItemKeyDown);
@@ -158,19 +158,23 @@ export class Menu {
   }
 
   isFocusable(element) {
-    return element.ariaDisabled !== 'true' && !element.hasAttribute('disabled');
+    return element.getAttribute('aria-disabled') !== 'true' && !element.hasAttribute('disabled');
   }
 
   resetTabIndex() {
-    const focusable = this.itemElements.find(item => this.isFocusable(item));
-    this.itemElements.forEach(item => (item.tabIndex = item === focusable ? 0 : -1));
+    this.itemElements.forEach(item => {
+      item.removeAttribute('tabindex');
+    });
+    this.itemElements.forEach(item => {
+      item.setAttribute('tabindex', this.isFocusable(item) && this.itemElements.filter(this.isFocusable).findIndex(item => item.getAttribute('tabindex') === '0') === -1 ? '0' : '-1');
+    });
   }
 
   toggle(open) {
     if (this.triggerElement) {
       window.requestAnimationFrame(() => {
         if (!this.isContextMenu) {
-          this.triggerElement.ariaExpanded = String(open);
+          this.triggerElement.setAttribute('aria-expanded', String(open));
         } else {
           if (open) {
             this.listElement.setAttribute('data-context-menu-open', '');
@@ -269,18 +273,19 @@ export class Menu {
   }
 
   handleRootFocusOut(event) {
-    if (!event.relatedTarget || this.rootElement.contains(event.relatedTarget) || (!this.isContextMenu && !!this.triggerElement && this.triggerElement.ariaExpanded === 'false') || (!this.isContextMenu && this.listElement.hasAttribute('data-context-menu-open'))) {
+    if (!event.relatedTarget || this.rootElement.contains(event.relatedTarget) || (!this.isContextMenu && this.triggerElement?.getAttribute('aria-expanded') !== 'true') || (!this.isContextMenu && this.listElement.hasAttribute('data-context-menu-open'))) {
       return;
     }
-    this.resetTabIndex();
     if (this.triggerElement) {
       this.close();
+    } else {
+      this.resetTabIndex();
     }
   }
 
   handleTriggerClick(event) {
     event.preventDefault();
-    const open = this.triggerElement.ariaExpanded === 'true' || this.listElement.hasAttribute('data-context-menu-open');
+    const open = this.triggerElement.getAttribute('aria-expanded') === 'true' || this.listElement.hasAttribute('data-context-menu-open');
     if (!this.isSubmenu || event.pointerType !== 'mouse') {
       this.toggle(!open);
     }
@@ -299,13 +304,19 @@ export class Menu {
 
   handleTriggerKeyDown(event) {
     const { key } = event;
-    const keys = ['Enter', 'Escape', ' ', ...(!this.isSubmenu ? ['ArrowUp', 'ArrowDown'] : ['ArrowRight'])];
+    const keys = ['Enter', 'Escape', ' ', 'ArrowUp', 'ArrowDown'];
+    if (this.isSubmenu) {
+      keys.push('ArrowRight');
+    }
     if (!keys.includes(key)) {
       return;
     }
     event.preventDefault();
     if (['Escape'].includes(key)) {
       this.close();
+      return;
+    }
+    if (this.isSubmenu && key !== 'ArrowRight') {
       return;
     }
     this.open();
@@ -351,12 +362,10 @@ export class Menu {
       return;
     }
     const focusables = this.itemElements.filter(this.isFocusable);
-    const currentIndex = focusables.indexOf(current);
-    focusables[currentIndex].tabIndex = -1;
-    let focusable;
     if (['End', 'Home', 'ArrowUp', 'ArrowDown'].includes(key)) {
-      let newIndex;
+      const currentIndex = focusables.indexOf(current);
       const length = focusables.length;
+      let newIndex;
       switch (key) {
         case 'End':
           newIndex = length - 1;
@@ -371,25 +380,27 @@ export class Menu {
           newIndex = (currentIndex + 1) % length;
           break;
       }
-      focusable = focusables[newIndex];
-    } else {
-      const focusablesByInitial = this.itemElementsByInitial[key.toLowerCase()].filter(this.isFocusable);
-      const nextIndex = focusablesByInitial.findIndex(focusable => focusables.indexOf(focusable) > currentIndex);
-      focusable = focusablesByInitial[nextIndex !== -1 ? nextIndex : 0];
+      if (!this.triggerElement) {
+        focusables[currentIndex].setAttribute('tabindex', '-1');
+        focusables[newIndex].setAttribute('tabindex', '0');
+      }
+      focusables[newIndex].focus();
+      return;
     }
-    focusable.tabIndex = 0;
-    focusable.focus();
+    const focusablesByInitial = this.itemElementsByInitial[key.toLowerCase()].filter(this.isFocusable);
+    const index = focusablesByInitial.findIndex(focusable => focusables.indexOf(focusable) > focusables.indexOf(current));
+    focusablesByInitial[index !== -1 ? index : 0].focus();
   }
 
   handleCheckboxItemClick(event) {
     const item = event.currentTarget;
-    item.ariaChecked = String(item.ariaChecked === 'false');
+    item.setAttribute('aria-checked', String(item.getAttribute('aria-checked') !== 'true'));
   }
 
   handleRadioItemClick(event) {
     const target = event.currentTarget;
     this.radioItemElementsByGroup.get(target.closest('[role="group"]') || this.rootElement).forEach(item => {
-      item.ariaChecked = String(item === target);
+      item.setAttribute('aria-checked', String(item === target));
     });
   }
 
@@ -430,7 +441,7 @@ export class Menu {
   }
 
   open() {
-    if ((!this.isContextMenu && (!this.triggerElement || this.triggerElement.ariaExpanded === 'true')) || (this.isContextMenu && this.listElement.hasAttribute('data-context-menu-open'))) {
+    if ((!this.isContextMenu && (!this.triggerElement || this.triggerElement.getAttribute('aria-expanded') === 'true')) || (this.isContextMenu && this.listElement.hasAttribute('data-context-menu-open'))) {
       return;
     }
     this.toggle(true);
@@ -443,7 +454,7 @@ export class Menu {
         submenu.close();
       });
     }
-    if ((!this.isContextMenu && (!this.triggerElement || this.triggerElement.ariaExpanded === 'false')) || (this.isContextMenu && !this.listElement.hasAttribute('data-context-menu-open'))) {
+    if ((!this.isContextMenu && (!this.triggerElement || this.triggerElement.getAttribute('aria-expanded') !== 'true')) || (this.isContextMenu && !this.listElement.hasAttribute('data-context-menu-open'))) {
       return;
     }
     this.toggle(false);
