@@ -15,29 +15,20 @@ export class Disclosure {
     }
     this.summaryElements.forEach(summary => {
       if (!this.isFocusable(summary.parentElement)) {
-        summary.setAttribute('tabindex', '-1');
+        summary.tabIndex = -1;
         summary.style.setProperty('pointer-events', 'none');
       }
       summary.addEventListener('keydown', this.handleSummaryKeyDown);
-    });
-    this.contentElements.forEach(content => {
-      if (!this.isFocusable(content.parentElement)) {
-        content.setAttribute('hidden', '');
-      }
     });
     this.rootElement.setAttribute('data-disclosure-initialized', '');
   }
 
   isFocusable(element) {
-    return element.getAttribute('aria-disabled') !== 'true' && !element.hasAttribute('disabled');
+    return element.ariaDisabled !== 'true';
   }
 
   toggle(details, open) {
-    if (open) {
-      details.setAttribute('open', '');
-    } else {
-      details.removeAttribute('open');
-    }
+    details.open = open;
   }
 
   handleSummaryKeyDown(event) {
@@ -68,14 +59,14 @@ export class Disclosure {
   }
 
   open(details) {
-    if (details.hasAttribute('open')) {
+    if (details.open) {
       return;
     }
     this.toggle(details, true);
   }
 
   close(details) {
-    if (!details.hasAttribute('open')) {
+    if (!details.open) {
       return;
     }
     this.toggle(details, false);
