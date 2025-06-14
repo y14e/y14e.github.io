@@ -4,7 +4,9 @@ export class Menu {
   static menus = [];
 
   constructor(root, options, submenu = false, contextMenu = false) {
-    Menu.menus.push(this);
+    if (!root) {
+      return;
+    }
     this.rootElement = root;
     this.defaults = {
       selector: {
@@ -123,19 +125,16 @@ export class Menu {
       item.addEventListener('pointerover', this.handleItemPointerOver);
     });
     if (this.checkboxItemElements.length) {
-      this.checkboxItemElements.forEach(item => {
-        item.addEventListener('click', this.handleCheckboxItemClick);
-      });
+      this.checkboxItemElements.forEach(item => item.addEventListener('click', this.handleCheckboxItemClick));
     }
     if (this.radioItemElements.length) {
-      this.radioItemElements.forEach(item => {
-        item.addEventListener('click', this.handleRadioItemClick);
-      });
+      this.radioItemElements.forEach(item => item.addEventListener('click', this.handleRadioItemClick));
     }
     this.resetTabIndex();
     if (!this.isSubmenu) {
       this.rootElement.setAttribute('data-menu-initialized', '');
     }
+    Menu.menus.push(this);
   }
 
   isFocusable(element) {
@@ -174,11 +173,7 @@ export class Menu {
       });
     }
     if (open) {
-      Menu.menus
-        .filter(menu => !menu.rootElement.contains(this.rootElement))
-        .forEach(menu => {
-          menu.close();
-        });
+      Menu.menus.filter(menu => !menu.rootElement.contains(this.rootElement)).forEach(menu => menu.close());
       Object.assign(this.listElement.style, {
         display: 'block',
         opacity: '0',
@@ -197,9 +192,7 @@ export class Menu {
     } else {
       if (this.submenus.length) {
         window.clearTimeout(this.submenuTimer);
-        this.submenus.forEach(submenu => {
-          submenu.close();
-        });
+        this.submenus.forEach(submenu => submenu.close());
       }
       if (this.triggerElement && this.rootElement.contains(document.activeElement)) {
         this.triggerElement.focus();
@@ -364,12 +357,16 @@ export class Menu {
     }
     event.preventDefault();
     const focusables = this.itemElements.filter(this.isFocusable);
-    const current = document.activeElement;
+    const length = focusables.length;
+    const active = document.activeElement;
+    const current = active instanceof HTMLElement ? active : null;
+    if (!current) {
+      return;
+    }
     const currentIndex = focusables.indexOf(current);
     if (currentIndex === -1) {
       return;
     }
-    const length = focusables.length;
     let newIndex;
     let targetFocusables = focusables;
     switch (key) {
@@ -470,9 +467,7 @@ export class ContextMenu extends Menu {
     this.handleTriggerLongPressCancel = this.handleTriggerLongPressCancel.bind(this);
     this.handleTriggerPointerDown = this.handleTriggerPointerDown.bind(this);
     this.triggerElement.addEventListener('contextmenu', this.handleTriggerContextMenu);
-    ['pointercancel', 'pointerleave', 'pointerup'].forEach(name => {
-      this.triggerElement.addEventListener(name, this.handleTriggerLongPressCancel);
-    });
+    ['pointercancel', 'pointerleave', 'pointerup'].forEach(name => this.triggerElement.addEventListener(name, this.handleTriggerLongPressCancel));
     this.triggerElement.addEventListener('pointerdown', this.handleTriggerPointerDown);
   }
 
