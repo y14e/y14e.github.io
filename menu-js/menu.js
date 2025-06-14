@@ -31,25 +31,13 @@ export class Menu {
     this.settings = {
       ...this.defaults,
       ...options,
-      selector: {
-        ...this.defaults.selector,
-        ...options?.selector,
-      },
-      animation: {
-        ...this.defaults.animation,
-        ...options?.animation,
-      },
+      selector: { ...this.defaults.selector, ...options?.selector },
+      animation: { ...this.defaults.animation, ...options?.animation },
       popover: {
         ...this.defaults.popover,
         ...options?.popover,
-        menu: {
-          ...this.defaults.popover.menu,
-          ...options?.popover?.menu,
-        },
-        submenu: {
-          ...this.defaults.popover.submenu,
-          ...options?.popover?.submenu,
-        },
+        menu: { ...this.defaults.popover.menu, ...options?.popover?.menu },
+        submenu: { ...this.defaults.popover.submenu, ...options?.popover?.submenu },
       },
     };
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {

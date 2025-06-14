@@ -213,14 +213,8 @@ export class Tabs {
     this.contentAnimation.addEventListener('finish', () => {
       this.contentAnimation = null;
       this.rootElement.removeAttribute('data-tabs-animating');
-      ['block-size', 'overflow', 'position'].forEach(name => {
-        this.contentElement.style.removeProperty(name);
-      });
-      this.panelElements.forEach(panel => {
-        ['content-visibility', 'display', 'position'].forEach(name => {
-          panel.style.removeProperty(name);
-        });
-      });
+      ['block-size', 'overflow', 'position'].forEach(name => this.contentElement.style.removeProperty(name));
+      this.panelElements.forEach(panel => ['content-visibility', 'display', 'position'].forEach(name => panel.style.removeProperty(name)));
     });
     if (this.settings.animation.content.crossFade) {
       this.panelElements.forEach((panel, i) => {
