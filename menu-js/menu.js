@@ -79,6 +79,7 @@ export class Menu {
       this.popoverReferenceElement = this.triggerElement;
     }
     this.cleanupPopover = null;
+    this.handleOutsidePointerDown = this.handleOutsidePointerDown.bind(this);
     this.handleRootFocusIn = this.handleRootFocusIn.bind(this);
     this.handleRootFocusOut = this.handleRootFocusOut.bind(this);
     this.handleTriggerClick = this.handleTriggerClick.bind(this);
@@ -97,6 +98,7 @@ export class Menu {
     if ((this.isContextMenu && !this.triggerElement) || !this.listElement || !this.itemElements.length) {
       return;
     }
+    document.addEventListener('pointerdown', this.handleOutsidePointerDown);
     this.rootElement.addEventListener('focusin', this.handleRootFocusIn);
     this.rootElement.addEventListener('focusout', this.handleRootFocusOut);
     if (!this.isContextMenu && this.triggerElement) {
@@ -257,6 +259,14 @@ export class Menu {
     if (!this.cleanupPopover) {
       this.cleanupPopover = autoUpdate(this.popoverReferenceElement, this.listElement, compute);
     }
+  }
+
+  handleOutsidePointerDown(event) {
+    if (this[!this.isContextMenu ? 'rootElement' : 'listElement'].contains(event.currentTarget) || !this.triggerElement) {
+      return;
+    }
+    this.resetTabIndex();
+    this.close();
   }
 
   handleRootFocusIn(event) {
