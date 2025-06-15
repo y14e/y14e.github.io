@@ -399,13 +399,13 @@ export class Menu {
 
   handleItemPointerOver(event) {
     window.clearTimeout(this.submenuTimer);
-    const target = event.currentTarget;
+    const item = event.currentTarget;
     this.submenuTimer = window.setTimeout(() => {
       if (this.submenus.length) {
-        this.submenus.forEach(submenu => submenu.toggle(submenu.triggerElement === target));
+        this.submenus.forEach(submenu => submenu.toggle(submenu.triggerElement === item));
       }
-      target.tabIndex = 0;
-      target.focus();
+      item.tabIndex = 0;
+      item.focus();
     }, this.settings.delay);
   }
 
