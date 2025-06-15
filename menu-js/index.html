@@ -295,123 +295,17 @@
     </ul>
   </div>
 </div>
-<br><br><br><br><br>
-<div class="menu">
-  <div data-context-menu>
-    <div data-menu-trigger>Context menu<br>(Right click / Long press)</div>
-    <ul role="menu">
-      <li role="none"><button role="menuitem">Lorem</button></li>
-      <li role="none"><button role="menuitem">Ipsum</button>
-        <ul role="menu">
-          <li role="none"><button role="menuitem">Sub lorem</button></li>
-          <li role="none"><button role="menuitem" disabled>Sub ipsum (disabled)</button></li>
-          <li role="none"><button role="menuitem">Sub dolor</button>
-            <ul role="menu">
-              <li role="none"><button role="menuitem" disabled>Sub sub lorem (disabled)</button></li>
-              <li role="none"><button role="menuitem">Sub sub ipsum</button></li>
-              <li role="none"><button role="menuitem">Sub sub dolor</button></li>
-              <li role="none"><button role="menuitem">Sub sub sit</button>
-                <ul role="menu">
-                  <li role="none"><button role="menuitem">Sub sub sub lorem</button></li>
-                  <li role="none"><button role="menuitem">Sub sub sub ipsum</button></li>
-                  <li role="none"><button role="menuitem">Sub sub sub dolor</button></li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-          <li role="none"><button role="menuitem">Sub sit</button>
-            <ul role="menu">
-              <li role="none"><button role="menuitem">Sub sub lorem</button></li>
-              <li role="none"><button role="menuitem">Sub sub ipsum</button></li>
-            </ul>
-          </li>
-          <li role="none"><button role="menuitem">Sub amet</button></li>
-        </ul>
-      </li>
-      <li role="none"><button role="menuitem" disabled>Dolor (disabled)</button></li>
-      <li role="none"><button role="menuitem">Sit</button></li>
-      <li role="none"><button role="menuitem" disabled>Amet (disabled)</button>
-        <ul role="menu">
-          <li role="none"><button role="menuitem">Sub lorem</button></li>
-          <li role="none"><button role="menuitem">Sub ipsum</button></li>
-        </ul>
-      </li>
-      <li role="none"><button role="menuitem">Consectetur</button></li>
-      <li role="none"><button role="menuitem">Adipiscing</button></li>
-      <li role="none"><button role="menuitem">Elit</button></li>
-    </ul>
-  </div>
-  <div data-context-menu>
-    <div data-menu-trigger>Context menu<br>(Right click / Long press)</div>
-    <div role="menu">
-      <ul role="group">
-        <li role="none"><button role="menuitemcheckbox" aria-checked="false">Checkbox lorem</button></li>
-        <li role="none"><button role="menuitemcheckbox" aria-checked="true">Checkbox ipsum</button></li>
-        <li role="none"><button role="menuitemcheckbox" aria-checked="false">Checkbox dolor</button></li>
-      </ul>
-      <hr role="separator">
-      <ul role="group">
-        <li role="none"><button role="menuitemradio" aria-checked="true">Radio sit</button></li>
-        <li role="none"><button role="menuitemradio" aria-checked="false">Radio amet</button></li>
-        <li role="none"><button role="menuitemradio" aria-checked="false">Radio consectetur</button></li>
-      </ul>
-      <hr role="separator">
-      <ul role="group">
-        <li role="none"><button role="menuitemradio" aria-checked="false">Radio adipiscing</button></li>
-        <li role="none"><button role="menuitemradio" aria-checked="true">Radio elit</button></li>
-      </ul>
-    </div>
-  </div>
-  <div data-context-menu>
-    <div data-menu-trigger>Context menu<br>(Right click / Long press)</div>
-    <ul role="menu">
-      <li role="none"><a role="menuitem" href="#anchor">Lorem</a></li>
-      <li role="none"><a role="menuitem" href="#anchor">Ipsum</a></li>
-      <li role="none"><a role="menuitem" href="#anchor" aria-disabled="true">Dolor (disabled)</a></li>
-      <li role="none"><a role="menuitem" href="#anchor">Sit</a></li>
-    </ul>
-  </div>
-</div>
 <a id="anchor"></a>
 <script type="module">
 import { flip, offset, shift } from 'https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.7.1/+esm';
-import { Menu, ContextMenu } from './menu.js';
+import { Menu } from './menu.js';
 const myMenuOptions = {
   popover: {
     menu: {
-      middleware: [
-        flip({
-          padding: 4,
-        }),
-        offset(4),
-        shift(),
-      ],
+      middleware: [flip({ padding: 4 }), offset(4), shift()],
     },
     submenu: {
-      middleware: [
-        flip(),
-        offset({
-          alignmentAxis: -4,
-          mainAxis: 4,
-        }),
-        shift({
-          mainAxis: false,
-        }),
-      ],
-    },
-  },
-};
-const myContextMenuOptions = {
-  popover: {
-    submenu: {
-      middleware: [
-        flip(),
-        offset({
-          alignmentAxis: -4,
-          mainAxis: 4,
-        }),
-        shift(),
-      ],
+      middleware: [flip(), offset({ alignmentAxis: -4, mainAxis: 4 }), shift({ mainAxis: false })],
     },
   },
 };
@@ -435,28 +329,6 @@ document.querySelectorAll('[data-menu]').forEach(element => {
   });
   window.addEventListener('blur', () => {
     myMenu.close();
-  });
-});
-document.querySelectorAll('[data-context-menu]').forEach(element => {
-  const myContextMenu = new ContextMenu(element, myContextMenuOptions);
-  element.querySelectorAll('[role="menuitem"]:not([aria-haspopup])').forEach(item => {
-    item.addEventListener('click', () => {
-      console.log(item.textContent);
-      myContextMenu.close();
-    });
-  });
-  element.querySelectorAll('[role="menuitemcheckbox"]').forEach(item => {
-    item.addEventListener('click', () => {
-      console.log([...item.closest('[role="group"]').querySelectorAll('[role="menuitemcheckbox"]')].filter(item => item.getAttribute('aria-checked') === 'true').map(item => item.textContent));
-    });
-  });
-  element.querySelectorAll('[role="menuitemradio"]').forEach(item => {
-    item.addEventListener('click', () => {
-      console.log([...item.closest('[role="group"]').querySelectorAll('[role="menuitemradio"]')].filter(item => item.getAttribute('aria-checked') === 'true').map(item => item.textContent));
-    });
-  });
-  window.addEventListener('blur', () => {
-    myContextMenu.close();
   });
 });
 </script>
