@@ -317,8 +317,8 @@ document.querySelectorAll('[data-menu]').forEach(element => {
       myMenu.close();
     });
   });
-  element.querySelectorAll('[role="menuitemcheckbox"]').forEach(item => item.addEventListener('click', () => console.log([...item.closest('[role="group"]').querySelectorAll('[role="menuitemcheckbox"]')].filter(item => item.getAttribute('aria-checked') === 'true').map(item => item.textContent))));
-  element.querySelectorAll('[role="menuitemradio"]').forEach(item => item.addEventListener('click', () => console.log([...item.closest('[role="group"]').querySelectorAll('[role="menuitemradio"]')].filter(item => item.getAttribute('aria-checked') === 'true').map(item => item.textContent))));
+  element.querySelectorAll('[role="menuitemcheckbox"]').forEach(item => item.addEventListener('click', () => console.log([...(item.closest('[role="group"]') || item.closest('[role="menu"]')).querySelectorAll('[role="menuitemcheckbox"]')].filter(item => item.getAttribute('aria-checked') === 'true').map(item => item.textContent))));
+  element.querySelectorAll('[role="menuitemradio"]').forEach(item => item.addEventListener('click', () => console.log([...(item.closest('[role="group"]') || item.closest('[role="menu"]')).querySelectorAll('[role="menuitemradio"]')].filter(item => item.getAttribute('aria-checked') === 'true').map(item => item.textContent))));
   window.addEventListener('blur', () => myMenu.close());
 });
 </script>
