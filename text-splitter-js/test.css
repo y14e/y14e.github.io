@@ -1,0 +1,35 @@
+@import 'https://cdn.jsdelivr.net/npm/destyle.css@4.0.1/destyle.min.css';
+@import 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+JP:wght@100..900&display=swap';
+:root {
+  font-size: 10px;
+}
+body {
+  background: linear-gradient(90deg, rgb(230 245 255 / 0.5) 0.1rem, transparent 0.1rem), linear-gradient(180deg, rgb(230 245 255 / 0.5) 0.1rem, transparent 0.1rem);
+  background-size: 0.8rem 0.8rem;
+  font: 3.6rem / 1.5 Inter, 'Noto Sans JP', sans-serif;
+  padding: 3.2rem;
+}
+[data-text-splitter] {
+  margin: -0.2rem;
+}
+[data-word] {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 0.8rem;
+  line-height: 1.25;
+  &:not([data-whitespace]) {
+    margin: 0.2rem;
+    padding: 0.4rem 0.2rem;
+  }
+}
+[data-char] {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 0.6rem;
+  &:not([data-whitespace]) {
+    margin-inline: 0.2rem;
+    padding: 0.2rem;
+  }
+}
+[data-whitespace] {
+  margin-inline: 0.2rem;
+  opacity: 0.5;
+}

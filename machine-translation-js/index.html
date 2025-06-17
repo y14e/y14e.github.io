@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>machine-translation.js</title>
+<link rel="stylesheet" href="./index.css">
+</head>
+<body>
+<p>Let’s translate!</p>
+<p>翻訳してみましょう!</p>
+<script type="module">
+import { detectMachineTranslation } from './machine-translation.js';
+detectMachineTranslation();
+window.addEventListener('machineTranslationDetected', () => window.alert('Machine translation detected!'));
+</script>
+</body>
+</html>

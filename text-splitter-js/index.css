@@ -1,0 +1,38 @@
+@import 'https://cdn.jsdelivr.net/npm/destyle.css@4.0.1/destyle.min.css';
+@import 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Noto+Sans+JP:wght@100..900&display=swap';
+:root {
+  font-size: 10px;
+}
+body {
+  background: linear-gradient(90deg, rgb(230 245 255 / 0.5) 0.1rem, transparent 0.1rem), linear-gradient(180deg, rgb(230 245 255 / 0.5) 0.1rem, transparent 0.1rem);
+  background-size: 0.8rem 0.8rem;
+  font: 2.4rem / 1.5 Inter, 'Noto Sans JP', sans-serif;
+  padding: 3.2rem;
+}
+[data-text-splitter]:not(.is-animate) {
+  visibility: hidden;
+}
+[data-char] {
+  opacity: 0;
+  transition-delay: calc(var(--char-index) / var(--char-length) * 3s);
+  transition-duration: 0.3s;
+  transition-property: opacity, transform;
+  transform: translateY(1em) scale(0.8);
+  .is-animate & {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+a {
+  &,
+  * {
+    text-decoration: underline;
+  }
+  transition: 0.3s opacity;
+  * {
+    display: inline-block;
+  }
+  &:hover {
+    opacity: 0.5;
+  }
+}

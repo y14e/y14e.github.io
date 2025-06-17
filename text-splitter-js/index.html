@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>text-splitter.js</title>
+<link href="./index.css" rel="stylesheet">
+</head>
+<body>
+<p data-text-splitter="1">🐻<b style="color: #66c;">Lorem ipsum</b> dolor <b style="color: #c69;">sit amet</b>, consectetur <b style="color: #f96;">adipiscing elit</b>, sed do eiusmod tempor (incididunt) 3.14159 ut labore et <a href="#">dolore magna</a> aliqua. Ut enim ad [minim veniam], quis nostrud {exercitation} ullamco laboris nisi ut aliquip ex ea “commodo consequat”. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.🐻‍❄️</p>
+<br><br>
+<p data-text-splitter="2">🐻<b style="color: #66c;">Lorem ipsum</b> dolor <b style="color: #c69;">sit amet</b>, consectetur <b style="color: #f96;">adipiscing elit</b>, sed do eiusmod tempor (incididunt) 3.14159 ut labore et <a href="#">dolore magna</a> aliqua. Ut enim ad [minim veniam], quis nostrud {exercitation} ullamco laboris nisi ut aliquip ex ea “commodo consequat”. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. No line breaking rules.🐻‍❄️</p>
+<br><br>
+<p data-text-splitter="3" lang="ja">🐻波瀾も曲折もない<b style="color: #66c;">単調な生活</b>を続けて来た時、私は<b style="color: #c69;">少なからず</b>、驚きました……。鄭寧に――重ねて、<b style="color: #f96;">そりゃご心配</b>ですね（笑々）と3.14159秒いったまま、<a href="#">腕組みをしてくれ</a>といいました。えゝ来ました。日本人、Lorem ipsum dolor sit amet、ことに「『日本』の若いウーマン」は、そんな【利害の念】に頭を悩ます余地がなかった。🐻‍❄️</p>
+<br><br>
+<p data-text-splitter="4" lang="ja">🐻波瀾も曲折もない<b style="color: #66c;">単調な生活</b>を続けて来た時、私は<b style="color: #c69;">少なからず</b>、驚きました……。鄭寧に――重ねて、<b style="color: #f96;">そりゃご心配</b>ですね（笑々）と3.14159秒いったまま、<a href="#">腕組みをしてくれ</a>といいました。えゝ来ました。日本人、Lorem ipsum dolor sit amet、ことに「『日本』の若いウーマン」は、そんな【利害の念】に頭を悩ます余地がなかった。禁則処理なし。🐻‍❄️</p>
+<script type="module">
+import { TextSplitter } from './text-splitter.js';
+const ts1 = new TextSplitter(document.querySelector('[data-text-splitter="1"]'));
+const ts2 = new TextSplitter(document.querySelector('[data-text-splitter="2"]'), { lineBreakingRules: false });
+const ts3 = new TextSplitter(document.querySelector('[data-text-splitter="3"]'), { concatChar: true });
+const ts4 = new TextSplitter(document.querySelector('[data-text-splitter="4"]'), {
+  lineBreakingRules: false,
+  wordSegmenter: true,
+});
+window.addEventListener('load', () => document.querySelectorAll('[data-text-splitter]').forEach(element => element.classList.add('is-animate')));
+document.addEventListener('dblclick', () => {
+  ts1.destroy();
+  ts2.destroy();
+  ts3.destroy();
+  ts4.destroy();
+});
+</script>
+</body>
+</html>
