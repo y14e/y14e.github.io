@@ -28,9 +28,6 @@ body {
     padding: 3.2rem;
     transition: 0.3s opacity;
   }
-  &:has([aria-expanded='false']) + * > * {
-    opacity: 0;
-  }
 }
 [data-accordion-trigger] {
   align-items: center;
