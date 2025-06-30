@@ -24,9 +24,11 @@ body {
   font-weight: bold;
   user-select: none;
   & + * > * {
-    opacity: 1;
     padding: 3.2rem;
     transition: 0.3s opacity;
+  }
+  &:has([aria-expanded='false']) + * > * {
+    opacity: 0;
   }
 }
 [data-accordion-trigger] {
