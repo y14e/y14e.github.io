@@ -63,7 +63,4 @@ summary {
   details:not([data-disclosure-open]) > & + * > * {
     opacity: 0;
   }
-  details[data-disclosure-open] > & + * > * {
-    opacity: 1;
-  }
 }
