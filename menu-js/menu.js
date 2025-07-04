@@ -157,7 +157,7 @@ export class Menu {
   }
 
   isFocusable(element) {
-    return element.ariaDisabled !== 'true' && !element.hasAttribute('disabled');
+    return element.ariaDisabled !== 'true' && !element.disabled;
   }
 
   resetTabIndex(force = false) {

@@ -100,7 +100,7 @@ export class Tabs {
     }
     this.panelElements.forEach(panel => {
       panel.setAttribute('role', 'tabpanel');
-      if (!panel.hasAttribute('hidden')) {
+      if (!panel.hidden) {
         panel.setAttribute('tabindex', '0');
       }
       panel.addEventListener('beforematch', this.handlePanelBeforeMatch);
@@ -121,7 +121,7 @@ export class Tabs {
   }
 
   isFocusable(element) {
-    return element.getAttribute('aria-hidden') !== 'true' && !element.hasAttribute('disabled');
+    return element.getAttribute('aria-hidden') !== 'true' && !element.disabled;
   }
 
   handleTabClick(event) {
@@ -218,7 +218,7 @@ export class Tabs {
     const size = parseInt(window.getComputedStyle(this.contentElement).getPropertyValue('block-size')) || parseInt(window.getComputedStyle(this.panelElements.find(panel => !panel.hidden)).getPropertyValue('block-size'));
     this.panelElements.forEach((panel, i) => {
       if (panel.id === id) {
-        panel.removeAttribute('hidden');
+        panel.hidden = false;
       } else {
         panel.setAttribute('hidden', this.isFocusable(this.tabElements[i]) ? 'until-found' : '');
       }
