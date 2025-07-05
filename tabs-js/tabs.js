@@ -69,7 +69,7 @@ export class Tabs {
     });
     this.tabElements.forEach((tab, i) => {
       const id = Math.random().toString(36).slice(-8);
-      tab.setAttribute('aria-controls', (this.panelElements[i % this.panelElements.length].id ||= `tab-panel-${id}`));
+      tab.setAttribute('aria-controls', (this.panelElements[i % this.panelElements.length].id ||= `tabs-panel-${id}`));
       if (!tab.hasAttribute('aria-selected')) {
         tab.setAttribute('aria-selected', 'false');
       }
@@ -100,7 +100,7 @@ export class Tabs {
     }
     this.panelElements.forEach(panel => {
       panel.setAttribute('role', 'tabpanel');
-      if (!panel.hidden) {
+      if (!panel.hasAttribute('hidden')) {
         panel.setAttribute('tabindex', '0');
       }
       panel.addEventListener('beforematch', this.handlePanelBeforeMatch);
@@ -218,7 +218,7 @@ export class Tabs {
     const size = parseInt(window.getComputedStyle(this.contentElement).getPropertyValue('block-size')) || parseInt(window.getComputedStyle(this.panelElements.find(panel => !panel.hidden)).getPropertyValue('block-size'));
     this.panelElements.forEach((panel, i) => {
       if (panel.id === id) {
-        panel.hidden = false;
+        panel.removeAttribute('hidden');
       } else {
         panel.setAttribute('hidden', this.isFocusable(this.tabElements[i]) ? 'until-found' : '');
       }
