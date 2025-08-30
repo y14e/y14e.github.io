@@ -165,7 +165,7 @@
   </div>
 </div>
 <script type="module">
-import { Tabs } from './tabs.js';
+import Tabs from './tabs.js';
 document.querySelectorAll('[data-tabs]:not(:is([data-tabs="manual"], [data-tabs="vertical"]))').forEach(element => new Tabs(element));
 document.querySelectorAll('[data-tabs="manual"]').forEach(element => new Tabs(element, { manual: true }));
 document.querySelectorAll('[data-tabs="vertical"]').forEach(element => {

@@ -35,7 +35,12 @@ export default class Accordion {
     if (!this.triggerElements.length || !this.contentElements.length) {
       return;
     }
+    function save(element, names, style = false) {
+      names.forEach(name => element.setAttribute(`data-accordion-original-${name}`, !style ? element.getAttribute(name) : element.style.getPropertyValue(name) ?? 'null'));
+    }
     this.triggerElements.forEach((trigger, i) => {
+      save(trigger, ['aria-controls', 'aria-expanded', 'aria-label', 'tabindex']);
+      save(trigger, ['pointer-events'], true);
       const id = Math.random().toString(36).slice(-8);
       trigger.setAttribute('aria-controls', (this.contentElements[i].id ||= `accordion-content-${id}`));
       if (!trigger.hasAttribute('aria-expanded')) {
@@ -50,11 +55,15 @@ export default class Accordion {
       trigger.addEventListener('keydown', this.handleTriggerKeyDown);
     });
     this.contentElements.forEach((content, i) => {
+      save(content, ['aria-labelledby', 'hidden', 'role']);
       content.setAttribute('aria-labelledby', `${content.getAttribute('aria-labelledby') || ''} ${this.triggerElements[i].id}`.trim());
       content.setAttribute('role', 'region');
       content.addEventListener('beforematch', this.handleContentBeforeMatch);
     });
     this.rootElement.setAttribute('data-accordion-initialized', '');
+    window.setTimeout(() => {
+      this.destroy();
+    }, 3000);
   }
 
   getActiveElement() {
@@ -177,5 +186,58 @@ export default class Accordion {
       return;
     }
     this.toggle(trigger, false);
+  }
+
+  destroy() {
+    function restore(element, names, style = false) {
+      names.forEach(name => {
+        const original = element.getAttribute(`data-accordion-original-${name}`);
+        if (original !== 'null') {
+          if (!style) {
+            element.setAttribute(name, original);
+          } else {
+            element.style.setProperty(name, original);
+          }
+        } else {
+          if (!style) {
+            element.removeAttribute(name);
+          } else {
+            element.style.removeProperty(name);
+          }
+        }
+        element.removeAttribute(`data-accordion-original-${name}`);
+      });
+    }
+    this.triggerElements.forEach(trigger => {
+      restore(trigger, ['aria-controls', 'aria-expanded', 'aria-label', 'tabindex']);
+      if (/accordion-trigger-[0-9a-z]{1,8}/.test(trigger.id)) {
+        trigger.removeAttribute('id');
+      }
+      restore(trigger, ['pointer-events'], true);
+      trigger.removeEventListener('click', this.handleTriggerClick);
+      trigger.removeEventListener('keydown', this.handleTriggerKeyDown);
+    });
+    this.contentElements.forEach(content => {
+      content.setAttribute(
+        'aria-labelledby',
+        content
+          .getAttribute('aria-labelledby')
+          .replace(/accordion-trigger-[0-9a-z]{1,8}/, '')
+          .trim(),
+      );
+      restore(content, ['aria-labelledby', 'hidden', 'role']);
+      if (/accordion-content-[0-9a-z]{1,8}/.test(content.id)) {
+        content.removeAttribute('id');
+      }
+      restore(content, ['block-size', 'overflow'], true);
+      content.removeEventListener('beforematch', this.handleContentBeforeMatch);
+    });
+    this.animations.forEach(animation => {
+      if (animation) {
+        animation.cancel();
+      }
+    });
+    this.rootElement.removeAttribute('data-accordion-initialized');
+    delete this;
   }
 }
