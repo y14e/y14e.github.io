@@ -19,7 +19,7 @@ import TextSplitter from './text-splitter.js';
 const ts1 = new TextSplitter(document.querySelector('[data-text-splitter="1"]'));
 const ts2 = new TextSplitter(document.querySelector('[data-text-splitter="2"]'));
 const ts3 = new TextSplitter(document.querySelector('[data-text-splitter="3"]'));
-const ts4 = new TextSplitter(document.querySelector('[data-text-splitter="4"]'), {  wordSegmenter: true });
+const ts4 = new TextSplitter(document.querySelector('[data-text-splitter="4"]'), { wordSegmenter: true });
 document.addEventListener('dblclick', () => {
   ts1.destroy();
   ts2.destroy();
