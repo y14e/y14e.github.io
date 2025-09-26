@@ -170,9 +170,7 @@ document.querySelectorAll('[data-tabs]:not(:is([data-tabs="manual"], [data-tabs=
 document.querySelectorAll('[data-tabs="manual"]').forEach(element => new Tabs(element, { manual: true }));
 document.querySelectorAll('[data-tabs="vertical"]').forEach(element => {
   new Tabs(element, {
-    selector: {
-      content: '[role="tablist"] + * > *',
-    },
+    selector: { content: '[role="tablist"] + * > *' },
     vertical: true,
   });
 });
