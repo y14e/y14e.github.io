@@ -301,7 +301,7 @@ import { flip, offset, shift } from 'https://cdn.jsdelivr.net/npm/@floating-ui/d
 import Menu from './menu.js';
 const myMenuOptions = {
   popover: {
-    menu: { middleware: [flip({ padding: 4 }), shift()] },
+    menu: { middleware: [flip({ padding: 4 }), offset(8), shift()] },
     submenu: { middleware: [flip(), offset({ alignmentAxis: -4 }), shift({ mainAxis: false })] },
   },
 };

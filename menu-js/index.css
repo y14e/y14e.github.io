@@ -144,6 +144,9 @@ body {
   :is([data-menu-trigger], [aria-haspopup]) + * > & {
     visibility: visible;
   }
+  [data-menu-placement^='top'] & {
+    box-shadow: -0.1rem -0.1rem 0.1rem rgb(0 0 0 / 0.2);
+  }
 }
 [tabindex] {
   /*
