@@ -71,6 +71,7 @@ body {
   padding: 0.8rem 1.6rem;
   position: relative;
   width: 100%;
+  z-index: 1;
   &[aria-haspopup] {
     align-items: center;
     display: flex;
@@ -94,8 +95,7 @@ body {
     background: rgb(0 0 0 / 0.1);
   }
   &[aria-expanded='true'] {
-    background: #000;
-    color: #fff;
+    background: rgb(0 0 0 / 0.1);
   }
 }
 :is([role='menuitemcheckbox'], [role='menuitemradio']) {
@@ -133,6 +133,17 @@ body {
   text-align: center;
   -webkit-user-select: none;
   user-select: none;
+}
+[data-menu-arrow] {
+  aspect-ratio: 1;
+  box-shadow: -0.1rem -0.1rem 0.1rem rgb(0 0 0 / 0.1);
+  background: #fff;
+  position: absolute;
+  width: 0.8rem;
+  visibility: hidden;
+  :is([data-menu-trigger], [aria-haspopup]) + * > & {
+    visibility: visible;
+  }
 }
 [tabindex] {
   /*
