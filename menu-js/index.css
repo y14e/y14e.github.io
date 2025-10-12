@@ -4,7 +4,7 @@
   font-size: 10px;
 }
 body {
-  background: linear-gradient(90deg, rgb(230 245 255 / 0.5) 0.1rem, transparent 0.1rem), linear-gradient(180deg, rgb(230 245 255 / 0.5) 0.1rem, transparent 0.1rem);
+  background-image: linear-gradient(90deg, rgb(230 245 255 / 0.5) 0.1rem, transparent 0.1rem), linear-gradient(180deg, rgb(230 245 255 / 0.5) 0.1rem, transparent 0.1rem);
   background-size: 0.8rem 0.8rem;
   font: 1.6rem / 1.5 Inter, sans-serif;
   font-feature-settings: 'palt';
@@ -18,7 +18,7 @@ body {
 }
 [data-menu] [data-menu-trigger] {
   align-items: center;
-  background: rgb(0 0 0 / 0.2);
+  background-color: rgb(0 0 0 / 0.2);
   border-radius: 0.4rem;
   display: flex;
   font-weight: bold;
@@ -27,25 +27,25 @@ body {
   padding: 0.8rem 1.6rem;
   &::after {
     aspect-ratio: 1;
-    background: currentColor;
+    background-color: currentColor;
     clip-path: polygon(0 30%, 25% 30%, 50% 55%, 75% 30%, 100% 30%, 50% 80%);
     content: '';
     width: 1rem;
   }
   &[aria-expanded='true'] {
-    background: #000;
+    background-color: #000;
     color: #fff;
   }
   &:is([aria-disabled='true'], [disabled]) {
-    background: rgb(0 0 0 / 0.1);
+    background-color: rgb(0 0 0 / 0.1);
     color: rgb(0 0 0 / 0.35);
   }
   &:not([aria-expanded='true']):hover {
-    background: rgb(0 0 0 / 0.3);
+    background-color: rgb(0 0 0 / 0.3);
   }
 }
 [role='menu'] {
-  background: #fff;
+  background-color: #fff;
   border-radius: 0.4rem;
   box-shadow: 0 0 0.2rem rgb(0 0 0 / 0.1), 0 0.4rem 0.8rem rgb(0 0 0 / 0.2);
   padding: 0.4rem;
@@ -64,8 +64,8 @@ body {
   }
 }
 [role^='menuitem'] {
-  cursor: pointer;
   border-radius: 0.4rem;
+  cursor: pointer;
   display: block;
   outline-offset: -2px;
   padding: 0.8rem 1.6rem;
@@ -81,7 +81,7 @@ body {
     position: relative;
     &::after {
       aspect-ratio: 1;
-      background: currentColor;
+      background-color: currentColor;
       clip-path: polygon(30% 0%, 80% 50%, 30% 100%, 30% 75%, 55% 50%, 30% 25%);
       content: '';
       width: 1rem;
@@ -92,10 +92,10 @@ body {
     pointer-events: none;
   }
   &:hover {
-    background: rgb(0 0 0 / 0.1);
+    background-color: rgb(0 0 0 / 0.1);
   }
   &[aria-expanded='true'] {
-    background: rgb(0 0 0 / 0.1);
+    background-color: rgb(0 0 0 / 0.1);
   }
 }
 :is([role='menuitemcheckbox'], [role='menuitemradio']) {
@@ -104,7 +104,7 @@ body {
   gap: 0.8rem;
   &::before {
     aspect-ratio: 1;
-    background: currentColor;
+    background-color: currentColor;
     content: '';
     opacity: 0;
     width: 1rem;
@@ -120,7 +120,7 @@ body {
   clip-path: circle(30%);
 }
 [role='separator'] {
-  background: rgb(0 0 0 / 0.1);
+  background-color: rgb(0 0 0 / 0.1);
   border: 0;
   height: 0.1rem;
   margin: 0.8rem 1.6rem;
@@ -136,11 +136,11 @@ body {
 }
 [data-menu-arrow] {
   aspect-ratio: 1;
+  background-color: #fff;
   box-shadow: -0.1rem -0.1rem 0.1rem rgb(0 0 0 / 0.1);
-  background: #fff;
   position: absolute;
-  width: 0.8rem;
   visibility: hidden;
+  width: 0.8rem;
   :is([data-menu-trigger], [aria-haspopup]) + * > & {
     visibility: visible;
   }
