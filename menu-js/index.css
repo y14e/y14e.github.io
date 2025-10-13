@@ -4,7 +4,8 @@
   font-size: 10px;
 }
 body {
-  background-image: linear-gradient(90deg, rgb(230 245 255 / 0.5) 0.1rem, transparent 0.1rem), linear-gradient(180deg, rgb(230 245 255 / 0.5) 0.1rem, transparent 0.1rem);
+  background-color: #f6f6f6;
+  background-image: linear-gradient(90deg, rgb(221 238 246 / 0.5) 0.1rem, transparent 0.1rem), linear-gradient(180deg, rgb(221 238 246 / 0.5) 0.1rem, transparent 0.1rem);
   background-size: 0.8rem 0.8rem;
   font: 1.6rem / 1.5 Inter, sans-serif;
   font-feature-settings: 'palt';
@@ -56,7 +57,7 @@ body {
     transition: 0.3s transform;
     z-index: calc(infinity);
     &:not([aria-expanded='true'] + &):not([data-context-menu-open]) {
-      transform: scale(0.9);
+      transform: scale(0.8);
     }
   }
   & & {
@@ -147,17 +148,4 @@ body {
   [data-menu-placement^='top'] & {
     box-shadow: -0.1rem -0.1rem 0.1rem rgb(0 0 0 / 0.2);
   }
-}
-[tabindex] {
-  /*
-  text-decoration: underline;
-  text-decoration-thickness: 0.2rem;
-  text-underline-offset: 0.2rem;
-  &[tabindex='-1'] {
-    text-decoration-color: red;
-  }
-  &[tabindex='0'] {
-    text-decoration-color: blue;
-  }
-  */
 }
