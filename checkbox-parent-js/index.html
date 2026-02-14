@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>checkbox-parent.js</title>
+<link rel="stylesheet" href="./index.css">
+</head>
+<body>
+<fieldset class="checkbox-mixed">
+  <label><input aria-controls="cond1 cond2 cond3 cond4" data-checkbox-parent type="checkbox">Select ingredients</label>
+  <ul class="checkboxes">
+    <li><label><input type="checkbox" id="cond1">Cheese</label></li>
+    <li><label><input type="checkbox" id="cond2" checked>Mushrooms</label></li>
+    <li><label><input type="checkbox" id="cond3">Olives</label></li>
+    <li><label><input type="checkbox" id="cond4">Chicken</label></li>
+  </ul>
+</fieldset>
+<br><br>
+<fieldset class="checkbox-mixed">
+  <label><input aria-controls="cond21 cond22 cond23 cond24 cond25 cond26 cond27 cond28" data-checkbox-parent type="checkbox">Select ingredients</label>
+  <ul class="checkboxes">
+    <li><label><input type="checkbox" id="cond21">Cheese</label></li>
+    <li><label><input type="checkbox" id="cond22">Mushrooms</label></li>
+    <li><label><input type="checkbox" id="cond23">Olives</label></li>
+    <li><label><input type="checkbox" id="cond24">Chicken</label></li>
+    <li><label><input type="checkbox" id="cond25">Cheese</label></li>
+    <li><label><input type="checkbox" id="cond26">Mushrooms</label></li>
+    <li><label><input type="checkbox" id="cond27">Olives</label></li>
+    <li><label><input type="checkbox" id="cond28">Chicken</label></li>
+  </ul>
+</fieldset>
+<script type="module">
+import CheckboxParent from './checkbox-parent.js';
+document.querySelectorAll('[data-checkbox-parent]').forEach(parent => new CheckboxParent(parent));
+</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+@import 'https://cdn.jsdelivr.net/npm/destyle.css@4.0.1/destyle.min.css';
+@import 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap';
+:root {
+  font-size: 10px;
+}
+body {
+  background: linear-gradient(90deg, rgb(230 245 255 / 0.5) 0.1rem, transparent 0.1rem), linear-gradient(180deg, rgb(230 245 255 / 0.5) 0.1rem, transparent 0.1rem);
+  background-size: 0.8rem 0.8rem;
+  font: 1.6rem / 1.5 Inter, sans-serif;
+  font-feature-settings: 'palt';
+  padding: 3.2rem;
+}
+.checkbox-mixed {
+  user-select: none;
+}
+.checkbox-mixed ul.checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+}
+.checkbox-mixed ul.checkboxes li {
+  padding-left: 2.4rem;
+}
+.checkbox-mixed label {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  gap: 0.8rem;
+  width: fit-content;
+  input {
+    align-items: center;
+    aspect-ratio: 1;
+    display: grid;
+    justify-content: center;
+    width: 1.6rem;
+    &::before,
+    &::after {
+      aspect-ratio: 1;
+      content: '';
+      grid-area: 1 / 1;
+    }
+    &::before {
+      border: 0.2rem solid currentColor;
+      border-radius: 0.4rem;
+      width: 1.6rem;
+    }
+    &::after {
+      justify-self: center;
+      background: #fff;
+      width: 1rem;
+      opacity: 0;
+    }
+    &:checked {
+      &::before {
+        background: currentColor;
+      }
+      &::after {
+        clip-path: polygon(0 50%, 20% 50%, 32.5% 72.5%, 35% 75%, 80% 0, 100% 0, 40% 100%, 30% 100%);
+        opacity: 1;
+      }
+    }
+    &:indeterminate {
+      &::before {
+        background: currentColor;
+      }
+      &::after {
+        height: 0.2rem;
+        opacity: 1;
+      }
+    }
+  }
+}
