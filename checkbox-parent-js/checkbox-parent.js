@@ -34,7 +34,9 @@ export default class CheckboxParent {
 
   handleRootChange() {
     const checked = this.rootElement.checked;
-    this.childElements.forEach(child => (child.checked = checked));
+    this.childElements.forEach(child => {
+      child.checked = checked;
+    });
   }
 
   handleChildChange() {
