@@ -24,7 +24,7 @@ myTextSplitters.push(new TextSplitter(document.querySelector('[data-text-splitte
 myTextSplitters.push(new TextSplitter(document.querySelector('[data-text-splitter="3"]')));
 myTextSplitters.push(new TextSplitter(document.querySelector('[data-text-splitter="4"]'), { wordSegmenter: true }));
 myTextSplitters.push(new TextSplitter(document.querySelector('[data-text-splitter="5"]'), { concatChar: true }));
-document.addEventListener('dblclick', () => myTextSplitters.forEach(textSplitter => textSplitter.destroy()));
+document.addEventListener('dblclick', () => myTextSplitters.forEach((textSplitter) => textSplitter.destroy()));
 </script>
 </body>
 </html>

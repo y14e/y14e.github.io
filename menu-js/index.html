@@ -305,16 +305,16 @@ const myMenuOptions = {
     submenu: { middleware: [flip(), offset({ alignmentAxis: -4 }), shift({ mainAxis: false })] },
   },
 };
-document.querySelectorAll('[data-menu]').forEach(element => {
+document.querySelectorAll('[data-menu]').forEach((element) => {
   const myMenu = new Menu(element, myMenuOptions);
-  element.querySelectorAll('[role="menuitem"]:not([aria-haspopup])').forEach(item => {
+  element.querySelectorAll('[role="menuitem"]:not([aria-haspopup])').forEach((item) => {
     item.addEventListener('click', () => {
       console.log(item.textContent);
       myMenu.close();
     });
   });
-  element.querySelectorAll('[role="menuitemcheckbox"]').forEach(item => item.addEventListener('click', () => console.log([...(item.closest('[role="group"]') || item.closest('[role="menu"]')).querySelectorAll('[role="menuitemcheckbox"]')].filter(item => item.getAttribute('aria-checked') === 'true').map(item => item.textContent))));
-  element.querySelectorAll('[role="menuitemradio"]').forEach(item => item.addEventListener('click', () => console.log([...(item.closest('[role="group"]') || item.closest('[role="menu"]')).querySelectorAll('[role="menuitemradio"]')].filter(item => item.getAttribute('aria-checked') === 'true').map(item => item.textContent))));
+  element.querySelectorAll('[role="menuitemcheckbox"]').forEach((item) => item.addEventListener('click', () => console.log([...(item.closest('[role="group"]') || item.closest('[role="menu"]')).querySelectorAll('[role="menuitemcheckbox"]')].filter((item) => item.getAttribute('aria-checked') === 'true').map((item) => item.textContent))));
+  element.querySelectorAll('[role="menuitemradio"]').forEach((item) => item.addEventListener('click', () => console.log([...(item.closest('[role="group"]') || item.closest('[role="menu"]')).querySelectorAll('[role="menuitemradio"]')].filter((item) => item.getAttribute('aria-checked') === 'true').map((item) => item.textContent))));
   window.addEventListener('blur', () => myMenu.close());
 });
 </script>
