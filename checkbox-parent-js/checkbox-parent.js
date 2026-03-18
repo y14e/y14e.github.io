@@ -51,8 +51,8 @@ export default class CheckboxParent {
     if (this.destroyed) {
       return;
     }
+    this.destroyed = true;
     this.rootElement.removeAttribute('data-checkbox-parent-initialized');
     this.eventController.abort();
-    this.destroyed = true;
   }
 }
