@@ -13,7 +13,7 @@ export default class CheckboxParent {
     if (!this.childElements.length) {
       return;
     }
-    this.eventController = new AbortController();
+    this.controller = new AbortController();
     this.destroyed = false;
     this.handleRootChange = this.handleRootChange.bind(this);
     this.handleChildChange = this.handleChildChange.bind(this);
@@ -21,7 +21,7 @@ export default class CheckboxParent {
   }
 
   initialize() {
-    const { signal } = this.eventController;
+    const { signal } = this.controller;
     this.rootElement.addEventListener('change', this.handleRootChange, { signal });
     this.childElements.forEach((child) => child.addEventListener('change', this.handleChildChange, { signal }));
     this.update();
@@ -53,6 +53,6 @@ export default class CheckboxParent {
     }
     this.destroyed = true;
     this.rootElement.removeAttribute('data-checkbox-parent-initialized');
-    this.eventController.abort();
+    this.controller.abort();
   }
 }
