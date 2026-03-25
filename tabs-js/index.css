@@ -7,7 +7,9 @@ body {
   background-color: #f6f6f6;
   background-image: linear-gradient(90deg, rgb(221 238 246 / 0.5) 0.1rem, transparent 0.1rem), linear-gradient(180deg, rgb(221 238 246 / 0.5) 0.1rem, transparent 0.1rem);
   background-size: 0.8rem 0.8rem;
-  font: 1.6rem / 1.5 Inter, sans-serif;
+  font:
+    1.6rem / 1.5 Inter,
+    sans-serif;
   font-feature-settings: 'palt';
   padding: 3.2rem;
 }
@@ -28,7 +30,9 @@ body {
   }
   & + * {
     background-color: #fff;
-    box-shadow: 0 0 0.2rem rgb(0 0 0 / 0.1), 0 0.4rem 0.8rem rgb(0 0 0 / 0.2);
+    box-shadow:
+      0 0 0.2rem rgb(0 0 0 / 0.1),
+      0 0.4rem 0.8rem rgb(0 0 0 / 0.2);
   }
 }
 [role='tab'] {
@@ -88,12 +92,16 @@ body {
       [role='tablist']:has(+ div) & {
         border-top-left-radius: calc(var(--r1) + var(--r2)) var(--r1);
         border-top-right-radius: calc(var(--r1) + var(--r2)) var(--r1);
-        mask: radial-gradient(var(--r2) at var(--r2) 0, #0000 calc(100% - 0.5px), #000 calc(100% + 0.5px)) calc(-1 * var(--r2)) calc(100% - var(--a)) / 100% var(--r2) repeat-x, padding-box conic-gradient(#000 0 0);
+        mask:
+          radial-gradient(var(--r2) at var(--r2) 0, #0000 calc(100% - 0.5px), #000 calc(100% + 0.5px)) calc(-1 * var(--r2)) calc(100% - var(--a)) / 100% var(--r2) repeat-x,
+          padding-box conic-gradient(#000 0 0);
       }
       div + [role='tablist'] & {
         border-bottom-left-radius: calc(var(--r1) + var(--r2)) var(--r1);
         border-bottom-right-radius: calc(var(--r1) + var(--r2)) var(--r1);
-        mask: radial-gradient(var(--r2) at var(--r2) 100%, #0000 calc(100% - 0.5px), #000 calc(100% + 0.5px)) calc(-1 * var(--r2)) var(--a) / 100% var(--r2) repeat-x, padding-box conic-gradient(#000 0 0);
+        mask:
+          radial-gradient(var(--r2) at var(--r2) 100%, #0000 calc(100% - 0.5px), #000 calc(100% + 0.5px)) calc(-1 * var(--r2)) var(--a) / 100% var(--r2) repeat-x,
+          padding-box conic-gradient(#000 0 0);
       }
     }
   }
@@ -128,12 +136,16 @@ body {
       [role='tablist']:has(+ div) & {
         border-bottom-left-radius: var(--r1) calc(var(--r1) + var(--r2));
         border-top-left-radius: var(--r1) calc(var(--r1) + var(--r2));
-        mask: radial-gradient(var(--r2) at 0 var(--r2), #0000 calc(100% - 0.5px), #000 calc(100% + 0.5px)) calc(100% - var(--a)) calc(-1 * var(--r2)) / var(--r2) 100% repeat-y, padding-box conic-gradient(#000 0 0);
+        mask:
+          radial-gradient(var(--r2) at 0 var(--r2), #0000 calc(100% - 0.5px), #000 calc(100% + 0.5px)) calc(100% - var(--a)) calc(-1 * var(--r2)) / var(--r2) 100% repeat-y,
+          padding-box conic-gradient(#000 0 0);
       }
       div + [role='tablist'] & {
         border-bottom-right-radius: var(--r1) calc(var(--r1) + var(--r2));
         border-top-right-radius: var(--r1) calc(var(--r1) + var(--r2));
-        mask: radial-gradient(var(--r2) at 100% var(--r2), #0000 calc(100% - 0.5px), #000 calc(100% + 0.5px)) var(--a) calc(-1 * var(--r2)) / var(--r2) 100% repeat-y, conic-gradient(#000 0 0) padding-box;
+        mask:
+          radial-gradient(var(--r2) at 100% var(--r2), #0000 calc(100% - 0.5px), #000 calc(100% + 0.5px)) var(--a) calc(-1 * var(--r2)) / var(--r2) 100% repeat-y,
+          conic-gradient(#000 0 0) padding-box;
       }
     }
   }
