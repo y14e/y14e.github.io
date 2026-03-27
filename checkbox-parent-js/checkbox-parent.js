@@ -30,10 +30,8 @@ export default class CheckboxParent {
 
   update() {
     const checked = this.childElements.every((child) => child.checked);
-    Object.assign(this.rootElement, {
-      checked: checked,
-      indeterminate: !checked && this.childElements.some((child) => child.checked),
-    });
+    this.rootElement.checked = checked;
+    this.rootElement.indeterminate = !checked && this.childElements.some((child) => child.checked);
   }
 
   handleRootChange() {
