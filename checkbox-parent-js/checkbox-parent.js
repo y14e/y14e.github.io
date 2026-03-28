@@ -1,8 +1,6 @@
 export default class CheckboxParent {
   constructor(root) {
-    if (!root) {
-      return;
-    }
+    if (!root) return;
     this.rootElement = root;
     this.childElements =
       this.rootElement
@@ -10,9 +8,7 @@ export default class CheckboxParent {
         ?.split(' ')
         .map((id) => document.getElementById(id))
         .filter(Boolean) || [];
-    if (!this.childElements.length) {
-      return;
-    }
+    if (!this.childElements.length) return;
     this.controller = new AbortController();
     this.destroyed = false;
     this.handleRootChange = this.handleRootChange.bind(this);
@@ -46,9 +42,7 @@ export default class CheckboxParent {
   }
 
   destroy() {
-    if (this.destroyed) {
-      return;
-    }
+    if (this.destroyed) return;
     this.destroyed = true;
     this.rootElement.removeAttribute('data-checkbox-parent-initialized');
     this.controller.abort();
