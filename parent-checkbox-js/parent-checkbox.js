@@ -19,7 +19,7 @@ export default class ParentCheckbox {
   initialize() {
     const { signal } = this.controller;
     this.rootElement.addEventListener('change', this.handleRootChange, { signal });
-    this.childElements.forEach((child) => void child.addEventListener('change', this.handleChildChange, { signal }));
+    this.childElements.forEach((child) => child.addEventListener('change', this.handleChildChange, { signal }));
     this.update();
     this.rootElement.setAttribute('data-parent-checkbox-initialized', '');
   }
