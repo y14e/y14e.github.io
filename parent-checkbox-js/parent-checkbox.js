@@ -1,4 +1,4 @@
-export default class CheckboxParent {
+export default class ParentCheckbox {
   constructor(root) {
     if (!root) return;
     this.rootElement = root;
@@ -21,7 +21,7 @@ export default class CheckboxParent {
     this.rootElement.addEventListener('change', this.handleRootChange, { signal });
     this.childElements.forEach((child) => void child.addEventListener('change', this.handleChildChange, { signal }));
     this.update();
-    this.rootElement.setAttribute('data-checkbox-parent-initialized', '');
+    this.rootElement.setAttribute('data-parent-checkbox-initialized', '');
   }
 
   update() {
@@ -44,7 +44,7 @@ export default class CheckboxParent {
   destroy() {
     if (this.destroyed) return;
     this.destroyed = true;
-    this.rootElement.removeAttribute('data-checkbox-parent-initialized');
+    this.rootElement.removeAttribute('data-parent-checkbox-initialized');
     this.controller.abort();
   }
 }
