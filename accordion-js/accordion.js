@@ -90,16 +90,22 @@ export default class Accordion {
     const endSize = open ? parseFloat(style.getPropertyValue('block-size')) : 0;
     requestAnimationFrame(() => trigger.setAttribute('aria-expanded', String(open)));
     content.style.setProperty('overflow', 'clip');
-    this.animations[index] = content.animate(
+    animation = content.animate(
       { blockSize: [startSize, `${Math.max(parseFloat(style.getPropertyValue('min-block-size')), Math.min(endSize, parseFloat(style.getPropertyValue('max-block-size')) || endSize))}px`] },
       {
         duration: !match ? this.settings.animation.duration : 0,
         easing: this.settings.animation.easing,
       },
     );
-    animation = this.animations[index];
+    this.animations[index] = animation;
+    const cleanup = () => {
+      if (this.animations[index] === animation) {
+        this.animations[index] = null;
+      }
+    };
+    animation.addEventListener('cancel', cleanup);
     animation.addEventListener('finish', () => {
-      this.animations[index] = null;
+      cleanup();
       if (!open) {
         content.setAttribute('hidden', 'until-found');
       }

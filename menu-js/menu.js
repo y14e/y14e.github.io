@@ -209,8 +209,12 @@ export default class Menu {
         easing: 'ease',
       },
     );
-    this.animation.addEventListener('finish', () => {
+    const cleanup = () => {
       this.animation = null;
+    };
+    this.animation.addEventListener('cancel', cleanup);
+    this.animation.addEventListener('finish', () => {
+      cleanup();
       if (!open) {
         this.listElement.removeAttribute('data-menu-placement');
         this.listElement.style.setProperty('display', 'none');
