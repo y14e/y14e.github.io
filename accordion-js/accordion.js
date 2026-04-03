@@ -20,9 +20,9 @@ export default class Accordion {
       this.settings.animation.duration = 0;
     }
     const NOT_NESTED = `:not(:scope ${this.settings.selector.content} *)`;
-    this.triggerElements = [...this.rootElement.querySelectorAll(`${this.settings.selector.trigger}${NOT_NESTED}`)];
-    this.contentElements = [...this.rootElement.querySelectorAll(`${this.settings.selector.content}${NOT_NESTED}`)];
-    this.animations = Array(this.triggerElements.length).fill(null);
+    this.triggerElements = this.rootElement.querySelectorAll(`${this.settings.selector.trigger}${NOT_NESTED}`);
+    this.contentElements = this.rootElement.querySelectorAll(`${this.settings.selector.content}${NOT_NESTED}`);
+    this.entries = new WeakMap();
     this.controller = new AbortController();
     this.destroyed = false;
     this.handleTriggerClick = this.handleTriggerClick.bind(this);
@@ -55,6 +55,13 @@ export default class Accordion {
       content.setAttribute('role', 'region');
       content.addEventListener('beforematch', this.handleContentBeforeMatch, { signal });
     });
+    this.triggerElements.forEach((trigger, i) => {
+      const content = this.contentElements[i];
+      if (!content) return;
+      const entry = { animation: null, content, trigger };
+      this.entries.set(trigger, entry);
+      this.entries.set(content, entry);
+    });
     this.rootElement.setAttribute('data-accordion-initialized', '');
   }
 
@@ -80,27 +87,29 @@ export default class Accordion {
       }
     }
     trigger.setAttribute('aria-label', trigger.getAttribute(`data-accordion-${open ? 'expanded' : 'collapsed'}-label`) ?? (trigger.getAttribute('aria-label') || ''));
-    const index = this.triggerElements.indexOf(trigger);
-    const content = this.contentElements[index];
-    const style = getComputedStyle(content);
-    const startSize = !content.hidden ? style.getPropertyValue('block-size') : '0';
-    let animation = this.animations[index];
+    const entry = this.entries.get(trigger);
+    if (!entry) return;
+    const { content } = entry;
+    const startSize = content.hidden ? 0 : content.offsetHeight;
+    if (content.hidden) {
+      content.hidden = false;
+    }
+    const endSize = open ? content.scrollHeight : 0;
+    let { animation } = entry;
     animation?.cancel();
-    content.hidden = false;
-    const endSize = open ? parseFloat(style.getPropertyValue('block-size')) : 0;
-    requestAnimationFrame(() => trigger.setAttribute('aria-expanded', String(open)));
     content.style.setProperty('overflow', 'clip');
     animation = content.animate(
-      { blockSize: [startSize, `${Math.max(parseFloat(style.getPropertyValue('min-block-size')), Math.min(endSize, parseFloat(style.getPropertyValue('max-block-size')) || endSize))}px`] },
+      { blockSize: [`${startSize}px`, `${endSize}px`] },
       {
-        duration: !match ? this.settings.animation.duration : 0,
+        duration: match ? 0 : this.settings.animation.duration,
         easing: this.settings.animation.easing,
       },
     );
-    this.animations[index] = animation;
+    entry.animation = animation;
+    trigger.setAttribute('aria-expanded', String(open));
     const cleanupAnimation = () => {
-      if (this.animations[index] === animation) {
-        this.animations[index] = null;
+      if (entry.animation === animation) {
+        entry.animation = null;
       }
     };
     animation.addEventListener('cancel', cleanupAnimation);
@@ -109,7 +118,8 @@ export default class Accordion {
       if (!open) {
         content.setAttribute('hidden', 'until-found');
       }
-      ['block-size', 'overflow'].forEach((name) => content.style.removeProperty(name));
+      content.style.removeProperty('block-size');
+      content.style.removeProperty('overflow');
     });
   }
 
@@ -126,7 +136,12 @@ export default class Accordion {
     if (!['Enter', ' ', 'End', 'Home', 'ArrowUp', 'ArrowDown'].includes(key)) return;
     event.preventDefault();
     event.stopPropagation();
-    const focusables = this.triggerElements.filter(this.isFocusable);
+    const focusables = [];
+    this.triggerElements.forEach((trigger) => {
+      if (this.isFocusable(trigger)) {
+        focusables.push(trigger);
+      }
+    });
     const active = this.getActiveElement();
     if (!active) return;
     const currentIndex = focusables.indexOf(active);
@@ -155,20 +170,21 @@ export default class Accordion {
   handleContentBeforeMatch(event) {
     const content = event.currentTarget;
     if (!(content instanceof HTMLElement)) return;
-    const trigger = this.triggerElements[this.contentElements.indexOf(content)];
-    if (trigger.getAttribute('aria-expanded') === 'false') {
-      this.toggle(trigger, true, true);
+    const entry = this.entries.get(content);
+    if (!entry) return;
+    if (entry.trigger.getAttribute('aria-expanded') === 'false') {
+      this.toggle(entry.trigger, true, true);
     }
   }
 
   open(trigger) {
-    if (this.triggerElements.includes(trigger)) {
+    if (this.entries.has(trigger)) {
       this.toggle(trigger, true);
     }
   }
 
   close(trigger) {
-    if (this.triggerElements.includes(trigger)) {
+    if (this.entries.has(trigger)) {
       this.toggle(trigger, false);
     }
   }
@@ -179,8 +195,15 @@ export default class Accordion {
     this.rootElement.removeAttribute('data-accordion-initialized');
     this.controller.abort();
     if (!force) {
-      await Promise.all(this.animations.map((animation) => animation?.finished.catch(() => {})));
+      const promises = [];
+      this.triggerElements.forEach((trigger) => {
+        const entry = this.entries.get(trigger);
+        if (entry?.animation) {
+          promises.push(entry.animation.finished.then(() => {}).catch(() => {}));
+        }
+      });
+      await Promise.all(promises);
     }
-    this.animations.forEach((animation) => animation?.cancel());
+    this.triggerElements.forEach((trigger) => this.entries.get(trigger)?.animation?.cancel());
   }
 }
