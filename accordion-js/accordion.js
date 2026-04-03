@@ -119,7 +119,7 @@ export default class Accordion {
       if (!open) {
         content.setAttribute('hidden', 'until-found');
       }
-      ['block-size', 'overflow'].forEach((name) => content.style.removeProperty(name));
+      ['block-size', 'overflow'].forEach((prop) => content.style.removeProperty(prop));
     });
   }
 
