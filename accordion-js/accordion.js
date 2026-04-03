@@ -37,6 +37,7 @@ export default class Accordion {
     this.triggerElements.forEach((trigger, i) => {
       const id = Math.random().toString(36).slice(-8);
       const content = this.contentElements[i];
+      if (!content) return;
       content.id ||= `accordion-content-${id}`;
       trigger.setAttribute('aria-controls', content.id);
       if (!trigger.hasAttribute('aria-expanded')) {
