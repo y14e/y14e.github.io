@@ -118,8 +118,9 @@ export default class Accordion {
       if (!open) {
         content.setAttribute('hidden', 'until-found');
       }
-      content.style.removeProperty('block-size');
-      content.style.removeProperty('overflow');
+      const style = content.style;
+      style.removeProperty('block-size');
+      style.removeProperty('overflow');
     });
   }
 
