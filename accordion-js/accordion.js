@@ -60,13 +60,14 @@ export default class Accordion {
       const content = this.contentElements[i];
       if (!content) continue;
       const entry = this.createEntry(trigger, content);
-      this.entries.set(trigger, entry).set(content, entry);
+      this.entries.set(trigger, entry);
+      this.entries.set(content, entry);
     }
     this.rootElement.setAttribute('data-accordion-initialized', '');
   }
 
   createEntry(trigger, content) {
-    return { animation: null, content, trigger };
+    return { trigger, content, animation: null };
   }
 
   getActiveElement() {
