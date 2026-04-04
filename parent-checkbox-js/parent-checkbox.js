@@ -24,11 +24,13 @@ export default class ParentCheckbox {
   update() {
     let count = 0;
     for (const child of this.childElements) {
-      if (child.checked) count++;
+      if (child.checked) {
+        count++;
+      }
     }
     const every = count === this.childElements.length;
     this.rootElement.checked = every;
-    this.rootElement.indeterminate = !every && count !== 0;
+    this.rootElement.indeterminate = !every && count > 0;
   }
   handleRootChange() {
     const { checked } = this.rootElement;
