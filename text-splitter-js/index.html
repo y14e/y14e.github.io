@@ -20,8 +20,8 @@ myTextSplitters.push(new TextSplitter(document.querySelector('[data-text-splitte
 myTextSplitters.push(new TextSplitter(document.querySelector('[data-text-splitter="2"]'), { lineBreakingRules: false }));
 myTextSplitters.push(new TextSplitter(document.querySelector('[data-text-splitter="3"]')));
 myTextSplitters.push(new TextSplitter(document.querySelector('[data-text-splitter="4"]'), { lineBreakingRules: false }));
-window.addEventListener('load', () => document.querySelectorAll('[data-text-splitter]').forEach((element) => void element.classList.add('is-animate')));
-document.addEventListener('dblclick', () => myTextSplitters.forEach((textSplitter) => void textSplitter.destroy()));
+window.addEventListener('load', () => document.querySelectorAll('[data-text-splitter]').forEach((element) => element.classList.add('is-animate')));
+document.addEventListener('dblclick', () => myTextSplitters.forEach((textSplitter) => textSplitter.destroy()));
 </script>
 </body>
 </html>
