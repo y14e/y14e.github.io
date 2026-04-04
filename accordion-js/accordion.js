@@ -35,7 +35,7 @@ export default class Accordion {
       const trigger = this.triggerElements[i];
       const id = Math.random().toString(36).slice(-8);
       const content = this.contentElements[i];
-      if (!content) return;
+      if (!content) continue;
       content.id ||= `accordion-content-${id}`;
       trigger.setAttribute('aria-controls', content.id);
       if (!trigger.hasAttribute('aria-expanded')) {
@@ -58,11 +58,15 @@ export default class Accordion {
     for (let i = 0; i < this.triggerElements.length; i++) {
       const trigger = this.triggerElements[i];
       const content = this.contentElements[i];
-      if (!content) return;
-      const entry = { animation: null, content, trigger };
+      if (!content) continue;
+      const entry = this.createEntry(trigger, content);
       this.entries.set(trigger, entry).set(content, entry);
     }
     this.rootElement.setAttribute('data-accordion-initialized', '');
+  }
+
+  createEntry(trigger, content) {
+    return { animation: null, content, trigger };
   }
 
   getActiveElement() {
