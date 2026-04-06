@@ -19,9 +19,10 @@ export default class Accordion {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
       this.settings.animation.duration = 0;
     }
-    const NOT_NESTED = `:not(:scope ${this.settings.selector.content} *)`;
-    this.triggerElements = this.rootElement.querySelectorAll(`${this.settings.selector.trigger}${NOT_NESTED}`);
-    this.contentElements = this.rootElement.querySelectorAll(`${this.settings.selector.content}${NOT_NESTED}`);
+    const { selector } = this.settings;
+    const NOT_NESTED = `:not(:scope ${selector.content} *)`;
+    this.triggerElements = this.rootElement.querySelectorAll(`${selector.trigger}${NOT_NESTED}`);
+    this.contentElements = this.rootElement.querySelectorAll(`${selector.content}${NOT_NESTED}`);
     this.entries = new WeakMap();
     this.controller = new AbortController();
     this.destroyed = false;
@@ -173,13 +174,8 @@ export default class Accordion {
     let { animation } = entry;
     animation?.cancel();
     content.style.setProperty('overflow', 'clip');
-    animation = content.animate(
-      { blockSize: [`${startSize}px`, `${endSize}px`] },
-      {
-        duration: match ? 0 : this.settings.animation.duration,
-        easing: this.settings.animation.easing,
-      },
-    );
+    const { duration, easing } = this.settings.animation;
+    animation = content.animate({ blockSize: [`${startSize}px`, `${endSize}px`] }, { duration: !match ? duration : 0, easing });
     entry.animation = animation;
     trigger.setAttribute('aria-expanded', String(open));
     const cleanupAnimation = () => {
