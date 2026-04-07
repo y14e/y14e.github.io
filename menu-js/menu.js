@@ -32,14 +32,14 @@ export default class Menu {
     this.settings = {
       ...this.defaults,
       ...options,
-      animation: { ...this.defaults.animation, ...options.animation },
+      animation: { ...this.defaults.animation, ...(options.animation ?? {}) },
       popover: {
         ...this.defaults.popover,
-        ...options.popover,
-        menu: { ...this.defaults.popover.menu, ...options.popover?.menu },
-        submenu: { ...this.defaults.popover.submenu, ...options.popover?.submenu },
+        ...(options.popover ?? {}),
+        menu: { ...this.defaults.popover.menu, ...(options.popover?.menu ?? {}) },
+        submenu: { ...this.defaults.popover.submenu, ...(options.popover?.submenu ?? {}) },
       },
-      selector: { ...this.defaults.selector, ...options.selector },
+      selector: { ...this.defaults.selector, ...(options.selector ?? {}) },
     };
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
       this.settings.animation.duration = 0;
@@ -205,14 +205,7 @@ export default class Menu {
 
   handleTriggerClick = (event) => {
     event.preventDefault();
-    if (!this.isSubmenu) {
-      const open = this.triggerElement?.getAttribute('aria-expanded') === 'true';
-      if (event instanceof PointerEvent && event.pointerType !== 'mouse') {
-        this.toggle(!open);
-      }
-    } else {
-      this.toggle(event.currentTarget === this.triggerElement);
-    }
+    this.toggle(!this.isSubmenu ? this.triggerElement?.getAttribute('aria-expanded') !== 'true' : event.currentTarget === this.triggerElement);
   };
 
   handleTriggerKeyDown = (event) => {
