@@ -1,28 +1,40 @@
 export default class ParentCheckbox {
   constructor(root) {
-    if (!root) throw new Error('Root element missing');
+    if (!root) {
+      throw new Error('Root element missing');
+    }
     this.rootElement = root;
     const ids = this.rootElement.getAttribute('aria-controls')?.trim() ?? '';
-    if (!ids) console.warn('aria-controls attribute missing');
+    if (!ids) {
+      console.warn('aria-controls attribute missing');
+    }
     this.childElements = ids
       .split(/\s+/)
-      .map((id) => document.getElementById(id))
-      .filter((element) => element instanceof HTMLInputElement);
-    if (this.childElements.length === 0) console.warn('Child elements missing');
-    this.controller = new AbortController();
+      .map((id) => {
+        return document.getElementById(id);
+      })
+      .filter((element) => {
+        return element instanceof HTMLInputElement;
+      });
+    if (this.childElements.length === 0) {
+      console.warn('Child elements missing');
+    }
+    this.eventController = new AbortController();
     this.destroyed = false;
     this.initialize();
   }
 
   destroy() {
-    if (this.destroyed) return;
+    if (this.destroyed) {
+      return;
+    }
     this.destroyed = true;
-    this.controller.abort();
+    this.eventController.abort();
     this.rootElement.removeAttribute('data-parent-checkbox-initialized');
   }
 
   initialize() {
-    const { signal } = this.controller;
+    const { signal } = this.eventController;
     this.rootElement.addEventListener('change', this.handleRootChange, { signal });
     for (const child of this.childElements) {
       child.addEventListener('change', this.handleChildChange, { signal });
