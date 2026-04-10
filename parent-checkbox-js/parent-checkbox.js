@@ -1,12 +1,12 @@
 export default class ParentCheckbox {
   constructor(root) {
     if (!root) {
-      throw new Error('Root element missing');
+      throw new Error('Root element missing.');
     }
     this.rootElement = root;
     const ids = this.rootElement.getAttribute('aria-controls')?.trim() ?? '';
     if (!ids) {
-      console.warn('aria-controls attribute missing');
+      console.warn('Child element IDs missing.');
     }
     this.childElements = ids
       .split(/\s+/)
@@ -17,7 +17,7 @@ export default class ParentCheckbox {
         return element instanceof HTMLInputElement;
       });
     if (this.childElements.length === 0) {
-      console.warn('Child elements missing');
+      console.warn('Child elements missing.');
     }
     this.eventController = new AbortController();
     this.destroyed = false;
