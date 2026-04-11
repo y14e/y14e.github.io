@@ -27,11 +27,11 @@ export default class ParentCheckbox {
   }
 
   destroy() {
-    if (this.destroyed) {
+    if (this.destroyed || !this.#childElements) {
       return;
     }
     this.destroyed = true;
-    this.#controller.abort();
+    this.#controller?.abort();
     this.#controller = null;
     this.rootElement.removeAttribute('data-parent-checkbox-initialized');
     this.#childElements = null;
@@ -51,6 +51,9 @@ export default class ParentCheckbox {
   }
 
   handleRootChange = () => {
+    if (!this.#childElements) {
+      return;
+    }
     const { checked } = this.rootElement;
     this.rootElement.indeterminate = false;
     for (const child of this.#childElements) {
