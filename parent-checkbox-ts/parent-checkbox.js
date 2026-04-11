@@ -1,14 +1,15 @@
 export default class ParentCheckbox {
+  #rootElement;
   #childElements;
   #controller = new AbortController();
-
+  #destroyed = false;
   constructor(root) {
     if (!root) {
       throw new Error('Root element missing.');
     }
-    this.rootElement = root;
-    const ids = this.rootElement.getAttribute('aria-controls')?.trim() ?? '';
-    if (!ids) {
+    this.#rootElement = root;
+    const ids = this.#rootElement.getAttribute('aria-controls')?.trim() ?? '';
+    if (ids === '') {
       console.warn('Child element IDs missing.');
     }
     this.#childElements = ids
@@ -16,56 +17,50 @@ export default class ParentCheckbox {
       .map((id) => {
         return document.getElementById(id);
       })
-      .filter((element) => {
-        return element instanceof HTMLInputElement;
+      .filter((elements) => {
+        return elements instanceof HTMLInputElement;
       });
     if (this.#childElements.length === 0) {
       console.warn('Child elements missing.');
     }
-    this.destroyed = false;
-    this.initialize();
+    this.#initialize();
   }
-
   destroy() {
-    if (this.destroyed || !this.#childElements) {
+    if (this.#destroyed || !this.#childElements) {
       return;
     }
-    this.destroyed = true;
+    this.#destroyed = true;
     this.#controller?.abort();
     this.#controller = null;
-    this.rootElement.removeAttribute('data-parent-checkbox-initialized');
+    this.#rootElement.removeAttribute('data-parent-checkbox-initialized');
     this.#childElements = null;
   }
-
-  initialize() {
+  #initialize() {
     if (!this.#childElements || !this.#controller) {
       return;
     }
     const { signal } = this.#controller;
-    this.rootElement.addEventListener('change', this.handleRootChange, { signal });
+    this.#rootElement.addEventListener('change', this.#handleRootChange, { signal });
     for (const child of this.#childElements) {
-      child.addEventListener('change', this.handleChildChange, { signal });
+      child.addEventListener('change', this.#handleChildChange, { signal });
     }
-    this.update();
-    this.rootElement.setAttribute('data-parent-checkbox-initialized', '');
+    this.#update();
+    this.#rootElement.setAttribute('data-parent-checkbox-initialized', '');
   }
-
-  handleRootChange = () => {
+  #handleRootChange = () => {
     if (!this.#childElements) {
       return;
     }
-    const { checked } = this.rootElement;
-    this.rootElement.indeterminate = false;
+    const { checked } = this.#rootElement;
+    this.#rootElement.indeterminate = false;
     for (const child of this.#childElements) {
       child.checked = checked;
     }
   };
-
-  handleChildChange = () => {
-    this.update();
+  #handleChildChange = () => {
+    this.#update();
   };
-
-  update() {
+  #update() {
     if (!this.#childElements) {
       return;
     }
@@ -76,7 +71,7 @@ export default class ParentCheckbox {
       }
     }
     const allChecked = count === this.#childElements.length;
-    this.rootElement.checked = allChecked;
-    this.rootElement.indeterminate = !allChecked && count > 0;
+    this.#rootElement.checked = allChecked;
+    this.#rootElement.indeterminate = !allChecked && count > 0;
   }
 }
