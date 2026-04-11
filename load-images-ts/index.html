@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>load-images.js</title>
+<link rel="stylesheet" href="./index.css">
+</head>
+<body>
+<script type="module">
+import { loadImages } from './load-images.js';
+
+const urls = [
+  // success
+  'https://picsum.photos/1100/100',
+  'https://picsum.photos/1200/200',
+  'https://picsum.photos/1300/300',
+  'https://picsum.photos/1400/400',
+  'https://picsum.photos/1500/500',
+  'https://picsum.photos/1600/600',
+  'https://picsum.photos/1700/700',
+  'https://picsum.photos/1800/800',
+  'https://picsum.photos/1900/900',
+
+  // slow
+  'https://picsum.photos/2000/2000',
+
+  // error
+  'https://example.com/not-found.jpg',
+];
+await loadImages(urls, {
+  crossOrigin: 'anonymous',
+  concurrency: 3,
+  retry: {
+    retries: 3,
+  },
+  onProgress: (loaded, total) => {
+    console.log(`Loading: ${loaded}/${total} (${Math.round(loaded / total * 100)}%)`);
+  },
+  timeout: 1000,
+});
+console.log('Finished. (1/2)');
+await loadImages(urls, {
+  onProgress: (loaded, total) => {
+    console.log(`Loading: ${loaded}/${total} (${Math.round(loaded / total * 100)}%)`);
+  },
+  timeout: 3000,
+});
+console.log('Finished. (2/2)');
+</script>
+</body>
+</html>
