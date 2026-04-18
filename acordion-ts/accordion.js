@@ -23,8 +23,9 @@ export default class Accordion {
       selector: { ...this.#defaults.selector, ...(options.selector ?? {}) },
     };
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      this.#settings.animation.duration = 0;
+      Object.assign(this.#settings.animation, { duration: 0 });
     }
+    console.log(this.#settings);
     const { trigger, content } = this.#settings.selector;
     const NOT_NESTED = `:not(:scope ${content} *)`;
     this.#triggerElements = this.#rootElement.querySelectorAll(`${trigger}${NOT_NESTED}`);
