@@ -37,7 +37,7 @@ export default class Menu {
   #radioItemElements = [];
   #radioItemElementsByGroup = new Map();
   #arrowElement;
-  #eventController = new AbortController();
+  #controller = new AbortController();
   #animation = null;
   #submenus = [];
   #submenuTimer;
@@ -143,7 +143,7 @@ export default class Menu {
       return;
     }
     this.#destroyed = true;
-    this.#eventController.abort();
+    this.#controller.abort();
     this.#clearSubmenuTimer();
     this.#cleanupPopover?.();
     this.#cleanupPopover = null;
@@ -166,7 +166,7 @@ export default class Menu {
     this.#animation.cancel();
   }
   #initialize() {
-    const { signal } = this.#eventController;
+    const { signal } = this.#controller;
     document.addEventListener('pointerdown', this.#onOutsidePointerDown, {
       signal,
     });
