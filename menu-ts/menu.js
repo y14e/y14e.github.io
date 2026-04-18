@@ -67,7 +67,7 @@ export default class Menu {
       selector: { ...this.#defaults.selector, ...(options.selector ?? {}) },
     };
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      this.#settings.animation.duration = 0;
+      Object.assign(this.#settings.animation, { duration: 0 });
     }
     this.#isSubmenu = submenu;
     const { selector } = this.#settings;
@@ -144,9 +144,9 @@ export default class Menu {
     }
     this.#destroyed = true;
     this.#controller.abort();
-    this.#clearSubmenuTimer();
     this.#cleanupPopover?.();
     this.#cleanupPopover = null;
+    this.#clearSubmenuTimer();
     Menu.#menus = Menu.#menus.filter((menu) => {
       return menu !== this;
     });
