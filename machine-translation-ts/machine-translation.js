@@ -1,6 +1,7 @@
 export function detectMachineTranslation() {
   const html = document.documentElement;
   const title = document.getElementsByTagName('title')[0];
+  const language = new Intl.Locale(navigator.language).language;
   const strategies = [
     {
       attribute: 'class',
@@ -22,24 +23,49 @@ export function detectMachineTranslation() {
       attribute: 'lang',
       element: html,
       test: () => {
-        return new Intl.Locale(html.lang).language !== new Intl.Locale(navigator.language).language;
+        return new Intl.Locale(html.lang).language !== language;
       },
     },
   ];
-  const observer = new MutationObserver(() => {
-    if (
-      strategies.some((strategy) => {
-        return strategy.test();
-      })
-    ) {
-      window.dispatchEvent(new Event('machineTranslationDetected'));
-      observer.disconnect();
+  let timer;
+  const detect = () => {
+    if (timer !== undefined) {
+      return;
     }
-  });
-  strategies.forEach(({ attribute, element }) => {
-    observer.observe(element, { attributeFilter: [attribute] });
-  });
+    timer = requestAnimationFrame(() => {
+      const translated = strategies.some((strategy) => {
+        return strategy.test();
+      });
+      if (!translated) {
+        return;
+      }
+      window.dispatchEvent(new Event('machineTranslationDetected'));
+      observer?.disconnect();
+      observer = null;
+    });
+  };
+  const attributeMap = new Map();
+  for (const { element } of strategies) {
+    if (!attributeMap.has(element)) {
+      attributeMap.set(element, []);
+    }
+  }
+  for (const { attribute, element } of strategies) {
+    const list = attributeMap.get(element);
+    if (list !== undefined) {
+      list.push(attribute);
+    }
+  }
+  let observer = new MutationObserver(detect);
+  for (const [element, attributes] of attributeMap) {
+    observer.observe(element, { attributeFilter: attributes });
+  }
   return () => {
-    observer.disconnect();
+    observer?.disconnect();
+    observer = null;
+    if (timer !== undefined) {
+      cancelAnimationFrame(timer);
+      timer = undefined;
+    }
   };
 }

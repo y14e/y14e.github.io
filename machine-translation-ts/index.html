@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>machine-translation.js</title>
+<title>machine-translation.ts</title>
 <link rel="stylesheet" href="./index.css">
 </head>
 <body>
@@ -10,8 +10,11 @@
 <p>翻訳してみましょう!</p>
 <script type="module">
 import { detectMachineTranslation } from './machine-translation.js';
+
+window.addEventListener('machineTranslationDetected', () => {
+  alert('Machine translation detected!');
+});
 detectMachineTranslation();
-window.addEventListener('machineTranslationDetected', () => alert('Machine translation detected!'));
 </script>
 </body>
 </html>
