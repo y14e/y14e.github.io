@@ -90,7 +90,7 @@ export default class Menu {
     }
     for (const item of this.#itemElements) {
       const shortcuts = item.getAttribute('aria-keyshortcuts');
-      const keys = (shortcuts?.split(/\s+/) ?? [item.textContent.trim()[0]])
+      const keys = (shortcuts?.split(/\s+/) ?? [item.textContent?.trim()[0] ?? ''])
         .filter((key) => {
           return /^\S$/i.test(key);
         })
@@ -364,7 +364,7 @@ export default class Menu {
         newIndex = (currentIndex + 1) % focusables.length;
         break;
       default: {
-        targetFocusables = this.#itemElementsByFirstChar[key.toLowerCase()].filter(this.#isFocusable);
+        targetFocusables = this.#itemElementsByFirstChar[key.toLowerCase()]?.filter(this.#isFocusable) ?? [];
         const foundIndex = targetFocusables.findIndex((focusable) => {
           return focusables.indexOf(focusable) > currentIndex;
         });
@@ -556,23 +556,23 @@ export default class Menu {
         listStyle.setProperty('top', `${listY}px`);
         this.#listElement.setAttribute('data-menu-placement', placement);
         if (this.#settings.popover.transformOrigin) {
-          listStyle.setProperty(
-            'transform-origin',
-            {
-              top: '50% 100%',
-              'top-start': '0 100%',
-              'top-end': '100% 100%',
-              right: '0 50%',
-              'right-start': '0 0',
-              'right-end': '0 100%',
-              bottom: '50% 0',
-              'bottom-start': '0 0',
-              'bottom-end': '100% 0',
-              left: '100% 50%',
-              'left-start': '100% 0',
-              'left-end': '100% 100%',
-            }[placement],
-          );
+          const transformOrigin = {
+            top: '50% 100%',
+            'top-start': '0 100%',
+            'top-end': '100% 100%',
+            right: '0 50%',
+            'right-start': '0 0',
+            'right-end': '0 100%',
+            bottom: '50% 0',
+            'bottom-start': '0 0',
+            'bottom-end': '100% 0',
+            left: '100% 50%',
+            'left-start': '100% 0',
+            'left-end': '100% 100%',
+          }[placement];
+          if (transformOrigin) {
+            listStyle.setProperty('transform-origin', transformOrigin);
+          }
         }
         if (!this.#arrowElement) {
           return;
