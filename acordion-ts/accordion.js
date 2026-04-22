@@ -158,14 +158,11 @@ export default class Accordion {
     focusables.at(newIndex)?.focus();
   };
   #onContentBeforeMatch = (event) => {
-    if (!this.#bindings) {
-      return;
-    }
     const content = event.currentTarget;
     if (!(content instanceof HTMLElement)) {
       return;
     }
-    const binding = this.#bindings.get(content);
+    const binding = this.#bindings?.get(content);
     if (!binding) {
       return;
     }
@@ -174,10 +171,10 @@ export default class Accordion {
     }
   };
   #toggle(trigger, open, match = false) {
-    if (!this.#triggerElements || !this.#bindings) {
+    if (!this.#triggerElements) {
       return;
     }
-    const binding = this.#bindings.get(trigger);
+    const binding = this.#bindings?.get(trigger);
     if (!binding || String(open) === trigger.getAttribute('aria-expanded')) {
       return;
     }

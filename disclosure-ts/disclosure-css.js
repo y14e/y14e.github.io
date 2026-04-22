@@ -12,13 +12,14 @@ export default class Disclosure {
     }
     this.#rootElement = root;
     const NOT_NESTED = ':not(:scope summary + * *)';
-    this.#detailsElements =
-      this.#rootElement.querySelectorAll(`details${NOT_NESTED}`);
+    this.#detailsElements = this.#rootElement.querySelectorAll(`details${NOT_NESTED}`);
     this.#summaryElements = this.#rootElement.querySelectorAll(`summary${NOT_NESTED}`);
     this.#contentElements = this.#rootElement.querySelectorAll(`summary${NOT_NESTED} + *`);
-    if (this.#detailsElements.length === 0 ||
+    if (
+      this.#detailsElements.length === 0 ||
       this.#summaryElements.length === 0 ||
-      this.#contentElements.length === 0) {
+      this.#contentElements.length === 0
+    ) {
       throw new Error('Details, summary, or content element missing.');
     }
     this.#initialize();
@@ -47,11 +48,13 @@ export default class Disclosure {
     this.#bindings = null;
   }
   #initialize() {
-    if (!this.#detailsElements ||
+    if (
+      !this.#detailsElements ||
       !this.#summaryElements ||
       !this.#contentElements ||
       !this.#bindings ||
-      !this.#controller) {
+      !this.#controller
+    ) {
       return;
     }
     const { signal } = this.#controller;
@@ -62,9 +65,7 @@ export default class Disclosure {
         summary.setAttribute('tabindex', '-1');
         summary.style.setProperty('pointer-events', 'none');
       }
-      summary.addEventListener('keydown', this.#onSummaryKeyDown, {
-        signal,
-      });
+      summary.addEventListener('keydown', this.#onSummaryKeyDown, { signal });
     }
     for (let i = 0, l = this.#detailsElements.length; i < l; i++) {
       const details = this.#detailsElements[i];
@@ -81,7 +82,7 @@ export default class Disclosure {
     this.#rootElement.setAttribute('data-disclosure-initialized', '');
   }
   #onSummaryKeyDown = (event) => {
-    if (!this.#summaryElements || !this.#bindings) {
+    if (!this.#summaryElements) {
       return;
     }
     const { key } = event;
@@ -92,7 +93,7 @@ export default class Disclosure {
     event.stopPropagation();
     const focusables = [];
     for (const summary of this.#summaryElements) {
-      const binding = this.#bindings.get(summary);
+      const binding = this.#bindings?.get(summary);
       if (binding && this.#isFocusable(binding.details)) {
         focusables.push(summary);
       }

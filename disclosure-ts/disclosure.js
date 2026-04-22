@@ -29,9 +29,11 @@ export default class Disclosure {
     this.#detailsElements = this.#rootElement.querySelectorAll(`details${NOT_NESTED}`);
     this.#summaryElements = this.#rootElement.querySelectorAll(`summary${NOT_NESTED}`);
     this.#contentElements = this.#rootElement.querySelectorAll(`summary${NOT_NESTED} + *`);
-    if (this.#detailsElements.length === 0 ||
+    if (
+      this.#detailsElements.length === 0 ||
       this.#summaryElements.length === 0 ||
-      this.#contentElements.length === 0) {
+      this.#contentElements.length === 0
+    ) {
       throw new Error('Details, summary or content element missing.');
     }
     this.#initialize();
@@ -94,11 +96,13 @@ export default class Disclosure {
     this.#bindings = null;
   }
   #initialize() {
-    if (!this.#detailsElements ||
+    if (
+      !this.#detailsElements ||
       !this.#summaryElements ||
       !this.#contentElements ||
       !this.#bindings ||
-      !this.#controller) {
+      !this.#controller
+    ) {
       return;
     }
     const { signal } = this.#controller;
@@ -121,9 +125,7 @@ export default class Disclosure {
         summary.style.setProperty('pointer-events', 'none');
       }
       summary.addEventListener('click', this.#onSummaryClick, { signal });
-      summary.addEventListener('keydown', this.#onSummaryKeyDown, {
-        signal,
-      });
+      summary.addEventListener('keydown', this.#onSummaryKeyDown, { signal });
     }
     for (let i = 0, l = this.#detailsElements.length; i < l; i++) {
       const details = this.#detailsElements[i];
@@ -140,16 +142,13 @@ export default class Disclosure {
     this.#rootElement.setAttribute('data-disclosure-initialized', '');
   }
   #onSummaryClick = (event) => {
-    if (!this.#bindings) {
-      return;
-    }
     event.preventDefault();
     event.stopPropagation();
     const summary = event.currentTarget;
     if (!(summary instanceof HTMLElement)) {
       return;
     }
-    const binding = this.#bindings.get(summary);
+    const binding = this.#bindings?.get(summary);
     if (!binding) {
       return;
     }
@@ -157,7 +156,7 @@ export default class Disclosure {
     this.#toggle(details, !details.hasAttribute('data-disclosure-open'));
   };
   #onSummaryKeyDown = (event) => {
-    if (!this.#summaryElements || !this.#bindings) {
+    if (!this.#summaryElements) {
       return;
     }
     const { key } = event;
@@ -168,7 +167,7 @@ export default class Disclosure {
     event.stopPropagation();
     const focusables = [];
     for (const summary of this.#summaryElements) {
-      const binding = this.#bindings.get(summary);
+      const binding = this.#bindings?.get(summary);
       if (binding && this.#isFocusable(binding.details)) {
         focusables.push(summary);
       }
@@ -196,19 +195,21 @@ export default class Disclosure {
     focusables.at(newIndex)?.focus();
   };
   #toggle(details, open) {
-    if (!this.#detailsElements || !this.#bindings) {
+    if (!this.#detailsElements) {
       return;
     }
-    const binding = this.#bindings.get(details);
+    const binding = this.#bindings?.get(details);
     if (!binding || open === details.hasAttribute('data-disclosure-open')) {
       return;
     }
     const name = details.getAttribute('data-disclosure-name');
     if (name && open) {
       for (const d of this.#detailsElements) {
-        if (d !== details &&
+        if (
+          d !== details &&
           d.getAttribute('data-disclosure-name') === name &&
-          d.hasAttribute('data-disclosure-open')) {
+          d.hasAttribute('data-disclosure-open')
+        ) {
           this.close(d);
           break;
         }
@@ -242,18 +243,22 @@ export default class Disclosure {
     }
     const { signal } = this.#controller;
     animation.addEventListener('cancel', cleanup, { once: true, signal });
-    animation.addEventListener('finish', () => {
-      cleanup();
-      if (name) {
-        details.setAttribute('name', details.getAttribute('data-disclosure-name') ?? '');
-      }
-      if (!open) {
-        details.open = false;
-      }
-      const { style } = content;
-      style.removeProperty('block-size');
-      style.removeProperty('overflow');
-    }, { once: true, signal });
+    animation.addEventListener(
+      'finish',
+      () => {
+        cleanup();
+        if (name) {
+          details.setAttribute('name', details.getAttribute('data-disclosure-name') ?? '');
+        }
+        if (!open) {
+          details.open = false;
+        }
+        const { style } = content;
+        style.removeProperty('block-size');
+        style.removeProperty('overflow');
+      },
+      { once: true, signal },
+    );
   }
   #createBinding(details, summary, content) {
     return { details, summary, content, timer: undefined, animation: null };
