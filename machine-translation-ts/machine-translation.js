@@ -33,10 +33,10 @@ export function detectMachineTranslation() {
       return;
     }
     timer = requestAnimationFrame(() => {
-      const translated = strategies.some((strategy) => {
+      const isTranslated = strategies.some((strategy) => {
         return strategy.test();
       });
-      if (!translated) {
+      if (!isTranslated) {
         return;
       }
       window.dispatchEvent(new Event('machineTranslationDetected'));
