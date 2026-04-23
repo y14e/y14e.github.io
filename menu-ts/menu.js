@@ -48,9 +48,9 @@ export default class Menu {
   #animation = null;
   #submenus = [];
   #submenuTimer;
-  #destroyed = false;
+  #isDestroyed = false;
   #cleanupPopover = null;
-  constructor(root, options = {}, submenu = false) {
+  constructor(root, options = {}, isSubmenu = false) {
     if (!root) {
       throw new Error('Root element missing.');
     }
@@ -76,7 +76,7 @@ export default class Menu {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
       Object.assign(this.#settings.animation, { duration: 0 });
     }
-    this.#isSubmenu = submenu;
+    this.#isSubmenu = isSubmenu;
     const { selector } = this.#settings;
     this.#triggerElement = this.#rootElement.querySelector(selector[!this.#isSubmenu ? 'trigger' : 'item']);
     const list = this.#rootElement.querySelector(selector.list);
@@ -143,11 +143,11 @@ export default class Menu {
   close() {
     this.#toggle(false);
   }
-  async destroy(force = false) {
-    if (this.#destroyed) {
+  async destroy(isForce = false) {
+    if (this.#isDestroyed) {
       return;
     }
-    this.#destroyed = true;
+    this.#isDestroyed = true;
     this.#controller.abort();
     this.#cleanupPopover?.();
     this.#cleanupPopover = null;
@@ -164,7 +164,7 @@ export default class Menu {
     if (!this.#animation) {
       return;
     }
-    if (!force) {
+    if (!isForce) {
       try {
         await this.#animation.finished;
       } catch {}
@@ -428,16 +428,16 @@ export default class Menu {
       i.setAttribute('aria-checked', String(i === item));
     }
   };
-  #toggle(open) {
-    if (String(open) === this.#triggerElement?.getAttribute('aria-expanded')) {
+  #toggle(isOpen) {
+    if (String(isOpen) === this.#triggerElement?.getAttribute('aria-expanded')) {
       return;
     }
     if (this.#triggerElement) {
       requestAnimationFrame(() => {
-        this.#triggerElement?.setAttribute('aria-expanded', String(open));
+        this.#triggerElement?.setAttribute('aria-expanded', String(isOpen));
       });
     }
-    if (open) {
+    if (isOpen) {
       for (const menu of Menu.#menus.filter((m) => {
         return !m.#rootElement.contains(this.#rootElement);
       })) {
@@ -467,14 +467,14 @@ export default class Menu {
     if (!this.#triggerElement) {
       return;
     }
-    if (!open) {
+    if (!isOpen) {
       this.#cleanupPopover?.();
       this.#cleanupPopover = null;
     }
     const opacity = getComputedStyle(this.#listElement).getPropertyValue('opacity');
     this.#animation?.cancel();
     this.#animation = this.#listElement.animate(
-      { opacity: open ? [opacity, '1'] : [opacity, '0'] },
+      { opacity: isOpen ? [opacity, '1'] : [opacity, '0'] },
       { duration: this.#settings.animation.duration, easing: 'ease' },
     );
     const cleanupAnimation = () => {
@@ -487,7 +487,7 @@ export default class Menu {
       () => {
         cleanupAnimation();
         const { style: listStyle } = this.#listElement;
-        if (!open) {
+        if (!isOpen) {
           this.#listElement.removeAttribute('data-menu-placement');
           listStyle.setProperty('display', 'none');
           listStyle.removeProperty('left');
@@ -521,16 +521,16 @@ export default class Menu {
   #isFocusable(element) {
     return element.getAttribute('aria-disabled') !== 'true' && !element.hasAttribute('disabled');
   }
-  #resetTabIndex(force = false) {
-    if (this.#triggerElement || force) {
+  #resetTabIndex(isForce = false) {
+    if (this.#triggerElement || isForce) {
       for (const item of this.#itemElements) {
         item.setAttribute('tabindex', '-1');
       }
     } else {
-      let found = false;
+      let isFound = false;
       for (const item of this.#itemElements) {
-        if (!found && this.#isFocusable(item)) {
-          found = true;
+        if (!isFound && this.#isFocusable(item)) {
+          isFound = true;
           item.setAttribute('tabindex', '0');
         } else {
           item.setAttribute('tabindex', '-1');
