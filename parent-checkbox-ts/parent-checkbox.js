@@ -2,7 +2,7 @@ export default class ParentCheckbox {
   #rootElement;
   #childElements;
   #controller = new AbortController();
-  #destroyed = false;
+  #isDestroyed = false;
   constructor(root) {
     if (!root) {
       throw new Error('Root element missing.');
@@ -27,10 +27,10 @@ export default class ParentCheckbox {
     this.#initialize();
   }
   destroy() {
-    if (this.#destroyed) {
+    if (this.#isDestroyed) {
       return;
     }
-    this.#destroyed = true;
+    this.#isDestroyed = true;
     this.#controller?.abort();
     this.#controller = null;
     this.#rootElement.removeAttribute('data-parent-checkbox-initialized');
@@ -58,18 +58,18 @@ export default class ParentCheckbox {
         count++;
       }
     }
-    const all = count === this.#childElements.length;
-    this.#rootElement.checked = all;
-    this.#rootElement.indeterminate = !all && count > 0;
+    const isAllChecked = count === this.#childElements.length;
+    this.#rootElement.checked = isAllChecked;
+    this.#rootElement.indeterminate = !isAllChecked && count > 0;
   }
   #onRootChange = () => {
     if (!this.#childElements) {
       return;
     }
     this.#rootElement.indeterminate = false;
-    const checked = this.#rootElement.checked;
+    const isChecked = this.#rootElement.checked;
     for (const child of this.#childElements) {
-      child.checked = checked;
+      child.checked = isChecked;
     }
   };
   #onChildChange = () => {
