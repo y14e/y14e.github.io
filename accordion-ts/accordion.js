@@ -12,7 +12,7 @@ export default class Accordion {
   #contentElements;
   #bindings = new WeakMap();
   #controller = new AbortController();
-  #destroyed = false;
+  #isDestroyed = false;
   constructor(root, options = {}) {
     if (!root) {
       throw new Error('Root element missing.');
@@ -35,24 +35,24 @@ export default class Accordion {
     this.#initialize();
   }
   open(trigger) {
-    if (!this.#destroyed && this.#bindings?.has(trigger)) {
+    if (!this.#isDestroyed && this.#bindings?.has(trigger)) {
       this.#toggle(trigger, true);
     }
   }
   close(trigger) {
-    if (!this.#destroyed && this.#bindings?.has(trigger)) {
+    if (!this.#isDestroyed && this.#bindings?.has(trigger)) {
       this.#toggle(trigger, false);
     }
   }
-  async destroy(force = false) {
-    if (this.#destroyed || !this.#triggerElements || !this.#bindings) {
+  async destroy(isForce = false) {
+    if (this.#isDestroyed || !this.#triggerElements || !this.#bindings) {
       return;
     }
-    this.#destroyed = true;
+    this.#isDestroyed = true;
     this.#controller?.abort();
     this.#controller = null;
     this.#rootElement.removeAttribute('data-accordion-initialized');
-    if (!force) {
+    if (!isForce) {
       const promises = [];
       for (const trigger of this.#triggerElements) {
         const animation = this.#bindings.get(trigger)?.animation;
@@ -170,30 +170,30 @@ export default class Accordion {
       this.#toggle(binding.trigger, true, true);
     }
   };
-  #toggle(trigger, open, match = false) {
+  #toggle(trigger, isOpen, isMatch = false) {
     if (!this.#triggerElements) {
       return;
     }
     const binding = this.#bindings?.get(trigger);
-    if (!binding || String(open) === trigger.getAttribute('aria-expanded')) {
+    if (!binding || String(isOpen) === trigger.getAttribute('aria-expanded')) {
       return;
     }
     const name = trigger.getAttribute('data-accordion-name');
-    if (name && open) {
+    if (name && isOpen) {
       for (const t of this.#triggerElements) {
         if (
           t !== trigger &&
           t.getAttribute('data-accordion-name') === name &&
           t.getAttribute('aria-expanded') === 'true'
         ) {
-          this.#toggle(t, false, match);
+          this.#toggle(t, false, isMatch);
           break;
         }
       }
     }
     trigger.setAttribute(
       'aria-label',
-      trigger.getAttribute(`data-accordion-${open ? 'expanded' : 'collapsed'}-label`) ??
+      trigger.getAttribute(`data-accordion-${isOpen ? 'expanded' : 'collapsed'}-label`) ??
         trigger.getAttribute('aria-label') ??
         '',
     );
@@ -202,16 +202,16 @@ export default class Accordion {
     if (content.hidden) {
       content.hidden = false;
     }
-    const endSize = open ? content.scrollHeight : 0;
+    const endSize = isOpen ? content.scrollHeight : 0;
     binding.animation?.cancel();
     content.style.setProperty('overflow', 'clip');
     const { duration, easing } = this.#settings.animation;
     const animation = content.animate(
       { blockSize: [`${startSize}px`, `${endSize}px`] },
-      { duration: match ? 0 : duration, easing },
+      { duration: isMatch ? 0 : duration, easing },
     );
     binding.animation = animation;
-    trigger.setAttribute('aria-expanded', String(open));
+    trigger.setAttribute('aria-expanded', String(isOpen));
     const cleanup = () => {
       if (binding.animation === animation) {
         binding.animation = null;
@@ -226,7 +226,7 @@ export default class Accordion {
       'finish',
       () => {
         cleanup();
-        if (!open) {
+        if (!isOpen) {
           content.setAttribute('hidden', 'until-found');
         }
         const { style } = content;

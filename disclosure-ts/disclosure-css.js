@@ -5,7 +5,7 @@ export default class Disclosure {
   #contentElements;
   #bindings = new WeakMap();
   #controller = new AbortController();
-  #destroyed = false;
+  #isDestroyed = false;
   constructor(root) {
     if (!root) {
       throw new Error('Root element missing.');
@@ -25,20 +25,20 @@ export default class Disclosure {
     this.#initialize();
   }
   open(details) {
-    if (!this.#destroyed && this.#bindings?.has(details)) {
+    if (!this.#isDestroyed && this.#bindings?.has(details)) {
       this.#toggle(details, true);
     }
   }
   close(details) {
-    if (!this.#destroyed && this.#bindings?.has(details)) {
+    if (!this.#isDestroyed && this.#bindings?.has(details)) {
       this.#toggle(details, false);
     }
   }
   destroy() {
-    if (this.#destroyed) {
+    if (this.#isDestroyed) {
       return;
     }
-    this.#destroyed = true;
+    this.#isDestroyed = true;
     this.#controller?.abort();
     this.#controller = null;
     this.#rootElement.removeAttribute('data-disclosure-initialized');
@@ -120,9 +120,9 @@ export default class Disclosure {
     }
     focusables.at(newIndex)?.focus();
   };
-  #toggle(details, open) {
-    if (open !== details.open) {
-      details.open = open;
+  #toggle(details, isOpen) {
+    if (isOpen !== details.open) {
+      details.open = isOpen;
     }
   }
   #createBinding(details, summary, content) {
