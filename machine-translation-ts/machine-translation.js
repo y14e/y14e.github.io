@@ -51,9 +51,9 @@ export function detectMachineTranslation() {
     }
   }
   for (const { attribute, element } of strategies) {
-    const list = attributeMap.get(element);
-    if (list !== undefined) {
-      list.push(attribute);
+    const attributes = attributeMap.get(element);
+    if (attributes !== undefined) {
+      attributes.push(attribute);
     }
   }
   let observer = new MutationObserver(detect);
