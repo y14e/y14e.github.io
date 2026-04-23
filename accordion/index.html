@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>accordion.ts</title>
+<title>accordion</title>
 <link href="./index.css" rel="stylesheet">
 </head>
 <body>
@@ -154,7 +154,8 @@
   </div>
 </div>
 <script type="module">
-import Accordion from "./accordion.js";
+import Accordion from '@y14e/accordion';
+
 document.querySelectorAll('[data-accordion]').forEach((element) => new Accordion(element));
 </script>
 </body>
