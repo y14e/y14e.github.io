@@ -84,40 +84,32 @@ export default class Menu {
       throw new Error('List element missing.');
     }
     this.#listElement = list;
-    this.#itemElements = this.#listElement.querySelectorAll(`${selector.item}:not(:scope ${selector.list} *)`);
+    this.#itemElements = [...this.#listElement.querySelectorAll(`${selector.item}:not(:scope ${selector.list} *)`)];
     if (this.#itemElements.length === 0) {
       throw new Error('Item elements missing.');
     }
-    for (const item of this.#itemElements) {
+    this.#itemElements.forEach((item) => {
       const shortcuts = item.getAttribute('aria-keyshortcuts');
       const keys = (shortcuts?.split(/\s+/) ?? [item.textContent?.trim()[0] ?? ''])
-        .filter((key) => {
-          return /^\S$/i.test(key);
-        })
-        .map((key) => {
-          return key.toLowerCase();
-        });
-      for (const key of keys) {
-        let items = this.#itemElementsByFirstChar[key];
-        if (!items) {
-          items = this.#itemElementsByFirstChar[key] = [];
-        }
+        .filter((key) => /^\S$/i.test(key))
+        .map((key) => key.toLowerCase());
+      keys.forEach((key) => {
+        const items = this.#itemElementsByFirstChar[key] ?? [];
         items.push(item);
-      }
+        this.#itemElementsByFirstChar[key] = items;
+      });
       const first = keys[0];
       if (!shortcuts && first) {
         item.setAttribute('aria-keyshortcuts', first);
       }
-    }
-    for (const item of this.#itemElements) {
       const role = item.getAttribute('role');
       if (role === 'menuitemcheckbox') {
         this.#checkboxItemElements.push(item);
       } else if (role === 'menuitemradio') {
         this.#radioItemElements.push(item);
       }
-    }
-    for (const item of this.#radioItemElements) {
+    });
+    this.#radioItemElements.forEach((item) => {
       let group = item.closest(selector.group);
       if (!group || !this.#rootElement.contains(group)) {
         group = this.#rootElement;
@@ -125,7 +117,7 @@ export default class Menu {
       const items = this.#radioItemElementsByGroup.get(group) ?? [];
       items.push(item);
       this.#radioItemElementsByGroup.set(group, items);
-    }
+    });
     const settings = this.#settings.popover[!this.#isSubmenu ? 'menu' : 'submenu'];
     if (settings.arrow) {
       this.#arrowElement = document.createElement('div');
@@ -152,15 +144,9 @@ export default class Menu {
     this.#cleanupPopover?.();
     this.#cleanupPopover = null;
     this.#clearSubmenuTimer();
-    Menu.#menus = Menu.#menus.filter((menu) => {
-      return menu !== this;
-    });
+    Menu.#menus = Menu.#menus.filter((menu) => menu !== this);
     this.#rootElement.removeAttribute('data-menu-initialized');
-    await Promise.all(
-      this.#submenus.map((submenu) => {
-        return submenu.destroy();
-      }),
-    );
+    await Promise.all(this.#submenus.map((submenu) => submenu.destroy()));
     if (!this.#animation) {
       return;
     }
@@ -199,7 +185,7 @@ export default class Menu {
     }
     this.#listElement.setAttribute('role', 'menu');
     this.#listElement.addEventListener('keydown', this.#onListKeyDown, { signal });
-    for (const item of this.#itemElements) {
+    this.#itemElements.forEach((item) => {
       const parent = item.parentElement;
       if (!(parent instanceof HTMLElement)) {
         return;
@@ -207,26 +193,22 @@ export default class Menu {
       if (parent.querySelector(this.#settings.selector.list)) {
         this.#submenus.push(new Menu(parent, this.#settings, true));
       }
-      if (
-        [this.#checkboxItemElements, this.#radioItemElements].every((list) => {
-          return !list.includes(item);
-        })
-      ) {
+      if ([this.#checkboxItemElements, this.#radioItemElements].every((list) => !list.includes(item))) {
         item.setAttribute('role', 'menuitem');
       }
       item.addEventListener('blur', this.#onItemBlur, { signal });
       item.addEventListener('focus', this.#onItemFocus, { signal });
       item.addEventListener('pointerenter', this.#onItemPointerEnter, { signal });
       item.addEventListener('pointerleave', this.#onItemPointerLeave, { signal });
-    }
-    for (const item of this.#checkboxItemElements) {
+    });
+    this.#checkboxItemElements.forEach((item) => {
       item.setAttribute('role', 'menuitemcheckbox');
       item.addEventListener('click', this.#onCheckboxItemClick, { signal });
-    }
-    for (const item of this.#radioItemElements) {
+    });
+    this.#radioItemElements.forEach((item) => {
       item.setAttribute('role', 'menuitemradio');
       item.addEventListener('click', this.#onRadioItemClick, { signal });
-    }
+    });
     this.#resetTabIndex();
     if (!this.#isSubmenu) {
       this.#rootElement.setAttribute('data-menu-initialized', '');
@@ -275,15 +257,7 @@ export default class Menu {
     event.preventDefault();
     event.stopPropagation();
     this.open();
-    const focusables = [];
-    for (const item of this.#itemElements) {
-      if (this.#isFocusable(item)) {
-        focusables.push(item);
-      }
-    }
-    if (focusables.length === 0) {
-      return;
-    }
+    const focusables = this.#itemElements.filter(this.#isFocusable);
     let index = 0;
     switch (key) {
       case 'Enter':
@@ -328,12 +302,7 @@ export default class Menu {
     }
     event.preventDefault();
     event.stopPropagation();
-    const focusables = [];
-    for (const item of this.#itemElements) {
-      if (this.#isFocusable(item)) {
-        focusables.push(item);
-      }
-    }
+    const focusables = this.#itemElements.filter(this.#isFocusable);
     const active = this.#getActiveElement();
     if (!active) {
       return;
@@ -365,9 +334,7 @@ export default class Menu {
         break;
       default: {
         targetFocusables = this.#itemElementsByFirstChar[key.toLowerCase()]?.filter(this.#isFocusable) ?? [];
-        const foundIndex = targetFocusables.findIndex((focusable) => {
-          return focusables.indexOf(focusable) > currentIndex;
-        });
+        const foundIndex = targetFocusables.findIndex((focusable) => focusables.indexOf(focusable) > currentIndex);
         newIndex = foundIndex !== -1 ? foundIndex : 0;
       }
     }
@@ -394,9 +361,9 @@ export default class Menu {
       return;
     }
     this.#submenuTimer = setTimeout(() => {
-      for (const submenu of this.#submenus) {
+      this.#submenus.forEach((submenu) => {
         submenu.#toggle(submenu.#triggerElement === item);
-      }
+      });
       item.setAttribute('tabindex', '0');
       item.focus();
     }, this.#settings.delay);
@@ -424,9 +391,9 @@ export default class Menu {
     if (!items) {
       return;
     }
-    for (const i of items) {
+    items.forEach((i) => {
       i.setAttribute('aria-checked', String(i === item));
-    }
+    });
   };
   #toggle(isOpen) {
     if (String(isOpen) === this.#triggerElement?.getAttribute('aria-expanded')) {
@@ -438,28 +405,23 @@ export default class Menu {
       });
     }
     if (isOpen) {
-      for (const menu of Menu.#menus.filter((m) => {
-        return !m.#rootElement.contains(this.#rootElement);
-      })) {
-        menu.close();
-      }
+      Menu.#menus
+        .filter((m) => !m.#rootElement.contains(this.#rootElement))
+        .forEach((menu) => {
+          menu.close();
+        });
       const { style } = this.#listElement;
       style.setProperty('display', 'block');
       style.setProperty('opacity', '0');
       if (this.#triggerElement) {
         this.#updatePopover();
       }
-      for (const item of this.#itemElements) {
-        if (this.#isFocusable(item)) {
-          item.focus();
-          break;
-        }
-      }
+      this.#itemElements.find(this.#isFocusable)?.focus();
     } else {
       this.#clearSubmenuTimer();
-      for (const submenu of this.#submenus) {
+      this.#submenus.forEach((submenu) => {
         submenu.close();
-      }
+      });
       if (this.#triggerElement && this.#rootElement.contains(this.#getActiveElement())) {
         this.#triggerElement.focus();
       }
@@ -523,19 +485,19 @@ export default class Menu {
   }
   #resetTabIndex(isForce = false) {
     if (this.#triggerElement || isForce) {
-      for (const item of this.#itemElements) {
+      this.#itemElements.forEach((item) => {
         item.setAttribute('tabindex', '-1');
-      }
+      });
     } else {
       let isFound = false;
-      for (const item of this.#itemElements) {
+      this.#itemElements.forEach((item) => {
         if (!isFound && this.#isFocusable(item)) {
           isFound = true;
           item.setAttribute('tabindex', '0');
         } else {
           item.setAttribute('tabindex', '-1');
         }
-      }
+      });
     }
   }
   #updatePopover() {
