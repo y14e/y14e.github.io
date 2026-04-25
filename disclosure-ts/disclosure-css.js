@@ -12,9 +12,9 @@ export default class Disclosure {
     }
     this.#rootElement = root;
     const NOT_NESTED = ':not(:scope summary + * *)';
-    this.#detailsElements = this.#rootElement.querySelectorAll(`details${NOT_NESTED}`);
-    this.#summaryElements = this.#rootElement.querySelectorAll(`summary${NOT_NESTED}`);
-    this.#contentElements = this.#rootElement.querySelectorAll(`summary${NOT_NESTED} + *`);
+    this.#detailsElements = [...this.#rootElement.querySelectorAll(`details${NOT_NESTED}`)];
+    this.#summaryElements = [...this.#rootElement.querySelectorAll(`summary${NOT_NESTED}`)];
+    this.#contentElements = [...this.#rootElement.querySelectorAll(`summary${NOT_NESTED} + *`)];
     if (
       this.#detailsElements.length === 0 ||
       this.#summaryElements.length === 0 ||
@@ -91,13 +91,10 @@ export default class Disclosure {
     }
     event.preventDefault();
     event.stopPropagation();
-    const focusables = [];
-    for (const summary of this.#summaryElements) {
+    const focusables = this.#summaryElements.filter((summary) => {
       const binding = this.#bindings?.get(summary);
-      if (binding && this.#isFocusable(binding.details)) {
-        focusables.push(summary);
-      }
-    }
+      return binding && this.#isFocusable(binding.details);
+    });
     const active = this.#getActiveElement();
     if (!active) {
       return;
