@@ -27,8 +27,8 @@ export default class Accordion {
     }
     const { trigger, content } = this.#settings.selector;
     const NOT_NESTED = `:not(:scope ${content} *)`;
-    this.#triggerElements = this.#rootElement.querySelectorAll(`${trigger}${NOT_NESTED}`);
-    this.#contentElements = this.#rootElement.querySelectorAll(`${content}${NOT_NESTED}`);
+    this.#triggerElements = [...this.#rootElement.querySelectorAll(`${trigger}${NOT_NESTED}`)];
+    this.#contentElements = [...this.#rootElement.querySelectorAll(`${content}${NOT_NESTED}`)];
     if (this.#triggerElements.length === 0 || this.#contentElements.length === 0) {
       throw new Error('Trigger or content element missing.');
     }
@@ -54,17 +54,17 @@ export default class Accordion {
     this.#rootElement.removeAttribute('data-accordion-initialized');
     if (!isForce) {
       const promises = [];
-      for (const trigger of this.#triggerElements) {
-        const animation = this.#bindings.get(trigger)?.animation;
+      this.#triggerElements.forEach((trigger) => {
+        const animation = this.#bindings?.get(trigger)?.animation;
         if (animation) {
           promises.push(this.#waitAnimation(animation));
         }
-      }
+      });
       await Promise.allSettled(promises);
     }
-    for (const trigger of this.#triggerElements) {
-      this.#bindings.get(trigger)?.animation?.cancel();
-    }
+    this.#triggerElements.forEach((trigger) => {
+      this.#bindings?.get(trigger)?.animation?.cancel();
+    });
     this.#triggerElements = null;
     this.#contentElements = null;
     this.#bindings = null;
@@ -125,12 +125,7 @@ export default class Accordion {
     }
     event.preventDefault();
     event.stopPropagation();
-    const focusables = [];
-    for (const trigger of this.#triggerElements) {
-      if (this.#isFocusable(trigger)) {
-        focusables.push(trigger);
-      }
-    }
+    const focusables = this.#triggerElements.filter((trigger) => this.#isFocusable(trigger));
     const active = this.#getActiveElement();
     if (!active) {
       return;
@@ -180,15 +175,12 @@ export default class Accordion {
     }
     const name = trigger.getAttribute('data-accordion-name');
     if (name && isOpen) {
-      for (const t of this.#triggerElements) {
-        if (
-          t !== trigger &&
-          t.getAttribute('data-accordion-name') === name &&
-          t.getAttribute('aria-expanded') === 'true'
-        ) {
-          this.#toggle(t, false, isMatch);
-          break;
-        }
+      const opened = this.#triggerElements.find(
+        (t) =>
+          t !== trigger && t.getAttribute('data-accordion-name') === name && t.getAttribute('aria-expanded') === 'true',
+      );
+      if (opened) {
+        this.#toggle(opened, false, isMatch);
       }
     }
     trigger.setAttribute(
