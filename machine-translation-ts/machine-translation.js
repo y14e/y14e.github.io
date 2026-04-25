@@ -6,25 +6,17 @@ export function detectMachineTranslation() {
     {
       attribute: 'class',
       element: html,
-      test: () => {
-        return [...html.classList].some((className) => {
-          return /translated-(ltr|rtl)/.test(className);
-        });
-      },
+      test: () => [...html.classList].some((className) => /translated-(ltr|rtl)/.test(className)),
     },
     {
       attribute: '_msttexthash',
       element: title,
-      test: () => {
-        return title.hasAttribute('_msttexthash');
-      },
+      test: () => title.hasAttribute('_msttexthash'),
     },
     {
       attribute: 'lang',
       element: html,
-      test: () => {
-        return new Intl.Locale(html.lang).language !== language;
-      },
+      test: () => new Intl.Locale(html.lang).language !== language,
     },
   ];
   let timer;
@@ -33,10 +25,7 @@ export function detectMachineTranslation() {
       return;
     }
     timer = requestAnimationFrame(() => {
-      const isTranslated = strategies.some((strategy) => {
-        return strategy.test();
-      });
-      if (!isTranslated) {
+      if (!strategies.some((strategy) => strategy.test())) {
         return;
       }
       window.dispatchEvent(new Event('machineTranslationDetected'));
@@ -44,20 +33,12 @@ export function detectMachineTranslation() {
       observer = null;
     });
   };
-  const attributeMap = new Map();
-  for (const { element } of strategies) {
-    if (!attributeMap.has(element)) {
-      attributeMap.set(element, []);
-    }
-  }
+  const map = new Map();
   for (const { attribute, element } of strategies) {
-    const attributes = attributeMap.get(element);
-    if (attributes !== undefined) {
-      attributes.push(attribute);
-    }
+    (map.has(element) ? map.get(element) : map.set(element, []).get(element))?.push(attribute);
   }
   let observer = new MutationObserver(detect);
-  for (const [element, attributes] of attributeMap) {
+  for (const [element, attributes] of map) {
     observer.observe(element, { attributeFilter: attributes });
   }
   return () => {
