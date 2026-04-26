@@ -8,7 +8,7 @@ export default class Disclosure {
   #isDestroyed = false;
   constructor(root) {
     if (!root) {
-      throw new Error('Root element missing.');
+      throw new Error('Root element missing');
     }
     this.#rootElement = root;
     const NOT_NESTED = ':not(:scope summary + * *)';
@@ -20,7 +20,7 @@ export default class Disclosure {
       this.#summaryElements.length === 0 ||
       this.#contentElements.length === 0
     ) {
-      throw new Error('Details, summary, or content element missing.');
+      throw new Error('Details, summary, or content element missing');
     }
     this.#initialize();
   }
