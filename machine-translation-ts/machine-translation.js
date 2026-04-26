@@ -1,6 +1,9 @@
 export function detectMachineTranslation() {
   const html = document.documentElement;
   const title = document.getElementsByTagName('title')[0];
+  if (!title) {
+    return () => {};
+  }
   const language = new Intl.Locale(navigator.language).language;
   const strategies = [
     {
