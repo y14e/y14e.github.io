@@ -518,7 +518,7 @@ export default class Menu {
         listStyle.setProperty('top', `${listY}px`);
         this.#listElement.setAttribute('data-menu-placement', placement);
         if (this.#settings.popover.transformOrigin) {
-          const transformOrigin = {
+          const transformOrigins = {
             top: '50% 100%',
             'top-start': '0 100%',
             'top-end': '100% 100%',
@@ -531,7 +531,8 @@ export default class Menu {
             left: '100% 50%',
             'left-start': '100% 0',
             'left-end': '100% 100%',
-          }[placement];
+          };
+          const transformOrigin = transformOrigins[placement];
           if (transformOrigin) {
             listStyle.setProperty('transform-origin', transformOrigin);
           }
@@ -551,12 +552,13 @@ export default class Menu {
         if (!side) {
           return;
         }
-        const style = {
+        const styles = {
           top: { position: 'bottom', rotate: '225deg' },
           right: { position: 'left', rotate: '315deg' },
           bottom: { position: 'top', rotate: '45deg' },
           left: { position: 'right', rotate: '135deg' },
-        }[side];
+        };
+        const style = styles[side];
         if (!style) {
           return;
         }
