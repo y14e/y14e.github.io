@@ -59,8 +59,11 @@ export default class Disclosure {
     }
     const { signal } = this.#controller;
     for (let i = 0, l = this.#summaryElements.length; i < l; i++) {
-      const summary = this.#summaryElements[i];
       const details = this.#detailsElements[i];
+      const summary = this.#summaryElements[i];
+      if (!details || !summary) {
+        continue;
+      }
       if (!this.#isFocusable(details)) {
         summary.setAttribute('tabindex', '-1');
         summary.style.setProperty('pointer-events', 'none');
@@ -71,7 +74,7 @@ export default class Disclosure {
       const details = this.#detailsElements[i];
       const summary = this.#summaryElements[i];
       const content = this.#contentElements[i];
-      if (!summary || !content) {
+      if (!details || !summary || !content) {
         continue;
       }
       const binding = this.#createBinding(details, summary, content);
