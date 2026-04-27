@@ -29,11 +29,7 @@ export default class Disclosure {
     this.#detailsElements = [...this.#rootElement.querySelectorAll(`details${NOT_NESTED}`)];
     this.#summaryElements = [...this.#rootElement.querySelectorAll(`summary${NOT_NESTED}`)];
     this.#contentElements = [...this.#rootElement.querySelectorAll(`summary${NOT_NESTED} + *`)];
-    if (
-      this.#detailsElements.length === 0 ||
-      this.#summaryElements.length === 0 ||
-      this.#contentElements.length === 0
-    ) {
+    if (this.#detailsElements.length === 0 || this.#summaryElements.length === 0 || this.#contentElements.length === 0) {
       throw new Error('Details, summary or content element missing');
     }
     this.#initialize();
@@ -96,13 +92,7 @@ export default class Disclosure {
     this.#bindings = null;
   }
   #initialize() {
-    if (
-      !this.#detailsElements ||
-      !this.#summaryElements ||
-      !this.#contentElements ||
-      !this.#bindings ||
-      !this.#controller
-    ) {
+    if (!this.#detailsElements || !this.#summaryElements || !this.#contentElements || !this.#bindings || !this.#controller) {
       return;
     }
     const { signal } = this.#controller;
@@ -205,9 +195,7 @@ export default class Disclosure {
     }
     const name = details.getAttribute('data-disclosure-name');
     if (name && isOpen) {
-      const opened = this.#detailsElements.find(
-        (d) => d.hasAttribute('data-disclosure-open') && d.getAttribute('data-disclosure-name') === name,
-      );
+      const opened = this.#detailsElements.find((d) => d.hasAttribute('data-disclosure-open') && d.getAttribute('data-disclosure-name') === name);
       if (opened) {
         this.close(opened);
       }
