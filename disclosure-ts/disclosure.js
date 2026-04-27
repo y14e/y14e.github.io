@@ -29,7 +29,11 @@ export default class Disclosure {
     this.#detailsElements = [...this.#rootElement.querySelectorAll(`details${NOT_NESTED}`)];
     this.#summaryElements = [...this.#rootElement.querySelectorAll(`summary${NOT_NESTED}`)];
     this.#contentElements = [...this.#rootElement.querySelectorAll(`summary${NOT_NESTED} + *`)];
-    if (this.#detailsElements.length === 0 || this.#summaryElements.length === 0 || this.#contentElements.length === 0) {
+    if (
+      this.#detailsElements.length === 0 ||
+      this.#summaryElements.length === 0 ||
+      this.#contentElements.length === 0
+    ) {
       throw new Error('Details, summary or content element missing');
     }
     this.#initialize();
@@ -92,11 +96,16 @@ export default class Disclosure {
     this.#bindings = null;
   }
   #initialize() {
-    if (!this.#detailsElements || !this.#summaryElements || !this.#contentElements || !this.#bindings || !this.#controller) {
+    if (!this.#detailsElements || !this.#controller) {
       return;
     }
     const { signal } = this.#controller;
-    this.#detailsElements.forEach((details) => {
+    this.#detailsElements.forEach((details, i) => {
+      const summary = this.#summaryElements?.[i];
+      const content = this.#contentElements?.[i];
+      if (!summary || !content || !this.#bindings) {
+        return;
+      }
       if (details.name) {
         details.setAttribute('data-disclosure-name', details.name);
       }
@@ -107,32 +116,17 @@ export default class Disclosure {
       observer.observe(details, { attributeFilter: ['open'] });
       this.#observers?.push(observer);
       sync();
-    });
-    for (let i = 0, l = this.#summaryElements.length; i < l; i++) {
-      const details = this.#detailsElements[i];
-      const summary = this.#summaryElements[i];
-      if (!details || !summary) {
-        continue;
-      }
       if (!this.#isFocusable(details)) {
         summary.setAttribute('tabindex', '-1');
         summary.style.setProperty('pointer-events', 'none');
       }
       summary.addEventListener('click', this.#onSummaryClick, { signal });
       summary.addEventListener('keydown', this.#onSummaryKeyDown, { signal });
-    }
-    for (let i = 0, l = this.#detailsElements.length; i < l; i++) {
-      const details = this.#detailsElements[i];
-      const summary = this.#summaryElements[i];
-      const content = this.#contentElements[i];
-      if (!details || !summary || !content) {
-        continue;
-      }
       const binding = this.#createBinding(details, summary, content);
       this.#bindings.set(details, binding);
       this.#bindings.set(summary, binding);
       this.#bindings.set(content, binding);
-    }
+    });
     this.#rootElement.setAttribute('data-disclosure-initialized', '');
   }
   #onSummaryClick = (event) => {
@@ -195,7 +189,9 @@ export default class Disclosure {
     }
     const name = details.getAttribute('data-disclosure-name');
     if (name && isOpen) {
-      const opened = this.#detailsElements.find((d) => d.hasAttribute('data-disclosure-open') && d.getAttribute('data-disclosure-name') === name);
+      const opened = this.#detailsElements.find(
+        (d) => d.hasAttribute('data-disclosure-open') && d.getAttribute('data-disclosure-name') === name,
+      );
       if (opened) {
         this.close(opened);
       }
