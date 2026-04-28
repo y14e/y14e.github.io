@@ -116,7 +116,8 @@ export default class Disclosure {
       observer.observe(details, { attributeFilter: ['open'] });
       this.#observers?.push(observer);
       sync();
-      if (!this.#isFocusable(details)) {
+      if (!this.#isFocusable(summary)) {
+        summary.setAttribute('aria-disabled', 'true');
         summary.setAttribute('tabindex', '-1');
         summary.style.setProperty('pointer-events', 'none');
       }
@@ -155,7 +156,7 @@ export default class Disclosure {
     event.stopPropagation();
     const focusables = this.#summaryElements.filter((summary) => {
       const binding = this.#bindings?.get(summary);
-      return binding && this.#isFocusable(binding.details);
+      return binding && this.#isFocusable(summary);
     });
     const active = this.#getActiveElement();
     if (!active) {
@@ -252,7 +253,7 @@ export default class Disclosure {
     return active instanceof HTMLElement ? active : null;
   }
   #isFocusable(element) {
-    return element.getAttribute('aria-disabled') !== 'true';
+    return element.getAttribute('tabindex') !== '-1';
   }
   #waitAnimation(animation) {
     const { playState } = animation;
