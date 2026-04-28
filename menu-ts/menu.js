@@ -1,4 +1,11 @@
-import { arrow, autoUpdate, computePosition, flip, offset, shift } from 'https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.7.6/+esm';
+import {
+  arrow,
+  autoUpdate,
+  computePosition,
+  flip,
+  offset,
+  shift,
+} from 'https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.7.6/+esm';
 export default class Menu {
   static #menus = [];
   #rootElement;
@@ -45,7 +52,7 @@ export default class Menu {
   #cleanupPopover = null;
   constructor(root, options = {}, isSubmenu = false) {
     if (!root) {
-      throw new Error('Root element missing.');
+      throw new Error('Root element missing');
     }
     this.#rootElement = root;
     this.#settings = {
@@ -74,16 +81,18 @@ export default class Menu {
     this.#triggerElement = this.#rootElement.querySelector(selector[!this.#isSubmenu ? 'trigger' : 'item']);
     const list = this.#rootElement.querySelector(selector.list);
     if (!list) {
-      throw new Error('List element missing.');
+      throw new Error('List element missing');
     }
     this.#listElement = list;
     this.#itemElements = [...this.#listElement.querySelectorAll(`${selector.item}:not(:scope ${selector.list} *)`)];
     if (this.#itemElements.length === 0) {
-      throw new Error('Item elements missing.');
+      throw new Error('Item elements missing');
     }
     this.#itemElements.forEach((item) => {
       const shortcuts = item.getAttribute('aria-keyshortcuts');
-      const keys = (shortcuts?.split(/\s+/) ?? [item.textContent?.trim()[0] ?? '']).filter((key) => /^\S$/i.test(key)).map((key) => key.toLowerCase());
+      const keys = (shortcuts?.split(/\s+/) ?? [item.textContent?.trim()[0] ?? ''])
+        .filter((key) => /^\S$/i.test(key))
+        .map((key) => key.toLowerCase());
       keys.forEach((key) => {
         const items = this.#itemElementsByFirstChar[key] ?? [];
         items.push(item);
@@ -160,13 +169,19 @@ export default class Menu {
       this.#triggerElement.setAttribute('aria-expanded', 'false');
       this.#triggerElement.setAttribute('aria-haspopup', 'true');
       this.#triggerElement.id ||= `menu-trigger-${id}`;
-      this.#triggerElement.setAttribute('tabindex', this.#isFocusable(this.#triggerElement) && !this.#isSubmenu ? '0' : '-1');
+      this.#triggerElement.setAttribute(
+        'tabindex',
+        this.#isFocusable(this.#triggerElement) && !this.#isSubmenu ? '0' : '-1',
+      );
       if (!this.#isFocusable(this.#triggerElement)) {
         this.#triggerElement.style.setProperty('pointer-events', 'none');
       }
       this.#triggerElement.addEventListener('click', this.#onTriggerClick, { signal });
       this.#triggerElement.addEventListener('keydown', this.#onTriggerKeyDown, { signal });
-      this.#listElement.setAttribute('aria-labelledby', `${this.#listElement.getAttribute('aria-labelledby') ?? ''} ${this.#triggerElement.id}`.trim());
+      this.#listElement.setAttribute(
+        'aria-labelledby',
+        `${this.#listElement.getAttribute('aria-labelledby') ?? ''} ${this.#triggerElement.id}`.trim(),
+      );
     }
     this.#listElement.setAttribute('role', 'menu');
     this.#listElement.addEventListener('keydown', this.#onListKeyDown, { signal });
@@ -209,7 +224,11 @@ export default class Menu {
   };
   #onRootFocusIn = (event) => {
     const related = event.relatedTarget;
-    if (related instanceof Node && this.#rootElement.contains(related) && this.#rootElement.contains(this.#getActiveElement())) {
+    if (
+      related instanceof Node &&
+      this.#rootElement.contains(related) &&
+      this.#rootElement.contains(this.#getActiveElement())
+    ) {
       return;
     }
     this.#resetTabIndex(true);
@@ -224,7 +243,11 @@ export default class Menu {
   };
   #onTriggerClick = (event) => {
     event.preventDefault();
-    this.#toggle(!this.#isSubmenu ? this.#triggerElement?.getAttribute('aria-expanded') !== 'true' : event.currentTarget === this.#triggerElement);
+    this.#toggle(
+      !this.#isSubmenu
+        ? this.#triggerElement?.getAttribute('aria-expanded') !== 'true'
+        : event.currentTarget === this.#triggerElement,
+    );
   };
   #onTriggerKeyDown = (event) => {
     const { key } = event;
@@ -257,7 +280,18 @@ export default class Menu {
     if (key === 'Tab' && ((!this.#triggerElement && shiftKey) || !shiftKey)) {
       return;
     }
-    if (!['Enter', 'Escape', ' ', 'End', 'Home', ...(this.#isSubmenu ? ['ArrowLeft'] : []), 'ArrowUp', 'ArrowDown'].includes(key)) {
+    if (
+      ![
+        'Enter',
+        'Escape',
+        ' ',
+        'End',
+        'Home',
+        ...(this.#isSubmenu ? ['ArrowLeft'] : []),
+        'ArrowUp',
+        'ArrowDown',
+      ].includes(key)
+    ) {
       const char = /^\S$/i.test(key);
       if (!char || !this.#itemElementsByFirstChar[key.toLowerCase()]?.some(this.#isFocusable)) {
         if (char) {
@@ -401,7 +435,10 @@ export default class Menu {
     }
     const opacity = getComputedStyle(this.#listElement).getPropertyValue('opacity');
     this.#animation?.cancel();
-    this.#animation = this.#listElement.animate({ opacity: isOpen ? [opacity, '1'] : [opacity, '0'] }, { duration: this.#settings.animation.duration, easing: 'ease' });
+    this.#animation = this.#listElement.animate(
+      { opacity: isOpen ? [opacity, '1'] : [opacity, '0'] },
+      { duration: this.#settings.animation.duration, easing: 'ease' },
+    );
     const cleanupAnimation = () => {
       this.#animation = null;
     };
@@ -471,7 +508,11 @@ export default class Menu {
       if (!this.#triggerElement) {
         return;
       }
-      computePosition(this.#triggerElement, this.#listElement, this.#settings.popover[!this.#isSubmenu ? 'menu' : 'submenu']).then(({ x: listX, y: listY, placement, middlewareData }) => {
+      computePosition(
+        this.#triggerElement,
+        this.#listElement,
+        this.#settings.popover[!this.#isSubmenu ? 'menu' : 'submenu'],
+      ).then(({ x: listX, y: listY, placement, middlewareData }) => {
         const { style: listStyle } = this.#listElement;
         listStyle.setProperty('left', `${listX}px`);
         listStyle.setProperty('top', `${listY}px`);
