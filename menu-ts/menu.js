@@ -62,14 +62,8 @@ export default class Menu {
       popover: {
         ...this.#defaults.popover,
         ...(options.popover ?? {}),
-        menu: {
-          ...this.#defaults.popover.menu,
-          ...(options.popover?.menu ?? {}),
-        },
-        submenu: {
-          ...this.#defaults.popover.submenu,
-          ...(options.popover?.submenu ?? {}),
-        },
+        menu: { ...this.#defaults.popover.menu, ...(options.popover?.menu ?? {}) },
+        submenu: { ...this.#defaults.popover.submenu, ...(options.popover?.submenu ?? {}) },
       },
       selector: { ...this.#defaults.selector, ...(options.selector ?? {}) },
     };
@@ -174,6 +168,7 @@ export default class Menu {
         this.#isFocusable(this.#triggerElement) && !this.#isSubmenu ? '0' : '-1',
       );
       if (!this.#isFocusable(this.#triggerElement)) {
+        this.#triggerElement.setAttribute('aria-disabled', 'true');
         this.#triggerElement.style.setProperty('pointer-events', 'none');
       }
       this.#triggerElement.addEventListener('click', this.#onTriggerClick, { signal });
@@ -192,6 +187,10 @@ export default class Menu {
       }
       if (parent.querySelector(this.#settings.selector.list)) {
         this.#submenus.push(new Menu(parent, this.#settings, true));
+      } else if (item.hasAttribute('disabled') || item.getAttribute('tabindex') === '-1') {
+        item.setAttribute('aria-disabled', 'true');
+        item.setAttribute('data-menu-disabled', '');
+        item.style.setProperty('pointer-events', 'none');
       }
       if ([this.#checkboxItemElements, this.#radioItemElements].every((list) => !list.includes(item))) {
         item.setAttribute('role', 'menuitem');
@@ -481,7 +480,7 @@ export default class Menu {
     return active instanceof HTMLElement ? active : null;
   }
   #isFocusable(element) {
-    return element.getAttribute('aria-disabled') !== 'true' && !element.hasAttribute('disabled');
+    return !element.hasAttribute('data-menu-disabled') && !element.hasAttribute('disabled');
   }
   #resetTabIndex(isForce = false) {
     if (this.#triggerElement || isForce) {

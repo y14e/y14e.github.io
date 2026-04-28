@@ -39,7 +39,7 @@ body {
     background-color: #000;
     color: #fff;
   }
-  &:is([aria-disabled="true"], [disabled]) {
+  &:is([disabled], [tabindex="-1"]) {
     background-color: rgb(0 0 0 / 0.1);
     color: rgb(0 0 0 / 0.35);
   }
@@ -92,9 +92,8 @@ body {
       width: 1rem;
     }
   }
-  &:is([aria-disabled="true"], [disabled]) {
+  &:is([data-menu-disabled], [disabled]) {
     color: rgb(0 0 0 / 0.35);
-    pointer-events: none;
   }
   &:hover {
     background-color: rgb(0 0 0 / 0.1);
