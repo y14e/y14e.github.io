@@ -44,7 +44,7 @@ export default class Accordion {
       this.#toggle(trigger, false);
     }
   }
-  async destroy(isForce = false) {
+  async destroy(force = false) {
     if (this.#isDestroyed || !this.#triggerElements || !this.#bindings) {
       return;
     }
@@ -52,7 +52,7 @@ export default class Accordion {
     this.#controller?.abort();
     this.#controller = null;
     this.#rootElement.removeAttribute('data-accordion-initialized');
-    if (!isForce) {
+    if (!force) {
       const promises = [];
       this.#triggerElements.forEach((trigger) => {
         const animation = this.#bindings?.get(trigger)?.animation;

@@ -129,7 +129,7 @@ export default class Menu {
   close() {
     this.#toggle(false);
   }
-  async destroy(isForce = false) {
+  async destroy(force = false) {
     if (this.#isDestroyed) {
       return;
     }
@@ -144,7 +144,7 @@ export default class Menu {
     if (!this.#animation) {
       return;
     }
-    if (!isForce) {
+    if (!force) {
       try {
         await this.#animation.finished;
       } catch {}

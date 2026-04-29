@@ -48,7 +48,7 @@ export default class Disclosure {
       this.#toggle(details, false);
     }
   }
-  async destroy(isForce = false) {
+  async destroy(force = false) {
     if (this.#isDestroyed || !this.#detailsElements || !this.#bindings) {
       return;
     }
@@ -77,7 +77,7 @@ export default class Disclosure {
       details.removeAttribute('data-disclosure-name');
       details.removeAttribute('data-disclosure-open');
     });
-    if (!isForce) {
+    if (!force) {
       const promises = [];
       this.#detailsElements.forEach((details) => {
         const animation = this.#bindings?.get(details)?.animation;
