@@ -1,34 +1,79 @@
-const NOBR_REGEXP =
-  /[[[\P{scx=Han}]&&[\P{scx=Hang}]&&[\P{scx=Hira}]&&[\P{scx=Kana}]&&[\p{L}]]!-,.->@\[-`\{-~\u00A0]+/gv;
-const LBR_PROHIBIT_START_REGEXP =
+const NOBR_REGEX = /[[[\P{scx=Han}]&&[\P{scx=Hang}]&&[\P{scx=Hira}]&&[\P{scx=Kana}]&&[\p{L}]]!-,.->@\[-`\{-~\u00A0]+/gv;
+const LBR_PROHIBIT_START_REGEX =
   /^[[[\p{Pd}]--[―]]\p{Pe}\p{Pf}\p{Po}\u00A0々〵〻ぁぃぅぇぉっゃゅょゎゕゖ゛-ゞァィゥェォッャュョヮヵヶー-ヾㇰ-ㇿ]|\p{Pi}/v;
-const LBR_PROHIBIT_END_REGEXP = /[\p{Pf}\p{Pi}\p{Ps}\p{Sc}\u00A0]$/u;
-const LBR_INSEPARATABLE_REGEXP = /[―‥…]/u;
+const LBR_PROHIBIT_END_REGEX = /[\p{Pf}\p{Pi}\p{Ps}\p{Sc}\u00A0]$/u;
+const LBR_INSEPARATABLE_REGEX = /[―‥…]/u;
 export default class TextSplitter {
-  constructor(root, options) {
-    if (!root) return;
-    this.rootElement = root;
-    this.defaults = {
-      concatChar: false,
-      lineBreakingRules: true,
-      wordSegmenter: false,
-    };
-    this.settings = { ...this.defaults, ...options };
-    this.original = this.rootElement.innerHTML;
-    this.fragment = new DocumentFragment();
-    this.wordElements = [];
-    this.charElements = [];
-    this.destroyed = false;
-    this.initialize();
+  #rootElement;
+  #defaults = {
+    concatChar: false,
+    lineBreakingRules: true,
+    wordSegmenter: false,
+  };
+  #settings;
+  #wordElements;
+  #charElements;
+  #original;
+  #fragment;
+  #segmenter;
+  #isDestroyed = false;
+  constructor(root, options = {}) {
+    if (!root) {
+      throw new Error('Root element missing');
+    }
+    this.#rootElement = root;
+    this.#settings = { ...this.#defaults, ...options };
+    this.#wordElements = [];
+    this.#charElements = [];
+    this.#original = this.#rootElement.innerHTML;
+    this.#fragment = new DocumentFragment();
+    this.#segmenter = new Intl.Segmenter();
+    this.#isDestroyed = false;
+    this.#initialize();
   }
-  initialize() {
-    [...this.rootElement.childNodes].forEach((node) => this.fragment.appendChild(node.cloneNode(true)));
-    this.nobr();
-    this.split('word');
-    if (this.settings.lineBreakingRules && !this.settings.concatChar) this.lbr('word');
-    this.split('char');
-    if (this.settings.lineBreakingRules && this.settings.concatChar) this.lbr('char');
-    this.wordElements.forEach((word, i) => {
+  destroy() {
+    if (this.#isDestroyed) {
+      return;
+    }
+    this.#isDestroyed = true;
+    this.#rootElement.removeAttribute('data-text-splitter-initialized');
+    this.#rootElement.innerHTML = this.#original;
+    const style = this.#rootElement.style;
+    style.removeProperty('--word-length');
+    style.removeProperty('--char-length');
+    this.#wordElements = null;
+    this.#charElements = null;
+    this.#original = null;
+    this.#fragment = null;
+    this.#segmenter = null;
+  }
+  #initialize() {
+    if (!this.#fragment || !this.#wordElements || !this.#charElements) {
+      return;
+    }
+    const children = this.#rootElement.childNodes;
+    for (let i = 0, l = children.length; i < l; i++) {
+      const child = children[i];
+      if (!child) {
+        continue;
+      }
+      this.#fragment.appendChild(child.cloneNode(true));
+    }
+    this.#nobr();
+    this.#split('word');
+    const { concatChar, lineBreakingRules } = this.#settings;
+    if (!concatChar && lineBreakingRules) {
+      this.#lbr('word');
+    }
+    this.#split('char');
+    if (concatChar && lineBreakingRules) {
+      this.#lbr('char');
+    }
+    for (let i = 0, l = this.#wordElements.length; i < l; i++) {
+      const word = this.#wordElements[i];
+      if (!word) {
+        continue;
+      }
       word.translate = false;
       word.style.setProperty('--word-index', String(i));
       if (!word.hasAttribute('data-whitespace')) {
@@ -49,106 +94,153 @@ export default class TextSplitter {
         alt.textContent = word.textContent;
         word.append(alt);
       }
-    });
-    this.charElements.forEach((char, i) => {
+    }
+    for (let i = 0, l = this.#charElements.length; i < l; i++) {
+      const char = this.#charElements[i];
+      if (!char) {
+        continue;
+      }
       char.setAttribute('aria-hidden', 'true');
       char.style.setProperty('--char-index', String(i));
-    });
-    this.fragment.querySelectorAll(':is([data-word], [data-char]):not([data-whitespace])').forEach((span) => {
-      Object.assign(span.style, {
-        display: 'inline-block',
-        whiteSpace: 'nowrap',
-      });
-    });
-    this.rootElement.replaceChildren(...this.fragment.childNodes);
-    Object.entries({
-      '--word-length': String(this.wordElements.length),
-      '--char-length': String(this.charElements.length),
-    }).forEach(([name, value]) => this.rootElement.style.setProperty(name, value));
-    [...this.rootElement.querySelectorAll(':scope > :not([data-word]) [data-char][data-whitespace]')].forEach(
-      (whitespace) => {
-        if (window.getComputedStyle(whitespace).getPropertyValue('display') !== 'inline')
-          whitespace.innerHTML = '&nbsp;';
-      },
-    );
-    this.rootElement.setAttribute('data-text-splitter-initialized', '');
+    }
+    const spans = this.#fragment.querySelectorAll(':is([data-word], [data-char]):not([data-whitespace])');
+    for (let i = 0, l = spans.length; i < l; i++) {
+      const span = spans[i];
+      if (!span) {
+        continue;
+      }
+      const { style } = span;
+      style.setProperty('display', 'inline-block');
+      style.setProperty('white-space', 'nowrap');
+    }
+    this.#rootElement.replaceChildren(...this.#fragment.childNodes);
+    const { style } = this.#rootElement;
+    style.setProperty('--word-length', String(this.#wordElements.length));
+    style.setProperty('--char-length', String(this.#charElements.length));
+    const whitespaces = this.#rootElement.querySelectorAll(':scope > :not([data-word]) [data-char][data-whitespace]');
+    for (let i = 0, l = whitespaces.length; i < l; i++) {
+      const whitespace = whitespaces[i];
+      if (!whitespace) {
+        continue;
+      }
+      if (window.getComputedStyle(whitespace).getPropertyValue('display') !== 'inline') {
+        whitespace.innerHTML = '&nbsp;';
+      }
+    }
+    this.#rootElement.setAttribute('data-text-splitter-initialized', '');
   }
-  nobr(node = this.fragment) {
+  #nobr(node = this.#fragment) {
     if (node.nodeType === Node.TEXT_NODE) {
       const text = node.textContent;
-      const matches = [...text.matchAll(NOBR_REGEXP)];
-      if (!matches.length) return;
+      if (text === null) {
+        return;
+      }
+      const matches = [...text.matchAll(NOBR_REGEX)];
+      if (!matches.length) {
+        return;
+      }
       let index = 0;
       const parent = node.parentNode;
-      matches.forEach((match) => {
+      if (!parent) {
+        return;
+      }
+      for (let i = 0, l = matches.length; i < l; i++) {
+        const match = matches[i];
+        if (!match) {
+          continue;
+        }
         const offset = match.index;
-        if (offset > index) parent.insertBefore(document.createTextNode(text.slice(index, offset)), node);
+        if (offset > index) {
+          parent.insertBefore(document.createTextNode(text.slice(index, offset)), node);
+        }
         const span = document.createElement('span');
         span.setAttribute('data-_nobr', '');
         const matched = match[0];
         span.textContent = matched;
         parent.insertBefore(span, node);
         index = offset + matched.length;
-      });
-      if (index < text.length) parent.insertBefore(document.createTextNode(text.slice(index)), node);
+      }
+      if (index < text.length) {
+        parent.insertBefore(document.createTextNode(text.slice(index)), node);
+      }
       parent.removeChild(node);
     } else if (node.hasChildNodes()) {
-      [...node.childNodes].forEach((node) => this.nobr(node));
+      const children = node.childNodes;
+      for (let i = 0, l = children.length; i < l; i++) {
+        this.#nobr(children[i]);
+      }
     }
   }
-  split(by, node = this.fragment) {
-    const items = this[`${by}Elements`];
-    [...node.childNodes].forEach((node) => {
-      const text = node.textContent;
-      if (node.nodeType === Node.TEXT_NODE) {
-        const parent = node.parentNode;
-        function segmenter(self) {
-          if (by === 'word' && self.settings.wordSegmenter) {
-            return new Intl.Segmenter(
-              (parent.nodeType === Node.ELEMENT_NODE ? parent : self.rootElement).closest('[lang]')?.lang ||
-                document.documentElement.lang ||
-                'en',
-              { granularity: 'word' },
-            );
-          } else {
-            return new Intl.Segmenter();
+  #split(by, node = this.#fragment) {
+    const items = by === 'word' ? this.#wordElements : this.#charElements;
+    if (!items) {
+      return;
+    }
+    const children = Array.from(node.childNodes);
+    for (let i = 0, l = children.length; i < l; i++) {
+      const child = children[i];
+      if (!child) {
+        continue;
+      }
+      const text = child.textContent;
+      if (text === null) {
+        continue;
+      }
+      if (child.nodeType === Node.TEXT_NODE) {
+        const parent = child.parentNode;
+        const segments = Array.from(
+          this.#getSegmenter(by, parent).segment(text.replace(/[\r\n\t]/g, '').replace(/\s{2,}/g, ' ')),
+        );
+        for (let j = 0, m = segments.length; j < m; j++) {
+          const segment = segments[j];
+          if (!segment) {
+            continue;
           }
-        }
-        [...segmenter(this).segment(text.replace(/[\r\n\t]/g, '').replace(/\s{2,}/g, ' '))].forEach((segment) => {
           const span = document.createElement('span');
           const text = segment.segment;
-          [by, segment.segment.charCodeAt(0) === 32 && 'whitespace']
-            .filter(Boolean)
-            .forEach((type) => span.setAttribute(`data-${type}`, type !== 'whitespace' ? text : ''));
+          const types = [by, segment.segment.charCodeAt(0) === 32 && 'whitespace'].filter(Boolean);
+          for (let k = 0, n = types.length; k < n; k++) {
+            const type = types[k];
+            span.setAttribute(`data-${type}`, type !== 'whitespace' ? text : '');
+          }
           span.textContent = text;
           items.push(span);
-          node.before(span);
-        });
-        node.remove();
+          child.before(span);
+        }
+        child.remove();
       } else if (
         by === 'word' &&
-        node.nodeType === Node.ELEMENT_NODE &&
-        node instanceof HTMLElement &&
-        node.hasAttribute('data-_nobr')
+        child.nodeType === Node.ELEMENT_NODE &&
+        child instanceof HTMLElement &&
+        child.hasAttribute('data-_nobr')
       ) {
-        node.removeAttribute('data-_nobr');
-        node.setAttribute('data-word', text);
-        items.push(node);
-      } else if (node.hasChildNodes()) {
-        this.split(by, node);
+        child.removeAttribute('data-_nobr');
+        child.setAttribute('data-word', text);
+        items.push(child);
+      } else if (child.hasChildNodes()) {
+        this.#split(by, child);
       }
-    });
+    }
   }
-  lbr(by) {
-    const items = this[`${by}Elements`];
+  #lbr(by) {
+    const items = by === 'word' ? this.#wordElements : this.#charElements;
+    if (!items) {
+      return;
+    }
     let previous = null;
-    for (let i = 0; i < items.length; i++) {
+    for (let i = 0, l = items.length; i < l; i++) {
       const item = items[i];
+      if (!item) {
+        continue;
+      }
       const text = item.textContent;
       const segment = [...new Intl.Segmenter().segment(text)].shift();
-      if (!segment) return;
-      if (previous && previous.textContent.trim() && LBR_PROHIBIT_START_REGEXP.test(segment.segment)) {
-        previous.setAttribute(`data-${by}`, (previous.textContent += text));
+      if (!segment) {
+        continue;
+      }
+      if (previous && previous.textContent.trim() !== '' && LBR_PROHIBIT_START_REGEX.test(segment.segment)) {
+        previous.textContent += text;
+        previous.setAttribute(`data-${by}`, previous.textContent);
         item.remove();
         items.splice(i, 1);
         i--;
@@ -156,48 +248,75 @@ export default class TextSplitter {
         previous = item;
       }
     }
-    const concat = (item, regexp, index) => {
+    const concat = (item, regex, index) => {
       const offset = index + 1;
       let next = items[offset];
       let text;
-      while (next && regexp.test((text = next.textContent))) {
-        item.setAttribute(`data-${by}`, (item.textContent += text));
+      while (next && regex.test(next.textContent)) {
+        text = next.textContent;
+        item.textContent += text;
+        item.setAttribute(`data-${by}`, item.textContent);
         next.remove();
         items.splice(offset, 1);
         next = items[offset];
       }
     };
-    items.forEach((item, i) => {
-      if (LBR_PROHIBIT_END_REGEXP.test(item.textContent)) {
-        concat(item, LBR_PROHIBIT_END_REGEXP, i);
+    for (let i = 0, l = items.length; i < l; i++) {
+      const item = items[i];
+      if (!item) {
+        continue;
+      }
+      if (LBR_PROHIBIT_END_REGEX.test(item.textContent)) {
+        concat(item, LBR_PROHIBIT_END_REGEX, i);
         const next = items[i + 1];
-        const text = next?.textContent;
-        if (next && text.trim()) {
-          next.setAttribute(`data-${by}`, (next.textContent = item.textContent + text));
+        if (!next) {
+          continue;
+        }
+        const text = next.textContent;
+        if (next && text.trim() !== '') {
+          next.textContent = item.textContent + text;
+          next.setAttribute(`data-${by}`, next.textContent);
           item.remove();
           items.splice(i, 1);
         }
       }
-    });
-    items.forEach((item, i) => {
-      if (LBR_INSEPARATABLE_REGEXP.test(item.textContent)) concat(item, LBR_INSEPARATABLE_REGEXP, i);
-    });
+    }
+    for (let i = 0, l = items.length; i < l; i++) {
+      const item = items[i];
+      if (!item) {
+        continue;
+      }
+      if (LBR_INSEPARATABLE_REGEX.test(item.textContent)) {
+        concat(item, LBR_INSEPARATABLE_REGEX, i);
+      }
+    }
     if (by === 'char') {
-      this.fragment.querySelectorAll('[data-word]:not([data-whitespace])').forEach((span) => {
+      const spans = this.#fragment?.querySelectorAll('[data-word]:not([data-whitespace])');
+      if (!spans) {
+        return;
+      }
+      for (let i = 0, l = spans.length; i < l; i++) {
+        const span = spans[i];
+        if (!span) {
+          continue;
+        }
         const text = span.textContent;
-        if (text) {
+        if (text !== '') {
           span.setAttribute('data-word', text);
         } else {
           span.remove();
         }
-      });
+      }
     }
   }
-  destroy() {
-    if (this.destroyed) return;
-    this.rootElement.removeAttribute('data-text-splitter-initialized');
-    ['--word-length', '--char-length'].forEach((name) => this.rootElement.style.removeProperty(name));
-    this.rootElement.innerHTML = this.original;
-    this.destroyed = true;
+  #getSegmenter(by, parent) {
+    if (by === 'word' && this.#settings.wordSegmenter) {
+      const root = parent?.nodeType === Node.ELEMENT_NODE ? parent : this.#rootElement;
+      return new Intl.Segmenter(root.closest('[lang]')?.lang || document.documentElement.lang || 'en', {
+        granularity: 'word',
+      });
+    } else {
+      return this.#segmenter;
+    }
   }
 }
