@@ -5,7 +5,7 @@ const LBR_PROHIBIT_START_REGEXP =
 const LBR_PROHIBIT_END_REGEXP = /[\p{Pf}\p{Pi}\p{Ps}\p{Sc}\u00A0]$/u;
 const LBR_INSEPARATABLE_REGEXP = /[―‥…]/u;
 export default class TextSplitter {
-  constructor(root, options = {}) {
+  constructor(root, options) {
     if (!root) return;
     this.rootElement = root;
     this.defaults = {
@@ -25,13 +25,9 @@ export default class TextSplitter {
     [...this.rootElement.childNodes].forEach((node) => this.fragment.appendChild(node.cloneNode(true)));
     this.nobr();
     this.split('word');
-    if (this.settings.lineBreakingRules && !this.settings.concatChar) {
-      this.lbr('word');
-    }
+    if (this.settings.lineBreakingRules && !this.settings.concatChar) this.lbr('word');
     this.split('char');
-    if (this.settings.lineBreakingRules && this.settings.concatChar) {
-      this.lbr('char');
-    }
+    if (this.settings.lineBreakingRules && this.settings.concatChar) this.lbr('char');
     this.wordElements.forEach((word, i) => {
       word.translate = false;
       word.style.setProperty('--word-index', String(i));
@@ -59,17 +55,20 @@ export default class TextSplitter {
       char.style.setProperty('--char-index', String(i));
     });
     this.fragment.querySelectorAll(':is([data-word], [data-char]):not([data-whitespace])').forEach((span) => {
-      span.style.setProperty('display', 'inline-block');
-      span.style.setProperty('white-space', 'nowrap');
+      Object.assign(span.style, {
+        display: 'inline-block',
+        whiteSpace: 'nowrap',
+      });
     });
     this.rootElement.replaceChildren(...this.fragment.childNodes);
-    this.rootElement.style.setProperty('--word-length', String(this.wordElements.length));
-    this.rootElement.style.setProperty('--char-length', String(this.charElements.length));
+    Object.entries({
+      '--word-length': String(this.wordElements.length),
+      '--char-length': String(this.charElements.length),
+    }).forEach(([name, value]) => this.rootElement.style.setProperty(name, value));
     [...this.rootElement.querySelectorAll(':scope > :not([data-word]) [data-char][data-whitespace]')].forEach(
       (whitespace) => {
-        if (getComputedStyle(whitespace).getPropertyValue('display') !== 'inline') {
+        if (window.getComputedStyle(whitespace).getPropertyValue('display') !== 'inline')
           whitespace.innerHTML = '&nbsp;';
-        }
       },
     );
     this.rootElement.setAttribute('data-text-splitter-initialized', '');
@@ -83,19 +82,15 @@ export default class TextSplitter {
       const parent = node.parentNode;
       matches.forEach((match) => {
         const offset = match.index;
-        if (offset > index) {
-          parent.insertBefore(document.createTextNode(text.slice(index, offset)), node);
-        }
+        if (offset > index) parent.insertBefore(document.createTextNode(text.slice(index, offset)), node);
         const span = document.createElement('span');
-        span.setAttribute('data-text-splitter-__nobr__', '');
+        span.setAttribute('data-_nobr', '');
         const matched = match[0];
         span.textContent = matched;
         parent.insertBefore(span, node);
         index = offset + matched.length;
       });
-      if (index < text.length) {
-        parent.insertBefore(document.createTextNode(text.slice(index)), node);
-      }
+      if (index < text.length) parent.insertBefore(document.createTextNode(text.slice(index)), node);
       parent.removeChild(node);
     } else if (node.hasChildNodes()) {
       [...node.childNodes].forEach((node) => this.nobr(node));
@@ -107,21 +102,22 @@ export default class TextSplitter {
       const text = node.textContent;
       if (node.nodeType === Node.TEXT_NODE) {
         const parent = node.parentNode;
-        const segmenter = (self) => {
+        function segmenter(self) {
           if (by === 'word' && self.settings.wordSegmenter) {
             return new Intl.Segmenter(
-              (parent.nodeType === Node.ELEMENT_NODE ? parent : self.rootElement).closest('[lang]')?.lang ??
-                document.documentElement.lang ??
+              (parent.nodeType === Node.ELEMENT_NODE ? parent : self.rootElement).closest('[lang]')?.lang ||
+                document.documentElement.lang ||
                 'en',
               { granularity: 'word' },
             );
+          } else {
+            return new Intl.Segmenter();
           }
-          return new Intl.Segmenter();
-        };
+        }
         [...segmenter(this).segment(text.replace(/[\r\n\t]/g, '').replace(/\s{2,}/g, ' '))].forEach((segment) => {
           const span = document.createElement('span');
           const text = segment.segment;
-          [by, text.charCodeAt(0) === 32 && 'whitespace']
+          [by, segment.segment.charCodeAt(0) === 32 && 'whitespace']
             .filter(Boolean)
             .forEach((type) => span.setAttribute(`data-${type}`, type !== 'whitespace' ? text : ''));
           span.textContent = text;
@@ -133,9 +129,9 @@ export default class TextSplitter {
         by === 'word' &&
         node.nodeType === Node.ELEMENT_NODE &&
         node instanceof HTMLElement &&
-        node.hasAttribute('data-text-splitter-__nobr__')
+        node.hasAttribute('data-_nobr')
       ) {
-        node.removeAttribute('data-text-splitter-__nobr__');
+        node.removeAttribute('data-_nobr');
         node.setAttribute('data-word', text);
         items.push(node);
       } else if (node.hasChildNodes()) {
@@ -145,18 +141,17 @@ export default class TextSplitter {
   }
   lbr(by) {
     const items = this[`${by}Elements`];
-    let previous;
+    let previous = null;
     for (let i = 0; i < items.length; i++) {
       const item = items[i];
       const text = item.textContent;
       const segment = [...new Intl.Segmenter().segment(text)].shift();
       if (!segment) return;
-      if (previous?.textContent.trim() && LBR_PROHIBIT_START_REGEXP.test(segment.segment)) {
-        previous.textContent += text;
-        previous.setAttribute(`data-${by}`, previous.textContent);
+      if (previous && previous.textContent.trim() && LBR_PROHIBIT_START_REGEXP.test(segment.segment)) {
+        previous.setAttribute(`data-${by}`, (previous.textContent += text));
         item.remove();
         items.splice(i, 1);
-        i -= 1;
+        i--;
       } else {
         previous = item;
       }
@@ -164,11 +159,9 @@ export default class TextSplitter {
     const concat = (item, regexp, index) => {
       const offset = index + 1;
       let next = items[offset];
-      while (next) {
-        const text = next.textContent;
-        if (!regexp.test(text)) break;
-        item.textContent += text;
-        item.setAttribute(`data-${by}`, item.textContent);
+      let text;
+      while (next && regexp.test((text = next.textContent))) {
+        item.setAttribute(`data-${by}`, (item.textContent += text));
         next.remove();
         items.splice(offset, 1);
         next = items[offset];
@@ -180,17 +173,14 @@ export default class TextSplitter {
         const next = items[i + 1];
         const text = next?.textContent;
         if (next && text.trim()) {
-          next.textContent = item.textContent + text;
-          next.setAttribute(`data-${by}`, next.textContent);
+          next.setAttribute(`data-${by}`, (next.textContent = item.textContent + text));
           item.remove();
           items.splice(i, 1);
         }
       }
     });
     items.forEach((item, i) => {
-      if (LBR_INSEPARATABLE_REGEXP.test(item.textContent)) {
-        concat(item, LBR_INSEPARATABLE_REGEXP, i);
-      }
+      if (LBR_INSEPARATABLE_REGEXP.test(item.textContent)) concat(item, LBR_INSEPARATABLE_REGEXP, i);
     });
     if (by === 'char') {
       this.fragment.querySelectorAll('[data-word]:not([data-whitespace])').forEach((span) => {
@@ -205,9 +195,9 @@ export default class TextSplitter {
   }
   destroy() {
     if (this.destroyed) return;
-    this.destroyed = true;
     this.rootElement.removeAttribute('data-text-splitter-initialized');
     ['--word-length', '--char-length'].forEach((name) => this.rootElement.style.removeProperty(name));
     this.rootElement.innerHTML = this.original;
+    this.destroyed = true;
   }
 }
