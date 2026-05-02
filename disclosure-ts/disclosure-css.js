@@ -48,11 +48,11 @@ export default class Disclosure {
     this.#bindings = null;
   }
   #initialize() {
-    if (!this.#detailsElements || !this.#controller) {
+    if (!this.#controller) {
       return;
     }
     const { signal } = this.#controller;
-    this.#detailsElements.forEach((details, i) => {
+    this.#detailsElements?.forEach((details, i) => {
       const summary = this.#summaryElements?.[i];
       const content = this.#contentElements?.[i];
       if (!summary || !content || !this.#bindings) {

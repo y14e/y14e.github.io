@@ -49,7 +49,7 @@ export default class Disclosure {
     }
   }
   async destroy(force = false) {
-    if (this.#isDestroyed || !this.#detailsElements || !this.#bindings) {
+    if (this.#isDestroyed || !this.#detailsElements) {
       return;
     }
     this.#isDestroyed = true;
@@ -96,11 +96,11 @@ export default class Disclosure {
     this.#bindings = null;
   }
   #initialize() {
-    if (!this.#detailsElements || !this.#controller) {
+    if (!this.#controller) {
       return;
     }
     const { signal } = this.#controller;
-    this.#detailsElements.forEach((details, i) => {
+    this.#detailsElements?.forEach((details, i) => {
       const summary = this.#summaryElements?.[i];
       const content = this.#contentElements?.[i];
       if (!summary || !content || !this.#bindings) {
@@ -181,16 +181,13 @@ export default class Disclosure {
     focusables.at(newIndex)?.focus();
   };
   #toggle(details, isOpen) {
-    if (!this.#detailsElements) {
-      return;
-    }
     const binding = this.#bindings?.get(details);
     if (!binding || isOpen === details.hasAttribute('data-disclosure-open')) {
       return;
     }
     const name = details.getAttribute('data-disclosure-name');
     if (name && isOpen) {
-      const opened = this.#detailsElements.find(
+      const opened = this.#detailsElements?.find(
         (d) => d.hasAttribute('data-disclosure-open') && d.getAttribute('data-disclosure-name') === name,
       );
       if (opened) {
