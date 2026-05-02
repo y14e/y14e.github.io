@@ -45,7 +45,7 @@ export default class Accordion {
     }
   }
   async destroy(force = false) {
-    if (this.#isDestroyed || !this.#triggerElements || !this.#bindings) {
+    if (this.#isDestroyed || !this.#triggerElements) {
       return;
     }
     this.#isDestroyed = true;
@@ -70,11 +70,11 @@ export default class Accordion {
     this.#bindings = null;
   }
   #initialize() {
-    if (!this.#triggerElements || !this.#controller) {
+    if (!this.#controller) {
       return;
     }
     const { signal } = this.#controller;
-    this.#triggerElements.forEach((trigger, i) => {
+    this.#triggerElements?.forEach((trigger, i) => {
       const id = Math.random().toString(36).slice(-8);
       const content = this.#contentElements?.[i];
       if (!content || !this.#bindings) {
@@ -159,16 +159,13 @@ export default class Accordion {
     }
   };
   #toggle(trigger, isOpen, isMatch = false) {
-    if (!this.#triggerElements) {
-      return;
-    }
     const binding = this.#bindings?.get(trigger);
     if (!binding || String(isOpen) === trigger.getAttribute('aria-expanded')) {
       return;
     }
     const name = trigger.getAttribute('data-accordion-name');
     if (name && isOpen) {
-      const opened = this.#triggerElements.find(
+      const opened = this.#triggerElements?.find(
         (t) =>
           t !== trigger && t.getAttribute('data-accordion-name') === name && t.getAttribute('aria-expanded') === 'true',
       );
