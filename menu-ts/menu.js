@@ -51,7 +51,7 @@ export default class Menu {
   #isDestroyed = false;
   #cleanupPopover = null;
   constructor(root, options = {}, isSubmenu = false) {
-    if (!root) {
+    if (!(root instanceof HTMLElement)) {
       throw new Error('Root element missing');
     }
     this.#rootElement = root;
