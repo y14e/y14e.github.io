@@ -7,7 +7,7 @@ export default class Disclosure {
   #controller = new AbortController();
   #isDestroyed = false;
   constructor(root) {
-    if (!root) {
+    if (!(root instanceof HTMLElement)) {
       throw new Error('Root element missing');
     }
     this.#rootElement = root;
@@ -25,12 +25,12 @@ export default class Disclosure {
     this.#initialize();
   }
   open(details) {
-    if (!this.#isDestroyed && this.#bindings?.has(details)) {
+    if (details instanceof HTMLDetailsElement && !this.#isDestroyed && this.#bindings?.has(details)) {
       this.#toggle(details, true);
     }
   }
   close(details) {
-    if (!this.#isDestroyed && this.#bindings?.has(details)) {
+    if (details instanceof HTMLDetailsElement && !this.#isDestroyed && this.#bindings?.has(details)) {
       this.#toggle(details, false);
     }
   }
