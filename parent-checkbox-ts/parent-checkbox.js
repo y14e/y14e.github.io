@@ -4,7 +4,7 @@ export default class ParentCheckbox {
   #controller = new AbortController();
   #isDestroyed = false;
   constructor(root) {
-    if (!root) {
+    if (!(root instanceof HTMLInputElement)) {
       throw new Error('Root element missing');
     }
     this.#rootElement = root;
