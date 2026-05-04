@@ -56,7 +56,7 @@ export default class ParentCheckbox {
   }
   #update() {
     if (!this.#childElements) {
-      return;
+      throw new Error('Unreachable');
     }
     const isAllChecked = this.#childElements.every((child) => child.checked);
     this.#rootElement.checked = isAllChecked;

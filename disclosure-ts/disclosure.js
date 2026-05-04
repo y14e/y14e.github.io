@@ -101,7 +101,7 @@ export default class Disclosure {
       this.#observers = null;
     }
     if (!this.#detailsElements) {
-      return;
+      throw new Error('Unreachable');
     }
     this.#detailsElements.forEach((details) => {
       const binding = this.#bindings?.get(details);
@@ -148,7 +148,7 @@ export default class Disclosure {
       sync();
       const summary = this.#summaryElements?.[i];
       if (!summary) {
-        return;
+        throw new Error('Unreachable');
       }
       if (!this.#isFocusable(summary)) {
         summary.setAttribute('aria-disabled', 'true');
@@ -159,11 +159,11 @@ export default class Disclosure {
       summary.addEventListener('keydown', this.#onSummaryKeyDown, { signal });
       const content = this.#contentElements?.[i];
       if (!content) {
-        return;
+        throw new Error('Unreachable');
       }
       const binding = this.#createBinding(details, summary, content);
       if (!this.#bindings) {
-        return;
+        throw new Error('Unreachable');
       }
       this.#bindings.set(details, binding);
       this.#bindings.set(summary, binding);

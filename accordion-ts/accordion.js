@@ -84,7 +84,7 @@ export default class Accordion {
     this.#controller = null;
     this.#rootElement.removeAttribute('data-accordion-initialized');
     if (!this.#triggerElements) {
-      return;
+      throw new Error('Unreachable');
     }
     if (!force) {
       const promises = [];
@@ -131,7 +131,7 @@ export default class Accordion {
       });
       const binding = this.#createBinding(trigger, content);
       if (!this.#bindings) {
-        return;
+        throw new Error('Unreachable');
       }
       this.#bindings.set(trigger, binding);
       this.#bindings.set(content, binding);
