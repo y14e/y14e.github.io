@@ -1,3 +1,15 @@
+/**
+ * disclosure-css.ts
+ *
+ * @version 1.0.1
+ * @author Yusuke Kamiyamane
+ * @license MIT
+ * @copyright Copyright (c) 2026 Yusuke Kamiyamane
+ * @see {@link https://github.com/y14e/disclosure-ts}
+ */
+// -----------------------------------------------------------------------------
+// APIs
+// -----------------------------------------------------------------------------
 export default class Disclosure {
   #rootElement;
   #detailsElements;
@@ -8,31 +20,54 @@ export default class Disclosure {
   #isDestroyed = false;
   constructor(root) {
     if (!(root instanceof HTMLElement)) {
-      throw new Error('Root element missing');
+      throw new TypeError('Invalid root element');
     }
     this.#rootElement = root;
     const NOT_NESTED = ':not(:scope summary + * *)';
-    this.#detailsElements = [...this.#rootElement.querySelectorAll(`details${NOT_NESTED}`)];
-    this.#summaryElements = [...this.#rootElement.querySelectorAll(`summary${NOT_NESTED}`)];
-    this.#contentElements = [...this.#rootElement.querySelectorAll(`summary${NOT_NESTED} + *`)];
+    this.#detailsElements = [
+      ...this.#rootElement.querySelectorAll(`details${NOT_NESTED}`),
+    ];
+    this.#summaryElements = [
+      ...this.#rootElement.querySelectorAll(`summary${NOT_NESTED}`),
+    ];
+    this.#contentElements = [
+      ...this.#rootElement.querySelectorAll(`summary${NOT_NESTED} + *`),
+    ];
     if (
       this.#detailsElements.length === 0 ||
       this.#summaryElements.length === 0 ||
       this.#contentElements.length === 0
     ) {
-      throw new Error('Details, summary, or content element missing');
+      console.warn('Missing <details>, <summary>, or content element');
+      return;
     }
     this.#initialize();
   }
   open(details) {
-    if (details instanceof HTMLDetailsElement && !this.#isDestroyed && this.#bindings?.has(details)) {
-      this.#toggle(details, true);
+    if (this.#isDestroyed) {
+      return;
     }
+    if (
+      !(details instanceof HTMLDetailsElement) ||
+      !this.#bindings?.has(details)
+    ) {
+      console.warn('Invalid <details> element');
+      return;
+    }
+    this.#toggle(details, true);
   }
   close(details) {
-    if (details instanceof HTMLDetailsElement && !this.#isDestroyed && this.#bindings?.has(details)) {
-      this.#toggle(details, false);
+    if (this.#isDestroyed) {
+      return;
     }
+    if (
+      !(details instanceof HTMLDetailsElement) ||
+      !this.#bindings?.has(details)
+    ) {
+      console.warn('Invalid <details> element');
+      return;
+    }
+    this.#toggle(details, false);
   }
   destroy() {
     if (this.#isDestroyed) {
@@ -48,14 +83,10 @@ export default class Disclosure {
     this.#bindings = null;
   }
   #initialize() {
-    if (!this.#controller) {
-      return;
-    }
     const { signal } = this.#controller;
     this.#detailsElements?.forEach((details, i) => {
       const summary = this.#summaryElements?.[i];
-      const content = this.#contentElements?.[i];
-      if (!summary || !content || !this.#bindings) {
+      if (!summary) {
         return;
       }
       if (!this.#isFocusable(details)) {
@@ -64,7 +95,14 @@ export default class Disclosure {
         summary.style.setProperty('pointer-events', 'none');
       }
       summary.addEventListener('keydown', this.#onSummaryKeyDown, { signal });
+      const content = this.#contentElements?.[i];
+      if (!content) {
+        return;
+      }
       const binding = this.#createBinding(details, summary, content);
+      if (!this.#bindings) {
+        return;
+      }
       this.#bindings.set(details, binding);
       this.#bindings.set(summary, binding);
       this.#bindings.set(content, binding);
@@ -72,23 +110,14 @@ export default class Disclosure {
     this.#rootElement.setAttribute('data-disclosure-initialized', '');
   }
   #onSummaryKeyDown = (event) => {
-    if (!this.#summaryElements) {
-      return;
-    }
     const { key } = event;
     if (!['End', 'Home', 'ArrowUp', 'ArrowDown'].includes(key)) {
       return;
     }
     event.preventDefault();
     event.stopPropagation();
-    const focusables = this.#summaryElements.filter((summary) => {
-      const binding = this.#bindings?.get(summary);
-      return binding && this.#isFocusable(binding.details);
-    });
+    const focusables = this.#summaryElements.filter(this.#isFocusable);
     const active = this.#getActiveElement();
-    if (!active) {
-      return;
-    }
     const currentIndex = focusables.indexOf(active);
     let newIndex = currentIndex;
     switch (key) {
