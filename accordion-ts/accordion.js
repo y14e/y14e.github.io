@@ -49,7 +49,8 @@ export default class Accordion {
       this.#triggerElements.length === 0 ||
       this.#contentElements.length === 0
     ) {
-      throw new Error('Missing trigger or content elements');
+      console.warn('Missing trigger or content elements');
+      return;
     }
     this.#initialize();
   }
