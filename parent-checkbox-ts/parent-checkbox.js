@@ -1,3 +1,15 @@
+/**
+ * parent-checkbox.ts
+ *
+ * @version 1.0.1
+ * @author Yusuke Kamiyamane
+ * @license MIT
+ * @copyright Copyright (c) 2026 Yusuke Kamiyamane
+ * @see {@link https://github.com/y14e/parent-checkbox-ts}
+ */
+// -----------------------------------------------------------------------------
+// APIs
+// -----------------------------------------------------------------------------
 export default class ParentCheckbox {
   #rootElement;
   #childElements;
@@ -5,19 +17,19 @@ export default class ParentCheckbox {
   #isDestroyed = false;
   constructor(root) {
     if (!(root instanceof HTMLInputElement)) {
-      throw new Error('Root element missing');
+      throw new TypeError('Invalid root element');
     }
     this.#rootElement = root;
     const ids = root.getAttribute('aria-controls')?.trim() ?? '';
     if (ids === '') {
-      console.warn('Child element IDs missing');
+      console.warn('Invalid aria-controls attribute.');
     }
     this.#childElements = ids
       .split(/\s+/)
       .map((id) => document.getElementById(id))
       .filter((element) => element instanceof HTMLInputElement);
     if (this.#childElements.length === 0) {
-      console.warn('Child element missing');
+      console.warn('Missing child elements.');
     }
     this.#initialize();
   }
@@ -32,11 +44,10 @@ export default class ParentCheckbox {
     this.#childElements = null;
   }
   #initialize() {
-    if (!this.#controller) {
-      return;
-    }
     const { signal } = this.#controller;
-    this.#rootElement.addEventListener('change', this.#onRootChange, { signal });
+    this.#rootElement.addEventListener('change', this.#onRootChange, {
+      signal,
+    });
     this.#childElements?.forEach((child) => {
       child.addEventListener('change', this.#onChildChange, { signal });
     });
@@ -49,7 +60,8 @@ export default class ParentCheckbox {
     }
     const isAllChecked = this.#childElements.every((child) => child.checked);
     this.#rootElement.checked = isAllChecked;
-    this.#rootElement.indeterminate = !isAllChecked && this.#childElements.some((child) => child.checked);
+    this.#rootElement.indeterminate =
+      !isAllChecked && this.#childElements.some((child) => child.checked);
   }
   #onRootChange = () => {
     this.#rootElement.indeterminate = false;

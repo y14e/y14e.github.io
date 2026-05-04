@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>parent-checkbox.js</title>
+<title>parent-checkbox.ts</title>
 <link rel="stylesheet" href="./index.css">
 </head>
 <body>
@@ -31,7 +31,10 @@
 </fieldset>
 <script type="module">
 import ParentCheckbox from './parent-checkbox.js';
-document.querySelectorAll('[data-parent-checkbox]').forEach((element) => new ParentCheckbox(element));
+
+document.querySelectorAll('[data-parent-checkbox]').forEach((element) => {
+  new ParentCheckbox(element);
+});
 </script>
 </body>
 </html>
