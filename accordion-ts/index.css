@@ -1,5 +1,5 @@
-@import "https://cdn.jsdelivr.net/npm/destyle.css@4.0.1/destyle.min.css";
-@import "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap";
+@import 'https://cdn.jsdelivr.net/npm/destyle.css@4.0.1/destyle.min.css';
+@import 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap';
 :root {
   font-size: 10px;
 }
@@ -9,7 +9,7 @@ body {
   font:
     1.6rem / 1.5 Inter,
     sans-serif;
-  font-feature-settings: "palt";
+  font-feature-settings: 'palt';
   padding: 3.2rem;
 }
 [data-accordion] > * {
@@ -43,22 +43,22 @@ body {
     aspect-ratio: 1;
     background-color: currentColor;
     clip-path: polygon(0 25%, 15% 25%, 50% 60%, 85% 25%, 100% 25%, 50% 75%);
-    content: "";
+    content: '';
     transition: 0.3s rotate;
     width: 1.6rem;
   }
-  &[aria-expanded="true"] {
+  &[aria-expanded='true'] {
     background-color: #000;
     color: #fff;
     &::after {
       rotate: 180deg;
     }
   }
-  &:is([disabled], [tabindex="-1"]) {
+  &:is([disabled], [tabindex='-1']) {
     background-color: none;
     color: rgb(0, 0, 0, 0.35);
   }
-  &:not([aria-expanded="true"]):hover {
+  &:not([aria-expanded='true']):hover {
     background-color: rgb(0 0 0 / 0.2);
   }
 }
