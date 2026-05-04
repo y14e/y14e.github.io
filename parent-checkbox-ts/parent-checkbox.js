@@ -22,14 +22,14 @@ export default class ParentCheckbox {
     this.#rootElement = root;
     const ids = root.getAttribute('aria-controls')?.trim() ?? '';
     if (ids === '') {
-      console.warn('Invalid aria-controls attribute.');
+      console.warn('Invalid aria-controls attribute');
     }
     this.#childElements = ids
       .split(/\s+/)
       .map((id) => document.getElementById(id))
       .filter((element) => element instanceof HTMLInputElement);
     if (this.#childElements.length === 0) {
-      console.warn('Missing child elements.');
+      console.warn('Missing child elements');
     }
     this.#initialize();
   }
