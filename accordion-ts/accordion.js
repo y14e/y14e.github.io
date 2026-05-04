@@ -182,7 +182,7 @@ export default class Accordion {
     }
   };
   #toggle(trigger, isOpen, isMatch = false) {
-    if (String(isOpen) === trigger.getAttribute('aria-expanded')) {
+    if (trigger.getAttribute('aria-expanded') === String(isOpen)) {
       return;
     }
     const name = trigger.getAttribute('data-accordion-name');
