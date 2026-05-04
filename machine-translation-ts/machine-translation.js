@@ -1,15 +1,30 @@
+/**
+ * machine-translation.ts
+ *
+ * @version 1.0.1
+ * @author Yusuke Kamiyamane
+ * @license MIT
+ * @copyright Copyright (c) 2026 Yusuke Kamiyamane
+ * @see {@link https://github.com/y14e/machine-translation-ts}
+ */
+// -----------------------------------------------------------------------------
+// APIs
+// -----------------------------------------------------------------------------
 export function detectMachineTranslation() {
   const html = document.documentElement;
   const title = document.getElementsByTagName('title')[0];
   if (!title) {
-    return () => {};
+    throw new Error('Missing <title> element');
   }
   const language = new Intl.Locale(navigator.language).language;
   const strategies = [
     {
       attribute: 'class',
       element: html,
-      test: () => [...html.classList].some((className) => /translated-(ltr|rtl)/.test(className)),
+      test: () =>
+        [...html.classList].some((className) =>
+          /translated-(ltr|rtl)/.test(className),
+        ),
     },
     {
       attribute: '_msttexthash',
@@ -22,8 +37,15 @@ export function detectMachineTranslation() {
       test: () => new Intl.Locale(html.lang).language !== language,
     },
   ];
+  const map = new Map();
+  for (const { attribute, element } of strategies) {
+    (map.has(element)
+      ? map.get(element)
+      : map.set(element, []).get(element)
+    )?.push(attribute);
+  }
   let timer;
-  const detect = () => {
+  function detect() {
     if (timer !== undefined) {
       return;
     }
@@ -35,10 +57,6 @@ export function detectMachineTranslation() {
       observer?.disconnect();
       observer = null;
     });
-  };
-  const map = new Map();
-  for (const { attribute, element } of strategies) {
-    (map.has(element) ? map.get(element) : map.set(element, []).get(element))?.push(attribute);
   }
   let observer = new MutationObserver(detect);
   for (const [element, attributes] of map) {
