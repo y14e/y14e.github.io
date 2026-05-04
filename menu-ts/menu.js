@@ -125,7 +125,7 @@ export default class Menu {
         .map((key) => key.toLowerCase());
       keys.forEach((key) => {
         if (!this.#itemElementsByFirstChar) {
-          return;
+          throw new Error('Unreachable');
         }
         const items = this.#itemElementsByFirstChar[key] ?? [];
         items.push(item);
@@ -148,7 +148,7 @@ export default class Menu {
         group = this.#rootElement;
       }
       if (!this.#radioItemElementsByGroup) {
-        return;
+        throw new Error('Unreachable');
       }
       const items = this.#radioItemElementsByGroup.get(group) ?? [];
       items.push(item);
@@ -186,7 +186,7 @@ export default class Menu {
     this.#rootElement.removeAttribute('data-menu-initialized');
     await Promise.all(this.#submenus.map((submenu) => submenu.destroy()));
     if (!this.#animation) {
-      return;
+      throw new Error('Unreachable');
     }
     if (!force) {
       try {
@@ -215,7 +215,7 @@ export default class Menu {
       signal,
     });
     if (!this.#listElement) {
-      return;
+      throw new Error('Unreachable');
     }
     if (this.#triggerElement) {
       const id = Math.random().toString(36).slice(-8);
@@ -340,7 +340,7 @@ export default class Menu {
     event.stopPropagation();
     this.open();
     if (!this.#itemElements) {
-      return;
+      throw new Error('Unreachable');
     }
     const focusables = this.#itemElements.filter(this.#isFocusable);
     let index = 0;
@@ -393,7 +393,7 @@ export default class Menu {
     event.preventDefault();
     event.stopPropagation();
     if (!this.#itemElements) {
-      return;
+      throw new Error('Unreachable');
     }
     const focusables = this.#itemElements.filter(this.#isFocusable);
     const active = this.#getActiveElement();
@@ -589,9 +589,6 @@ export default class Menu {
     }
   }
   #updatePopover() {
-    if (!this.#triggerElement) {
-      return;
-    }
     const compute = () => {
       computePosition(
         this.#triggerElement,
