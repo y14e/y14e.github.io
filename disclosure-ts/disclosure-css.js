@@ -1,7 +1,7 @@
 /**
  * disclosure-css.ts
  *
- * @version 1.0.1
+ * @version 1.0.2
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -141,7 +141,7 @@ export default class Disclosure {
     focusables.at(newIndex)?.focus();
   };
   #toggle(details, isOpen) {
-    if (isOpen !== details.open) {
+    if (details.open !== isOpen) {
       details.open = isOpen;
     }
   }
@@ -149,11 +149,14 @@ export default class Disclosure {
     return { details, summary, content };
   }
   #getActiveElement() {
-    let active = document.activeElement;
-    while (active instanceof HTMLElement && active.shadowRoot?.activeElement) {
-      active = active.shadowRoot.activeElement;
+    function walk(node) {
+      if (node === null) {
+        return null;
+      }
+      const active = node.shadowRoot?.activeElement;
+      return active ? walk(active) : node;
     }
-    return active instanceof HTMLElement ? active : null;
+    return walk(document.activeElement);
   }
   #isFocusable(element) {
     return element.getAttribute('tabindex') !== '-1';

@@ -1,7 +1,7 @@
 /**
  * disclosure.ts
  *
- * @version 1.0.1
+ * @version 1.0.2
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -205,7 +205,7 @@ export default class Disclosure {
     focusables.at(newIndex)?.focus();
   };
   #toggle(details, isOpen) {
-    if (isOpen === details.hasAttribute('data-disclosure-open')) {
+    if (details.hasAttribute('data-disclosure-open') === isOpen) {
       return;
     }
     const name = details.getAttribute('data-disclosure-name');
@@ -272,11 +272,14 @@ export default class Disclosure {
     return { details, summary, content, timer: undefined, animation: null };
   }
   #getActiveElement() {
-    let active = document.activeElement;
-    while (active instanceof HTMLElement && active.shadowRoot?.activeElement) {
-      active = active.shadowRoot.activeElement;
+    function walk(node) {
+      if (node === null) {
+        return null;
+      }
+      const active = node.shadowRoot?.activeElement;
+      return active ? walk(active) : node;
     }
-    return active instanceof HTMLElement ? active : null;
+    return walk(document.activeElement);
   }
   #isFocusable(element) {
     return element.getAttribute('tabindex') !== '-1';
