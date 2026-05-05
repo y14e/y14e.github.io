@@ -1,7 +1,7 @@
 /**
  * menu.ts
  *
- * @version 1.0.1
+ * @version 1.0.3
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -103,7 +103,7 @@ export default class Menu {
       selector[!this.#isSubmenu ? 'trigger' : 'item'],
     );
     this.#listElement = this.#rootElement.querySelector(selector.list);
-    if (!this.#listElement) {
+    if (this.#listElement === null) {
       console.warn('Missing list element');
       return;
     }
@@ -132,7 +132,7 @@ export default class Menu {
         this.#itemElementsByFirstChar[key] = items;
       });
       const first = keys[0];
-      if (!shortcuts && first) {
+      if (shortcuts === null && first) {
         item.setAttribute('aria-keyshortcuts', first);
       }
       const role = item.getAttribute('role');
@@ -144,7 +144,7 @@ export default class Menu {
     });
     this.#radioItemElements?.forEach((item) => {
       let group = item.closest(selector.group);
-      if (!group || !this.#rootElement.contains(group)) {
+      if (group === null || !this.#rootElement.contains(group)) {
         group = this.#rootElement;
       }
       if (!this.#radioItemElementsByGroup) {
@@ -293,8 +293,8 @@ export default class Menu {
   }
   #onOutsidePointerDown = (event) => {
     if (
-      event.composedPath().includes(this.#rootElement) ||
-      !this.#triggerElement
+      this.#triggerElement === null ||
+      event.composedPath().includes(this.#rootElement)
     ) {
       return;
     }
@@ -377,14 +377,14 @@ export default class Menu {
         'ArrowDown',
       ].includes(key)
     ) {
-      const char = /^\S$/i.test(key);
+      const isChar = /^\S$/i.test(key);
       if (
-        !char ||
+        !isChar ||
         !this.#itemElementsByFirstChar?.[key.toLowerCase()]?.some(
           this.#isFocusable,
         )
       ) {
-        if (char) {
+        if (isChar) {
           event.stopPropagation();
         }
         return;
@@ -476,7 +476,7 @@ export default class Menu {
     ) {
       return;
     }
-    if (this.#triggerElement) {
+    if (this.#triggerElement !== null) {
       requestAnimationFrame(() => {
         this.#triggerElement?.setAttribute('aria-expanded', String(isOpen));
       });
@@ -490,7 +490,7 @@ export default class Menu {
       const { style } = this.#listElement;
       style.setProperty('display', 'block');
       style.setProperty('opacity', '0');
-      if (this.#triggerElement) {
+      if (this.#triggerElement !== null) {
         this.#updatePopover();
       }
       this.#itemElements?.find(this.#isFocusable)?.focus();
@@ -500,13 +500,14 @@ export default class Menu {
         submenu.close();
       });
       if (
-        this.#triggerElement &&
+        this.#triggerElement !== null &&
         this.#rootElement.contains(this.#getActiveElement())
       ) {
         this.#triggerElement.focus();
       }
     }
-    if (!this.#triggerElement) {
+    // Skip if not in popover mode
+    if (this.#triggerElement === null) {
       return;
     }
     if (!isOpen) {
@@ -540,7 +541,7 @@ export default class Menu {
           listStyle.removeProperty('left');
           listStyle.removeProperty('top');
           listStyle.removeProperty('transform-origin');
-          if (this.#arrowElement) {
+          if (this.#arrowElement !== null) {
             const { style: arrowStyle } = this.#arrowElement;
             arrowStyle.removeProperty('left');
             arrowStyle.removeProperty('rotate');
@@ -559,11 +560,14 @@ export default class Menu {
     }
   }
   #getActiveElement() {
-    let active = document.activeElement;
-    while (active instanceof HTMLElement && active.shadowRoot?.activeElement) {
-      active = active.shadowRoot.activeElement;
+    function walk(node) {
+      if (node === null) {
+        return null;
+      }
+      const active = node.shadowRoot?.activeElement;
+      return active ? walk(active) : node;
     }
-    return active instanceof HTMLElement ? active : null;
+    return walk(document.activeElement);
   }
   #isFocusable(element) {
     return (
@@ -572,7 +576,7 @@ export default class Menu {
     );
   }
   #resetTabIndex(isForce = false) {
-    if (this.#triggerElement || isForce) {
+    if (this.#triggerElement !== null || isForce) {
       this.#itemElements?.forEach((item) => {
         item.setAttribute('tabindex', '-1');
       });
@@ -619,7 +623,8 @@ export default class Menu {
             transformOrigins[placement],
           );
         }
-        if (!this.#arrowElement) {
+        // Skip if not in arrow mode
+        if (this.#arrowElement === null) {
           return;
         }
         const data = middlewareData.arrow;
@@ -632,14 +637,13 @@ export default class Menu {
             ? `${arrowY - this.#arrowElement.offsetHeight / 2}px`
             : '',
         );
-        const side = placement.split('-')[0];
         const styles = {
           top: { position: 'bottom', rotate: '225deg' },
           right: { position: 'left', rotate: '315deg' },
           bottom: { position: 'top', rotate: '45deg' },
           left: { position: 'right', rotate: '135deg' },
         };
-        const style = styles[side];
+        const style = styles[placement.split('-')[0]];
         arrowStyle.setProperty(
           style.position,
           `${this.#arrowElement.offsetWidth / -2}px`,
@@ -648,7 +652,7 @@ export default class Menu {
       });
     };
     compute();
-    if (!this.#cleanupPopover) {
+    if (this.#cleanupPopover === null) {
       this.#cleanupPopover = autoUpdate(
         this.#triggerElement,
         this.#listElement,
