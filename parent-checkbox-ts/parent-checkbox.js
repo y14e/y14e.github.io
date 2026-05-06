@@ -21,7 +21,7 @@ export default class ParentCheckbox {
     }
     this.#rootElement = root;
     const ids = root.getAttribute('aria-controls')?.trim() ?? '';
-    if (ids === '') {
+    if (!ids) {
       console.warn('Invalid aria-controls attribute');
     }
     this.#childElements = ids
