@@ -112,7 +112,7 @@ export default class Menu {
         `${selector.item}:not(:scope ${selector.list} *)`,
       ),
     ];
-    if (this.#itemElements.length === 0) {
+    if (!this.#itemElements.length) {
       console.warn('Missing item elements');
       return;
     }
