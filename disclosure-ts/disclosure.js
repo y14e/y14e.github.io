@@ -41,21 +41,21 @@ export default class Disclosure {
     this.#detailsElements = [
       ...this.#rootElement.querySelectorAll(`details${NOT_NESTED}`),
     ];
-    if (this.#detailsElements.length === 0) {
+    if (!this.#detailsElements.length) {
       console.warn('Missing <details> elements');
       return;
     }
     this.#summaryElements = [
       ...this.#rootElement.querySelectorAll(`summary${NOT_NESTED}`),
     ];
-    if (this.#summaryElements.length === 0) {
+    if (!this.#summaryElements.length) {
       console.warn('Missing <summary> elements');
       return;
     }
     this.#contentElements = [
       ...this.#rootElement.querySelectorAll(`summary${NOT_NESTED} + *`),
     ];
-    if (this.#contentElements.length === 0) {
+    if (!this.#contentElements.length) {
       console.warn('Missing content elements');
       return;
     }
