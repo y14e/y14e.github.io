@@ -74,7 +74,7 @@ var MojiSplitter = class {
       style2.setProperty("display", "inline-block");
       if (Array.from(
         this.#segmenter.segment(span.textContent)
-      ).length > 1) {
+      ).length) {
         style2.setProperty("white-space", "nowrap");
       }
     }
@@ -214,7 +214,7 @@ var MojiSplitter = class {
       const segment = Array.from(
         this.#segmenter.segment(text)
       ).shift();
-      if (previous !== null && previous.textContent.trim() !== "" && LBR_PROHIBIT_START_REGEX.test(segment.segment)) {
+      if (previous?.textContent.trim() && LBR_PROHIBIT_START_REGEX.test(segment.segment)) {
         previous.textContent += text;
         previous.setAttribute(`data-${granularity}`, previous.textContent);
         item.remove();
@@ -245,7 +245,7 @@ var MojiSplitter = class {
       concat(item, LBR_PROHIBIT_END_REGEX, i);
       const next = items[i + 1];
       const text = next?.textContent;
-      if (next && text?.trim() !== "") {
+      if (next && text?.trim()) {
         next.textContent = item.textContent + text;
         next.setAttribute(`data-${granularity}`, next.textContent);
         item.remove();
@@ -266,7 +266,7 @@ var MojiSplitter = class {
       for (let i = 0, l = spans.length; i < l; i++) {
         const span = spans[i];
         const text = span.textContent;
-        if (text !== "") {
+        if (text) {
           span.setAttribute("data-word", text);
         } else {
           span.remove();
@@ -300,7 +300,7 @@ var MojiSplitter = class {
  * Flexible text splitting utility for CSS animations.
  * Supports complex line breaking rules (ja: Kinsoku shori).
  *
- * @version 1.3.2
+ * @version 1.3.3
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
