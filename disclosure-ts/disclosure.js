@@ -1,7 +1,7 @@
 /**
  * disclosure.ts
  *
- * @version 1.0.2
+ * @version 1.0.4
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -273,7 +273,7 @@ export default class Disclosure {
   }
   #getActiveElement() {
     function walk(node) {
-      if (node === null) {
+      if (!node) {
         return null;
       }
       const active = node.shadowRoot?.activeElement;
