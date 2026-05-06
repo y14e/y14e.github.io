@@ -1,7 +1,7 @@
 /**
  * menu.ts
  *
- * @version 1.0.3
+ * @version 1.0.4
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -103,7 +103,7 @@ export default class Menu {
       selector[!this.#isSubmenu ? 'trigger' : 'item'],
     );
     this.#listElement = this.#rootElement.querySelector(selector.list);
-    if (this.#listElement === null) {
+    if (!this.#listElement) {
       console.warn('Missing list element');
       return;
     }
@@ -132,7 +132,7 @@ export default class Menu {
         this.#itemElementsByFirstChar[key] = items;
       });
       const first = keys[0];
-      if (shortcuts === null && first) {
+      if (!shortcuts && first) {
         item.setAttribute('aria-keyshortcuts', first);
       }
       const role = item.getAttribute('role');
@@ -144,7 +144,7 @@ export default class Menu {
     });
     this.#radioItemElements?.forEach((item) => {
       let group = item.closest(selector.group);
-      if (group === null || !this.#rootElement.contains(group)) {
+      if (!group || !this.#rootElement.contains(group)) {
         group = this.#rootElement;
       }
       if (!this.#radioItemElementsByGroup) {
@@ -293,7 +293,7 @@ export default class Menu {
   }
   #onOutsidePointerDown = (event) => {
     if (
-      this.#triggerElement === null ||
+      !this.#triggerElement ||
       event.composedPath().includes(this.#rootElement)
     ) {
       return;
@@ -476,7 +476,7 @@ export default class Menu {
     ) {
       return;
     }
-    if (this.#triggerElement !== null) {
+    if (this.#triggerElement) {
       requestAnimationFrame(() => {
         this.#triggerElement?.setAttribute('aria-expanded', String(isOpen));
       });
@@ -490,7 +490,7 @@ export default class Menu {
       const { style } = this.#listElement;
       style.setProperty('display', 'block');
       style.setProperty('opacity', '0');
-      if (this.#triggerElement !== null) {
+      if (this.#triggerElement) {
         this.#updatePopover();
       }
       this.#itemElements?.find(this.#isFocusable)?.focus();
@@ -500,14 +500,14 @@ export default class Menu {
         submenu.close();
       });
       if (
-        this.#triggerElement !== null &&
+        this.#triggerElement &&
         this.#rootElement.contains(this.#getActiveElement())
       ) {
         this.#triggerElement.focus();
       }
     }
     // Skip if not in popover mode
-    if (this.#triggerElement === null) {
+    if (!this.#triggerElement) {
       return;
     }
     if (!isOpen) {
@@ -541,7 +541,7 @@ export default class Menu {
           listStyle.removeProperty('left');
           listStyle.removeProperty('top');
           listStyle.removeProperty('transform-origin');
-          if (this.#arrowElement !== null) {
+          if (this.#arrowElement) {
             const { style: arrowStyle } = this.#arrowElement;
             arrowStyle.removeProperty('left');
             arrowStyle.removeProperty('rotate');
@@ -561,7 +561,7 @@ export default class Menu {
   }
   #getActiveElement() {
     function walk(node) {
-      if (node === null) {
+      if (!node) {
         return null;
       }
       const active = node.shadowRoot?.activeElement;
@@ -576,7 +576,7 @@ export default class Menu {
     );
   }
   #resetTabIndex(isForce = false) {
-    if (this.#triggerElement !== null || isForce) {
+    if (this.#triggerElement || isForce) {
       this.#itemElements?.forEach((item) => {
         item.setAttribute('tabindex', '-1');
       });
@@ -624,18 +624,16 @@ export default class Menu {
           );
         }
         // Skip if not in arrow mode
-        if (this.#arrowElement === null) {
+        if (!this.#arrowElement) {
           return;
         }
         const data = middlewareData.arrow;
         const { x: arrowX, y: arrowY } = data;
         const { style: arrowStyle } = this.#arrowElement;
-        arrowStyle.setProperty('left', arrowX != null ? `${arrowX}px` : '');
+        arrowStyle.setProperty('left', arrowX ? `${arrowX}px` : '');
         arrowStyle.setProperty(
           'top',
-          arrowY != null
-            ? `${arrowY - this.#arrowElement.offsetHeight / 2}px`
-            : '',
+          arrowY ? `${arrowY - this.#arrowElement.offsetHeight / 2}px` : '',
         );
         const styles = {
           top: { position: 'bottom', rotate: '225deg' },
@@ -652,7 +650,7 @@ export default class Menu {
       });
     };
     compute();
-    if (this.#cleanupPopover === null) {
+    if (!this.#cleanupPopover) {
       this.#cleanupPopover = autoUpdate(
         this.#triggerElement,
         this.#listElement,
