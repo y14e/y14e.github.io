@@ -42,14 +42,14 @@ export default class Accordion {
     this.#triggerElements = [
       ...this.#rootElement.querySelectorAll(`${trigger}${NOT_NESTED}`),
     ];
-    if (this.#triggerElements.length === 0) {
+    if (!this.#triggerElements.length) {
       console.warn('Missing trigger elements');
       return;
     }
     this.#contentElements = [
       ...this.#rootElement.querySelectorAll(`${content}${NOT_NESTED}`),
     ];
-    if (this.#contentElements.length === 0) {
+    if (!this.#contentElements.length) {
       console.warn('Missing content elements');
       return;
     }
