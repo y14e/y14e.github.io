@@ -28,7 +28,7 @@ export default class ParentCheckbox {
       .split(/\s+/)
       .map((id) => document.getElementById(id))
       .filter((element) => element instanceof HTMLInputElement);
-    if (this.#childElements.length === 0) {
+    if (!this.#childElements.length) {
       console.warn('Missing child elements');
     }
     this.#initialize();
