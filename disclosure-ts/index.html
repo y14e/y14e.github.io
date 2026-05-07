@@ -153,11 +153,26 @@
     </div>
   </details>
 </div>
+<br><br><br><br><br>
+<button id="destroy" type="button">Destroy all disclosures</button>
 <script type="module">
 import Disclosure from './disclosure.js';
 
+const disclosures = [];
+
 document.querySelectorAll('[data-disclosure]').forEach((element) => {
-  new Disclosure(element);
+  disclosures.push(new Disclosure(element));
+});
+
+const destroy = document.querySelector('#destroy');
+
+destroy.addEventListener('click', () => {
+  disclosures.forEach((disclosure) => {
+    disclosure.destroy();
+  });
+
+  destroy.disabled = true;
+  destroy.textContent = 'Destroyed';
 });
 </script>
 </body>

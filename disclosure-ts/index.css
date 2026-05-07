@@ -45,7 +45,8 @@ summary {
     transition: 0.3s rotate;
     width: 1.6rem;
   }
-  details[data-disclosure-open] > & {
+  [data-disclosure-initialized] > details[data-disclosure-open] > &,
+  [data-disclosure]:not([data-disclosure-initialized]) > details[open] > & {
     background-color: #000;
     color: #fff;
     &::after {
@@ -62,4 +63,11 @@ summary {
   & + * > * {
     padding: 3.2rem;
   }
+}
+
+#destroy {
+  background-color: rgb(255 0 0 / 0.2);
+  border-radius: 0.4rem;
+  color: #e00;
+  padding: 1.6rem;
 }
