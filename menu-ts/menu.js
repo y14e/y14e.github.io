@@ -184,7 +184,9 @@ export default class Menu {
     this.#clearSubmenuTimer();
     Menu.#menus = Menu.#menus.filter((menu) => menu !== this);
     this.#rootElement.removeAttribute('data-menu-initialized');
-    await Promise.all(this.#submenus.map((submenu) => submenu.destroy()));
+    if (this.#submenus) {
+      await Promise.all(this.#submenus.map((submenu) => submenu.destroy()));
+    }
     if (!this.#animation) {
       throw new Error('Unreachable');
     }
@@ -204,6 +206,9 @@ export default class Menu {
     this.#arrowElement = null;
   }
   #initialize() {
+    if (!this.#controller) {
+      throw new Error('Unreachable');
+    }
     const { signal } = this.#controller;
     document.addEventListener('pointerdown', this.#onOutsidePointerDown, {
       signal,
@@ -250,7 +255,7 @@ export default class Menu {
     this.#itemElements?.forEach((item) => {
       const parent = item.parentElement;
       const index = item.getAttribute('tabindex');
-      if (parent.querySelector(this.#settings.selector.list)) {
+      if (parent?.querySelector(this.#settings.selector.list)) {
         this.#submenus?.push(new Menu(parent, this.#settings, true));
       } else if (
         item.hasAttribute('disabled') ||
@@ -301,8 +306,10 @@ export default class Menu {
     this.close();
   };
   #onRootFocusIn = (event) => {
+    const target = event.currentTarget;
     if (
-      this.#rootElement.contains(event.relatedTarget) &&
+      target instanceof HTMLElement &&
+      this.#rootElement.contains(target) &&
       this.#rootElement.contains(getActiveElement())
     ) {
       return;
@@ -310,7 +317,8 @@ export default class Menu {
     this.#resetTabIndex(true);
   };
   #onRootFocusOut = (event) => {
-    if (this.#rootElement.contains(event.relatedTarget)) {
+    const target = event.relatedTarget;
+    if (target instanceof HTMLElement && this.#rootElement.contains(target)) {
       return;
     }
     this.#resetTabIndex();
@@ -394,6 +402,9 @@ export default class Menu {
     }
     const focusables = this.#itemElements.filter(isFocusable);
     const active = getActiveElement();
+    if (!(active instanceof HTMLElement)) {
+      throw new Error('Unreachable');
+    }
     const currentIndex = focusables.indexOf(active);
     let newIndex = currentIndex;
     let targetFocusables = focusables;
@@ -433,14 +444,26 @@ export default class Menu {
     targetFocusables.at(newIndex)?.focus();
   };
   #onItemBlur = (event) => {
-    event.currentTarget.setAttribute('tabindex', '-1');
+    const target = event.currentTarget;
+    if (!(target instanceof HTMLElement)) {
+      throw new Error('Unreachable');
+    }
+    target.setAttribute('tabindex', '-1');
   };
   #onItemFocus = (event) => {
-    event.currentTarget.setAttribute('tabindex', '0');
+    const target = event.currentTarget;
+    if (!(target instanceof HTMLElement)) {
+      throw new Error('Unreachable');
+    }
+    target.setAttribute('tabindex', '0');
   };
   #onItemPointerEnter = (event) => {
     this.#clearSubmenuTimer();
-    const item = event.currentTarget;
+    const target = event.currentTarget;
+    if (!(target instanceof HTMLElement)) {
+      throw new Error('Unreachable');
+    }
+    const item = target;
     this.#submenuTimer = setTimeout(() => {
       this.#submenus?.forEach((submenu) => {
         submenu.#toggle(submenu.#triggerElement === item);
@@ -454,6 +477,9 @@ export default class Menu {
   };
   #onCheckboxItemClick = (event) => {
     const item = event.currentTarget;
+    if (!(item instanceof HTMLElement)) {
+      throw new Error('Unreachable');
+    }
     item.setAttribute(
       'aria-checked',
       String(item.getAttribute('aria-checked') === 'false'),
@@ -461,6 +487,9 @@ export default class Menu {
   };
   #onRadioItemClick = (event) => {
     const item = event.currentTarget;
+    if (!(item instanceof HTMLElement)) {
+      throw new Error('Unreachable');
+    }
     const group =
       item.closest(this.#settings.selector.group) ?? this.#rootElement;
     this.#radioItemElementsByGroup?.get(group)?.forEach((i) => {
@@ -484,6 +513,9 @@ export default class Menu {
         .forEach((menu) => {
           menu.close();
         });
+      if (!this.#listElement) {
+        throw new Error('Unreachable');
+      }
       const { style } = this.#listElement;
       style.setProperty('display', 'block');
       style.setProperty('opacity', '0');
@@ -511,6 +543,9 @@ export default class Menu {
       this.#cleanupPopover?.();
       this.#cleanupPopover = null;
     }
+    if (!this.#listElement) {
+      throw new Error('Unreachable');
+    }
     const opacity = getComputedStyle(this.#listElement).getPropertyValue(
       'opacity',
     );
@@ -522,6 +557,9 @@ export default class Menu {
     const cleanupAnimation = () => {
       this.#animation = null;
     };
+    if (!this.#controller) {
+      throw new Error('Unreachable');
+    }
     const { signal } = this.#controller;
     this.#animation.addEventListener('cancel', cleanupAnimation, {
       once: true,
@@ -531,6 +569,9 @@ export default class Menu {
       'finish',
       () => {
         cleanupAnimation();
+        if (!this.#listElement) {
+          throw new Error('Unreachable');
+        }
         const { style: listStyle } = this.#listElement;
         if (!isOpen) {
           this.#listElement?.removeAttribute('data-menu-placement');
@@ -580,6 +621,9 @@ export default class Menu {
         this.#listElement,
         this.#settings.popover[!this.#isSubmenu ? 'menu' : 'submenu'],
       ).then(({ x: listX, y: listY, placement, middlewareData }) => {
+        if (!this.#listElement) {
+          throw new Error('Unreachable');
+        }
         const { style: listStyle } = this.#listElement;
         listStyle.setProperty('left', `${listX}px`);
         listStyle.setProperty('top', `${listY}px`);
@@ -599,16 +643,20 @@ export default class Menu {
             'left-start': '100% 0',
             'left-end': '100% 100%',
           };
-          listStyle.setProperty(
-            'transform-origin',
-            transformOrigins[placement],
-          );
+          const transformOrigin = transformOrigins[placement];
+          if (!transformOrigin) {
+            throw new Error('Unreachable');
+          }
+          listStyle.setProperty('transform-origin', transformOrigin);
         }
         // Skip if not in arrow mode
         if (!this.#arrowElement) {
           return;
         }
         const data = middlewareData.arrow;
+        if (!data) {
+          throw new Error('Unreachable');
+        }
         const { x: arrowX, y: arrowY } = data;
         const { style: arrowStyle } = this.#arrowElement;
         arrowStyle.setProperty('left', arrowX ? `${arrowX}px` : '');
@@ -623,6 +671,9 @@ export default class Menu {
           left: { position: 'right', rotate: '135deg' },
         };
         const style = styles[placement.split('-')[0]];
+        if (!style) {
+          throw new Error('Unreachable');
+        }
         arrowStyle.setProperty(
           style.position,
           `${this.#arrowElement.offsetWidth / -2}px`,
