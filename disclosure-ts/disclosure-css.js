@@ -1,7 +1,7 @@
 /**
  * disclosure-css.ts
  *
- * @version 1.0.4
+ * @version 1.0.5
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -149,16 +149,14 @@ export default class Disclosure {
     return { details, summary, content };
   }
   #getActiveElement() {
-    function walk(node) {
-      if (!node) {
-        return null;
-      }
-      const active = node.shadowRoot?.activeElement;
-      return active ? walk(active) : node;
+    let current = document.activeElement;
+    while (current?.shadowRoot?.activeElement) {
+      current = current.shadowRoot.activeElement;
     }
-    return walk(document.activeElement);
+    return current;
   }
   #isFocusable(element) {
-    return element.getAttribute('tabindex') !== '-1';
+    const index = element.getAttribute('tabindex');
+    return !index || Number(index) >= 0;
   }
 }
