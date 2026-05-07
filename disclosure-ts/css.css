@@ -46,6 +46,8 @@ summary {
   outline-offset: -2px;
   padding: 1.6rem;
   position: relative;
+  transition-duration: 0.3s;
+  transition-property: background-color, color;
   user-select: none;
   &::-webkit-details-marker {
     display: none;

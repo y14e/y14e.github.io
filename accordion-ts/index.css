@@ -38,6 +38,8 @@ body {
   outline-offset: -2px;
   padding: 1.6rem;
   position: relative;
+  transition-duration: 0.3s;
+  transition-property: background-color, color;
   width: 100%;
   &::after {
     aspect-ratio: 1;
