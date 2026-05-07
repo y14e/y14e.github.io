@@ -13,7 +13,7 @@
 export default class Accordion {
   #rootElement;
   #defaults = {
-    animation: { duration: 300, easing: 'ease' },
+    animation: { duration: 3000, easing: 'ease' },
     selector: {
       content: ':has(> [data-accordion-trigger]) + *',
       trigger: '[data-accordion-trigger]',
@@ -80,8 +80,6 @@ export default class Accordion {
       return;
     }
     this.#isDestroyed = true;
-    this.#controller?.abort();
-    this.#controller = null;
     this.#rootElement.removeAttribute('data-accordion-initialized');
     if (!force) {
       const promises = [];
@@ -94,10 +92,10 @@ export default class Accordion {
       await Promise.allSettled(promises);
     }
     this.#triggerElements?.forEach((trigger) => {
-      const animation = this.#bindings?.get(trigger)?.animation;
-      animation?.commitStyles();
-      animation?.cancel();
+      this.#bindings?.get(trigger)?.animation?.cancel();
     });
+    this.#controller?.abort();
+    this.#controller = null;
     this.#triggerElements = null;
     this.#contentElements = null;
     this.#bindings = null;
