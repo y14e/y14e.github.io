@@ -1,7 +1,7 @@
 /**
  * menu.ts
  *
- * @version 1.0.5
+ * @version 1.0.6
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -226,11 +226,9 @@ export default class Menu {
       this.#triggerElement.id ||= `menu-trigger-${id}`;
       this.#triggerElement.setAttribute(
         'tabindex',
-        this.#isFocusable(this.#triggerElement) && !this.#isSubmenu
-          ? '0'
-          : '-1',
+        isFocusable(this.#triggerElement) && !this.#isSubmenu ? '0' : '-1',
       );
-      if (!this.#isFocusable(this.#triggerElement)) {
+      if (!isFocusable(this.#triggerElement)) {
         this.#triggerElement.setAttribute('aria-disabled', 'true');
         this.#triggerElement.style.setProperty('pointer-events', 'none');
       }
@@ -251,11 +249,12 @@ export default class Menu {
     });
     this.#itemElements?.forEach((item) => {
       const parent = item.parentElement;
+      const index = item.getAttribute('tabindex');
       if (parent.querySelector(this.#settings.selector.list)) {
         this.#submenus?.push(new Menu(parent, this.#settings, true));
       } else if (
         item.hasAttribute('disabled') ||
-        item.getAttribute('tabindex') === '-1'
+        (index && Number(index) < 0)
       ) {
         item.setAttribute('aria-disabled', 'true');
         item.setAttribute('data-menu-disabled', '');
@@ -304,7 +303,7 @@ export default class Menu {
   #onRootFocusIn = (event) => {
     if (
       this.#rootElement.contains(event.relatedTarget) &&
-      this.#rootElement.contains(this.#getActiveElement())
+      this.#rootElement.contains(getActiveElement())
     ) {
       return;
     }
@@ -342,7 +341,7 @@ export default class Menu {
     if (!this.#itemElements) {
       throw new Error('Unreachable');
     }
-    const focusables = this.#itemElements.filter(this.#isFocusable);
+    const focusables = this.#itemElements.filter(isFocusable);
     let index = 0;
     switch (key) {
       case 'Enter':
@@ -380,9 +379,7 @@ export default class Menu {
       const isChar = /^\S$/i.test(key);
       if (
         !isChar ||
-        !this.#itemElementsByFirstChar?.[key.toLowerCase()]?.some(
-          this.#isFocusable,
-        )
+        !this.#itemElementsByFirstChar?.[key.toLowerCase()]?.some(isFocusable)
       ) {
         if (isChar) {
           event.stopPropagation();
@@ -395,8 +392,8 @@ export default class Menu {
     if (!this.#itemElements) {
       throw new Error('Unreachable');
     }
-    const focusables = this.#itemElements.filter(this.#isFocusable);
-    const active = this.#getActiveElement();
+    const focusables = this.#itemElements.filter(isFocusable);
+    const active = getActiveElement();
     const currentIndex = focusables.indexOf(active);
     let newIndex = currentIndex;
     let targetFocusables = focusables;
@@ -425,7 +422,7 @@ export default class Menu {
       default: {
         targetFocusables =
           this.#itemElementsByFirstChar?.[key.toLowerCase()]?.filter(
-            this.#isFocusable,
+            isFocusable,
           ) ?? [];
         const foundIndex = targetFocusables.findIndex(
           (focusable) => focusables.indexOf(focusable) > currentIndex,
@@ -493,7 +490,7 @@ export default class Menu {
       if (this.#triggerElement) {
         this.#updatePopover();
       }
-      this.#itemElements?.find(this.#isFocusable)?.focus();
+      this.#itemElements?.find(isFocusable)?.focus();
     } else {
       this.#clearSubmenuTimer();
       this.#submenus?.forEach((submenu) => {
@@ -501,7 +498,7 @@ export default class Menu {
       });
       if (
         this.#triggerElement &&
-        this.#rootElement.contains(this.#getActiveElement())
+        this.#rootElement.contains(getActiveElement())
       ) {
         this.#triggerElement.focus();
       }
@@ -559,19 +556,6 @@ export default class Menu {
       this.#submenuTimer = undefined;
     }
   }
-  #getActiveElement() {
-    let current = document.activeElement;
-    while (current?.shadowRoot?.activeElement) {
-      current = current.shadowRoot.activeElement;
-    }
-    return current;
-  }
-  #isFocusable(element) {
-    return (
-      !element.hasAttribute('data-menu-disabled') &&
-      !element.hasAttribute('disabled')
-    );
-  }
   #resetTabIndex(isForce = false) {
     if (this.#triggerElement || isForce) {
       this.#itemElements?.forEach((item) => {
@@ -580,7 +564,7 @@ export default class Menu {
     } else {
       let isFound = false;
       this.#itemElements?.forEach((item) => {
-        if (!isFound && this.#isFocusable(item)) {
+        if (!isFound && isFocusable(item)) {
           isFound = true;
           item.setAttribute('tabindex', '0');
         } else {
@@ -655,4 +639,20 @@ export default class Menu {
       );
     }
   }
+}
+// -----------------------------------------------------------------------------
+// Utils
+// -----------------------------------------------------------------------------
+function getActiveElement() {
+  let current = document.activeElement;
+  while (current?.shadowRoot?.activeElement) {
+    current = current.shadowRoot.activeElement;
+  }
+  return current;
+}
+function isFocusable(element) {
+  return (
+    !element.hasAttribute('data-menu-disabled') &&
+    !element.hasAttribute('disabled')
+  );
 }
