@@ -62,3 +62,10 @@ body {
     background-color: rgb(0 0 0 / 0.2);
   }
 }
+
+#destroy {
+  background-color: rgb(255 0 0 / 0.2);
+  border-radius: 0.4rem;
+  color: #e00;
+  padding: 1.6rem;
+}

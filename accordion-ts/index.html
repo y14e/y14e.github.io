@@ -153,11 +153,26 @@
     </div>
   </div>
 </div>
+<br><br><br><br><br>
+<button id="destroy" type="button">Destroy all accordions</button>
 <script type="module">
 import Accordion from './accordion.js';
 
+const accordions = [];
+
 document.querySelectorAll('[data-accordion]').forEach((element) => {
-  new Accordion(element);
+  accordions.push(new Accordion(element));
+});
+
+const destroy = document.querySelector('#destroy');
+
+destroy.addEventListener('click', () => {
+  accordions.forEach((accordion) => {
+    accordion.destroy();
+  });
+
+  destroy.disabled = true;
+  destroy.textContent = 'Destroyed';
 });
 </script>
 </body>
