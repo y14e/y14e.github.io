@@ -67,7 +67,7 @@ summary {
       rotate: 180deg;
     }
   }
-  details[aria-disabled='true'] > & {
+  details[tabindex='-1'] > & {
     background-color: none;
     color: rgb(0, 0, 0, 0.35);
   }
