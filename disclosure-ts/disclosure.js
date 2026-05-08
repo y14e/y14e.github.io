@@ -1,7 +1,7 @@
 /**
  * disclosure.ts
  *
- * @version 1.0.6
+ * @version 1.1.0
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -23,7 +23,8 @@ export default class Disclosure {
   #summaryElements;
   #contentElements;
   #bindings = new WeakMap();
-  #controller = new AbortController();
+  #eventController = new AbortController();
+  #animationController = new AbortController();
   #observers = [];
   #isDestroyed = false;
   constructor(root, options = {}) {
@@ -67,7 +68,7 @@ export default class Disclosure {
     }
     if (
       !(details instanceof HTMLDetailsElement) ||
-      !this.#bindings?.has(details)
+      !this.#bindings.has(details)
     ) {
       console.warn('Invalid <details> element');
       return;
@@ -80,7 +81,7 @@ export default class Disclosure {
     }
     if (
       !(details instanceof HTMLDetailsElement) ||
-      !this.#bindings?.has(details)
+      !this.#bindings.has(details)
     ) {
       console.warn('Invalid <details> element');
       return;
@@ -92,17 +93,14 @@ export default class Disclosure {
       return;
     }
     this.#isDestroyed = true;
-    if (this.#observers) {
-      this.#observers.forEach((observer) => {
-        observer.disconnect();
-      });
-      this.#observers = null;
-    }
-    if (!this.#detailsElements) {
-      throw new Error('Unreachable');
-    }
+    this.#eventController?.abort();
+    this.#eventController = null;
+    this.#observers.forEach((observer) => {
+      observer.disconnect();
+    });
+    this.#observers.length = 0;
     this.#detailsElements.forEach((details) => {
-      const binding = this.#bindings?.get(details);
+      const binding = this.#bindings.get(details);
       if (!binding) {
         throw new Error('Unreachable');
       }
@@ -112,15 +110,10 @@ export default class Disclosure {
         binding.timer = undefined;
       }
     });
-    this.#rootElement.removeAttribute('data-disclosure-initialized');
-    this.#detailsElements.forEach((details) => {
-      details.removeAttribute('data-disclosure-name');
-      details.removeAttribute('data-disclosure-open');
-    });
     if (!force) {
       const promises = [];
       this.#detailsElements.forEach((details) => {
-        const animation = this.#bindings?.get(details)?.animation;
+        const animation = this.#bindings.get(details)?.animation;
         if (animation) {
           promises.push(waitAnimation(animation));
         }
@@ -128,21 +121,25 @@ export default class Disclosure {
       await Promise.allSettled(promises);
     }
     this.#detailsElements.forEach((details) => {
-      this.#bindings?.get(details)?.animation?.cancel();
+      this.#bindings.get(details)?.animation?.cancel();
     });
-    this.#controller?.abort();
-    this.#controller = null;
-    this.#detailsElements = null;
-    this.#summaryElements = null;
-    this.#contentElements = null;
-    this.#bindings = null;
+    this.#animationController?.abort();
+    this.#animationController = null;
+    this.#detailsElements.forEach((details) => {
+      details.removeAttribute('data-disclosure-name');
+      details.removeAttribute('data-disclosure-open');
+    });
+    this.#detailsElements.length = 0;
+    this.#summaryElements.length = 0;
+    this.#contentElements.length = 0;
+    this.#rootElement.removeAttribute('data-disclosure-initialized');
   }
   #initialize() {
-    if (!this.#controller) {
+    if (!this.#eventController) {
       throw new Error('Unreachable');
     }
-    const { signal } = this.#controller;
-    this.#detailsElements?.forEach((details, i) => {
+    const { signal } = this.#eventController;
+    this.#detailsElements.forEach((details, i) => {
       if (details.name) {
         details.setAttribute('data-disclosure-name', details.name);
       }
@@ -151,9 +148,9 @@ export default class Disclosure {
       }
       const observer = new MutationObserver(sync);
       observer.observe(details, { attributeFilter: ['open'] });
-      this.#observers?.push(observer);
+      this.#observers.push(observer);
       sync();
-      const summary = this.#summaryElements?.[i];
+      const summary = this.#summaryElements[i];
       if (!summary) {
         throw new Error('Unreachable');
       }
@@ -164,14 +161,11 @@ export default class Disclosure {
       }
       summary.addEventListener('click', this.#onSummaryClick, { signal });
       summary.addEventListener('keydown', this.#onSummaryKeyDown, { signal });
-      const content = this.#contentElements?.[i];
+      const content = this.#contentElements[i];
       if (!content) {
         throw new Error('Unreachable');
       }
       const binding = createBinding(details, summary, content);
-      if (!this.#bindings) {
-        throw new Error('Unreachable');
-      }
       this.#bindings.set(details, binding);
       this.#bindings.set(summary, binding);
       this.#bindings.set(content, binding);
@@ -181,9 +175,6 @@ export default class Disclosure {
   #onSummaryClick = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    if (!this.#bindings) {
-      throw new Error('Unreachable');
-    }
     const target = event.currentTarget;
     if (!(target instanceof HTMLElement)) {
       throw new Error('Unreachable');
@@ -202,9 +193,6 @@ export default class Disclosure {
     }
     event.preventDefault();
     event.stopPropagation();
-    if (!this.#summaryElements) {
-      throw new Error('Unreachable');
-    }
     const focusables = this.#summaryElements.filter(isFocusable);
     const active = getActiveElement();
     if (!(active instanceof HTMLElement)) {
@@ -235,7 +223,7 @@ export default class Disclosure {
     const name = details.getAttribute('data-disclosure-name');
     if (name && isOpen) {
       details.removeAttribute('name');
-      const opened = this.#detailsElements?.find(
+      const opened = this.#detailsElements.find(
         (d) =>
           d.hasAttribute('data-disclosure-open') &&
           d.getAttribute('data-disclosure-name') === name,
@@ -244,7 +232,7 @@ export default class Disclosure {
         this.close(opened);
       }
     }
-    const binding = this.#bindings?.get(details);
+    const binding = this.#bindings.get(details);
     if (!binding) {
       throw new Error('Unreachable');
     }
@@ -275,10 +263,10 @@ export default class Disclosure {
         binding.animation = null;
       }
     }
-    if (!this.#controller) {
+    if (!this.#animationController) {
       throw new Error('Unreachable');
     }
-    const { signal } = this.#controller;
+    const { signal } = this.#animationController;
     animation.addEventListener('cancel', cleanup, { once: true, signal });
     animation.addEventListener(
       'finish',
@@ -323,11 +311,7 @@ function waitAnimation(animation) {
   if (playState === 'idle' || playState === 'finished') {
     return Promise.resolve();
   }
-  return new Promise((resolve) => {
-    function done() {
-      resolve();
-    }
-    animation.addEventListener('cancel', done, { once: true });
-    animation.addEventListener('finish', done, { once: true });
-  });
+  return new Promise((resolve) =>
+    animation.addEventListener('finish', () => resolve(), { once: true }),
+  );
 }

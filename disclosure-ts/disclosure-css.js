@@ -1,7 +1,7 @@
 /**
  * disclosure-css.ts
  *
- * @version 1.0.6
+ * @version 1.1.0
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -53,7 +53,7 @@ export default class Disclosure {
     }
     if (
       !(details instanceof HTMLDetailsElement) ||
-      !this.#bindings?.has(details)
+      !this.#bindings.has(details)
     ) {
       console.warn('Invalid <details> element');
       return;
@@ -66,7 +66,7 @@ export default class Disclosure {
     }
     if (
       !(details instanceof HTMLDetailsElement) ||
-      !this.#bindings?.has(details)
+      !this.#bindings.has(details)
     ) {
       console.warn('Invalid <details> element');
       return;
@@ -80,19 +80,18 @@ export default class Disclosure {
     this.#isDestroyed = true;
     this.#controller?.abort();
     this.#controller = null;
+    this.#detailsElements.length = 0;
+    this.#summaryElements.length = 0;
+    this.#contentElements.length = 0;
     this.#rootElement.removeAttribute('data-disclosure-initialized');
-    this.#detailsElements = null;
-    this.#summaryElements = null;
-    this.#contentElements = null;
-    this.#bindings = null;
   }
   #initialize() {
     if (!this.#controller) {
       throw new Error('Unreachable');
     }
     const { signal } = this.#controller;
-    this.#detailsElements?.forEach((details, i) => {
-      const summary = this.#summaryElements?.[i];
+    this.#detailsElements.forEach((details, i) => {
+      const summary = this.#summaryElements[i];
       if (!summary) {
         throw new Error('Unreachable');
       }
@@ -102,7 +101,7 @@ export default class Disclosure {
         summary.style.setProperty('pointer-events', 'none');
       }
       summary.addEventListener('keydown', this.#onSummaryKeyDown, { signal });
-      const content = this.#contentElements?.[i];
+      const content = this.#contentElements[i];
       if (!content) {
         throw new Error('Unreachable');
       }
@@ -123,9 +122,6 @@ export default class Disclosure {
     }
     event.preventDefault();
     event.stopPropagation();
-    if (!this.#summaryElements) {
-      throw new Error('Unreachable');
-    }
     const focusables = this.#summaryElements.filter(isFocusable);
     const active = getActiveElement();
     if (!(active instanceof HTMLElement)) {
