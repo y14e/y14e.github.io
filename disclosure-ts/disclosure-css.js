@@ -86,15 +86,9 @@ export default class Disclosure {
     this.#rootElement.removeAttribute('data-disclosure-initialized');
   }
   #initialize() {
-    if (!this.#controller) {
-      throw new Error('Unreachable');
-    }
     const { signal } = this.#controller;
     this.#detailsElements.forEach((details, i) => {
       const summary = this.#summaryElements[i];
-      if (!summary) {
-        throw new Error('Unreachable');
-      }
       if (!isFocusable(details)) {
         summary.setAttribute('aria-disabled', 'true');
         summary.setAttribute('tabindex', '-1');
@@ -102,13 +96,7 @@ export default class Disclosure {
       }
       summary.addEventListener('keydown', this.#onSummaryKeyDown, { signal });
       const content = this.#contentElements[i];
-      if (!content) {
-        throw new Error('Unreachable');
-      }
       const binding = createBinding(details, summary, content);
-      if (!this.#bindings) {
-        throw new Error('Unreachable');
-      }
       this.#bindings.set(details, binding);
       this.#bindings.set(summary, binding);
       this.#bindings.set(content, binding);
@@ -124,9 +112,6 @@ export default class Disclosure {
     event.stopPropagation();
     const focusables = this.#summaryElements.filter(isFocusable);
     const active = getActiveElement();
-    if (!(active instanceof HTMLElement)) {
-      throw new Error('Unreachable');
-    }
     const currentIndex = focusables.indexOf(active);
     let newIndex = currentIndex;
     switch (key) {
