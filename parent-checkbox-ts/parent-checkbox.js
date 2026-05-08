@@ -1,7 +1,7 @@
 /**
  * parent-checkbox.ts
  *
- * @version 1.0.2
+ * @version 1.0.3
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -40,24 +40,24 @@ export default class ParentCheckbox {
     this.#isDestroyed = true;
     this.#controller?.abort();
     this.#controller = null;
+    this.#childElements.length = 0;
     this.#rootElement.removeAttribute('data-parent-checkbox-initialized');
-    this.#childElements = null;
   }
   #initialize() {
+    if (!this.#controller) {
+      throw new Error('Unreachable');
+    }
     const { signal } = this.#controller;
     this.#rootElement.addEventListener('change', this.#onRootChange, {
       signal,
     });
-    this.#childElements?.forEach((child) => {
+    this.#childElements.forEach((child) => {
       child.addEventListener('change', this.#onChildChange, { signal });
     });
     this.#update();
     this.#rootElement.setAttribute('data-parent-checkbox-initialized', '');
   }
   #update() {
-    if (!this.#childElements) {
-      throw new Error('Unreachable');
-    }
     const isAllChecked = this.#childElements.every((child) => child.checked);
     this.#rootElement.checked = isAllChecked;
     this.#rootElement.indeterminate =
@@ -66,7 +66,7 @@ export default class ParentCheckbox {
   #onRootChange = () => {
     this.#rootElement.indeterminate = false;
     const isChecked = this.#rootElement.checked;
-    this.#childElements?.forEach((child) => {
+    this.#childElements.forEach((child) => {
       child.checked = isChecked;
     });
   };
