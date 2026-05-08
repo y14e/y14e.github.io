@@ -117,147 +117,124 @@ var MojiSplitter = class {
   #nobr(node = this.#fragment) {
     if (node.nodeType === Node.TEXT_NODE) {
       const text = node.textContent;
-      const matches = Array.from(text.matchAll(NOBR_REGEX));
-      if (!matches.length) {
+      if (!text || !NOBR_REGEX.test(text)) {
         return;
       }
-      let index = 0;
-      const parent = node.parentNode;
-      for (let i = 0, l = matches.length; i < l; i++) {
-        const match = matches[i];
-        const offset = match.index;
-        if (offset > index) {
-          parent.insertBefore(
-            document.createTextNode(text.slice(index, offset)),
-            node
-          );
+      NOBR_REGEX.lastIndex = 0;
+      let lastIndex = 0;
+      const fragment = document.createDocumentFragment();
+      for (const match of text.matchAll(NOBR_REGEX)) {
+        const index = match.index;
+        if (index > lastIndex) {
+          fragment.append(text.slice(lastIndex, index));
         }
         const span = document.createElement("span");
         span.setAttribute("data-_nobr", "");
         const matched = match[0];
         span.textContent = matched;
-        parent.insertBefore(span, node);
-        index = offset + matched.length;
+        fragment.append(span);
+        lastIndex = index + matched.length;
       }
-      if (index < text.length) {
-        parent.insertBefore(document.createTextNode(text.slice(index)), node);
+      if (lastIndex < text.length) {
+        fragment.append(text.slice(lastIndex));
       }
-      parent.removeChild(node);
-    } else if (node.hasChildNodes()) {
-      const children = Array.from(node.childNodes);
-      for (let i = 0, l = children.length; i < l; i++) {
-        this.#nobr(children[i]);
-      }
+      node.replaceWith(fragment);
+      return;
+    }
+    for (let child = node.firstChild; child; ) {
+      const next = child.nextSibling;
+      this.#nobr(child);
+      child = next;
     }
   }
   #split(granularity, node = this.#fragment) {
     const items = granularity === "word" ? this.#wordElements : this.#charElements;
-    const children = Array.from(node.childNodes);
-    for (let i = 0, l = children.length; i < l; i++) {
-      const child = children[i];
-      const text = child.textContent;
+    for (let child = node.firstChild; child; ) {
+      const next = child.nextSibling;
       if (child.nodeType === Node.TEXT_NODE) {
-        const parent = child.parentNode;
-        const segmenter = this.#getSegmenter(
-          granularity,
-          parent
-        );
-        const segments = Array.from(
-          segmenter.segment(
-            text.replace(/[\r\n\t]/g, "").replace(/\s{2,}/g, " ")
-          )
-        );
-        for (let j = 0, m = segments.length; j < m; j++) {
-          const segment = segments[j];
+        const fragment = document.createDocumentFragment();
+        for (const segment of this.#getSegmenter(granularity, child.parentNode).segment(
+          child.textContent.replace(/[\r\n\t]/g, "").replace(/\s{2,}/g, " ")
+        )) {
           const span = document.createElement("span");
-          const text2 = segment.segment;
-          const types = [
-            granularity,
-            segment.segment.charCodeAt(0) === 32 && "whitespace"
-          ].filter(Boolean);
-          for (let k = 0, n = types.length; k < n; k++) {
-            const type = types[k];
-            span.setAttribute(
-              `data-${type}`,
-              type !== "whitespace" ? text2 : ""
-            );
+          const text = segment.segment;
+          span.textContent = text;
+          if (text.charCodeAt(0) === 32) {
+            span.setAttribute("data-whitespace", "");
           }
-          span.textContent = text2;
+          span.setAttribute(`data-${granularity}`, text);
           items.push(span);
-          child.before(span);
+          fragment.append(span);
         }
-        child.remove();
-      } else if (granularity === "word" && child.nodeType === Node.ELEMENT_NODE && child instanceof HTMLElement && child.hasAttribute("data-_nobr")) {
+        child.replaceWith(fragment);
+      } else if (granularity === "word" && child instanceof HTMLElement && child.hasAttribute("data-_nobr")) {
         child.removeAttribute("data-_nobr");
+        const text = child.textContent ?? "";
         child.setAttribute("data-word", text);
         items.push(child);
       } else if (child.hasChildNodes()) {
         this.#split(granularity, child);
       }
+      child = next;
     }
   }
   #lbr(granularity) {
     const items = granularity === "word" ? this.#wordElements : this.#charElements;
     let previous = null;
-    for (let i = 0, l = items.length; i < l; i++) {
+    for (let i = 0; i < items.length; ) {
       const item = items[i];
-      if (!item) {
-        continue;
-      }
-      const text = item.textContent;
-      const segment = Array.from(
-        this.#segmenter.segment(text)
-      ).shift();
-      if (previous?.textContent.trim() && LBR_PROHIBIT_START_REGEX.test(segment.segment)) {
-        previous.textContent += text;
-        previous.setAttribute(`data-${granularity}`, previous.textContent);
+      let text = item.textContent ?? "";
+      if (previous?.textContent?.trim() && LBR_PROHIBIT_START_REGEX.test(text)) {
+        text = (previous.textContent ?? "") + text;
+        previous.textContent = text;
+        previous.setAttribute(`data-${granularity}`, text);
         item.remove();
         items.splice(i, 1);
-        i--;
-      } else {
-        previous = item;
+        continue;
       }
+      previous = item;
+      i++;
     }
-    function concat(item, regex, index) {
+    function concat(index, regex) {
+      const item = items[index];
       const offset = index + 1;
-      let next = items[offset];
-      let text;
-      while (next && regex.test(next.textContent)) {
-        text = next.textContent;
-        item.textContent += text;
-        item.setAttribute(`data-${granularity}`, item.textContent);
+      let text = item.textContent ?? "";
+      while (offset < items.length) {
+        const next = items[offset];
+        const nextText = next.textContent ?? "";
+        if (!regex.test(nextText)) {
+          break;
+        }
+        text += nextText;
         next.remove();
         items.splice(offset, 1);
-        next = items[offset];
       }
+      item.textContent = text;
+      item.setAttribute(`data-${granularity}`, text);
     }
-    for (let i = 0, l = items.length; i < l; i++) {
+    for (let i = 0; i < items.length; i++) {
       const item = items[i];
-      if (!item || !LBR_PROHIBIT_END_REGEX.test(item.textContent)) {
+      const text = item.textContent ?? "";
+      if (LBR_PROHIBIT_END_REGEX.test(text)) {
+        concat(i, LBR_PROHIBIT_END_REGEX);
+        const next = items[i + 1];
+        if (next?.textContent?.trim()) {
+          const text2 = (items[i]?.textContent ?? "") + next.textContent;
+          next.textContent = text2;
+          next.setAttribute(`data-${granularity}`, text2);
+          items[i]?.remove();
+          items.splice(i, 1);
+          i--;
+        }
         continue;
       }
-      concat(item, LBR_PROHIBIT_END_REGEX, i);
-      const next = items[i + 1];
-      const text = next?.textContent;
-      if (next && text?.trim()) {
-        next.textContent = item.textContent + text;
-        next.setAttribute(`data-${granularity}`, next.textContent);
-        item.remove();
-        items.splice(i, 1);
+      if (LBR_INSEPARATABLE_REGEX.test(text)) {
+        concat(i, LBR_INSEPARATABLE_REGEX);
       }
-    }
-    for (let i = 0, l = items.length; i < l; i++) {
-      const item = items[i];
-      if (!item || !LBR_INSEPARATABLE_REGEX.test(item.textContent)) {
-        continue;
-      }
-      concat(item, LBR_INSEPARATABLE_REGEX, i);
     }
     if (granularity === "char") {
-      const spans = this.#fragment?.querySelectorAll(
-        "[data-word]:not([data-whitespace])"
-      );
-      for (let i = 0, l = spans.length; i < l; i++) {
+      const spans = this.#fragment.querySelectorAll("[data-word]:not([data-whitespace])");
+      for (let i = 0; i < spans.length; i++) {
         const span = spans[i];
         const text = span.textContent;
         if (text) {
@@ -294,7 +271,7 @@ var MojiSplitter = class {
  * Flexible text splitting utility for CSS animations.
  * Supports complex line breaking rules (ja: Kinsoku shori).
  *
- * @version 1.3.4
+ * @version 1.4.0
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
