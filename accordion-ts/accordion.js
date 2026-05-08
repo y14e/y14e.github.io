@@ -13,7 +13,7 @@
 export default class Accordion {
   #rootElement;
   #defaults = {
-    animation: { duration: 3000, easing: 'ease' },
+    animation: { duration: 300, easing: 'ease' },
     selector: {
       content: ':has(> [data-accordion-trigger]) + *',
       trigger: '[data-accordion-trigger]',
