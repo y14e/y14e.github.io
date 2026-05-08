@@ -57,9 +57,6 @@ var MojiSplitter = class {
     if (concatChar && lineBreakingRules) {
       this.#lbr("char");
     }
-    if (!this.#charElements) {
-      throw new Error("Unreachable");
-    }
     for (let i = 0, l = this.#charElements.length; i < l; i++) {
       const char = this.#charElements[i];
       char.setAttribute("aria-hidden", "true");
@@ -77,9 +74,6 @@ var MojiSplitter = class {
       ).length) {
         style2.setProperty("white-space", "nowrap");
       }
-    }
-    if (!this.#wordElements) {
-      throw new Error("Unreachable");
     }
     for (let i = 0, l = this.#wordElements.length; i < l; i++) {
       const word = this.#wordElements[i];
@@ -275,8 +269,8 @@ var MojiSplitter = class {
     }
   }
   #cleanup() {
-    this.#wordElements = null;
-    this.#charElements = null;
+    this.#wordElements.length = 0;
+    this.#charElements.length = 0;
     this.#fragment = null;
     this.#segmenter = null;
   }
@@ -300,7 +294,7 @@ var MojiSplitter = class {
  * Flexible text splitting utility for CSS animations.
  * Supports complex line breaking rules (ja: Kinsoku shori).
  *
- * @version 1.3.3
+ * @version 1.3.4
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
