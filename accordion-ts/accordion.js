@@ -103,16 +103,10 @@ export default class Accordion {
     this.#rootElement.removeAttribute('data-accordion-initialized');
   }
   #initialize() {
-    if (!this.#eventController) {
-      throw new Error('Unreachable');
-    }
     const { signal } = this.#eventController;
     this.#triggerElements.forEach((trigger, i) => {
       const id = Math.random().toString(36).slice(-8);
       const content = this.#contentElements[i];
-      if (!content) {
-        throw new Error('Unreachable');
-      }
       content.id ||= `accordion-content-${id}`;
       trigger.setAttribute('aria-controls', content.id);
       trigger.setAttribute(
@@ -145,9 +139,6 @@ export default class Accordion {
     event.preventDefault();
     event.stopPropagation();
     const trigger = event.currentTarget;
-    if (!(trigger instanceof HTMLElement)) {
-      throw new Error('Unreachable');
-    }
     this.#toggle(trigger, trigger.getAttribute('aria-expanded') === 'false');
   };
   #onTriggerKeyDown = (event) => {
@@ -159,9 +150,6 @@ export default class Accordion {
     event.stopPropagation();
     const focusables = this.#triggerElements.filter(isFocusable);
     const active = getActiveElement();
-    if (!(active instanceof HTMLElement)) {
-      throw new Error('Unreachable');
-    }
     const currentIndex = focusables.indexOf(active);
     let newIndex = currentIndex;
     switch (key) {
@@ -185,12 +173,8 @@ export default class Accordion {
     focusables.at(newIndex)?.focus();
   };
   #onContentBeforeMatch = (event) => {
-    const target = event.currentTarget;
-    if (!(target instanceof HTMLElement)) {
-      throw new Error('Unreachable');
-    }
-    const binding = this.#bindings.get(target);
-    if (binding?.trigger.getAttribute('aria-expanded') === 'false') {
+    const binding = this.#bindings.get(event.currentTarget);
+    if (binding.trigger.getAttribute('aria-expanded') === 'false') {
       this.#toggle(binding.trigger, true, true);
     }
   };
@@ -219,9 +203,6 @@ export default class Accordion {
         '',
     );
     const binding = this.#bindings.get(trigger);
-    if (!binding) {
-      throw new Error('Unreachable');
-    }
     const { content } = binding;
     const startSize = content.hidden ? 0 : content.offsetHeight;
     if (content.hidden) {
@@ -241,9 +222,6 @@ export default class Accordion {
       if (binding?.animation === animation) {
         binding.animation = null;
       }
-    }
-    if (!this.#animationController) {
-      throw new Error('Unreachable');
     }
     const { signal } = this.#animationController;
     animation.addEventListener('cancel', cleanup, { once: true, signal });
