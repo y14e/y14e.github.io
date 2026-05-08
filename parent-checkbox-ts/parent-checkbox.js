@@ -44,9 +44,6 @@ export default class ParentCheckbox {
     this.#rootElement.removeAttribute('data-parent-checkbox-initialized');
   }
   #initialize() {
-    if (!this.#controller) {
-      throw new Error('Unreachable');
-    }
     const { signal } = this.#controller;
     this.#rootElement.addEventListener('change', this.#onRootChange, {
       signal,
