@@ -57,7 +57,7 @@ body {
     }
   }
   &:is([disabled], [tabindex='-1']) {
-    background-color: none;
+    background-color: transparent;
     color: rgb(0, 0, 0, 0.35);
   }
   &:not([aria-expanded='true']):hover {
