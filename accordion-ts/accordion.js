@@ -23,7 +23,7 @@ export default class Accordion {
   #triggerElements;
   #contentElements;
   #bindings = new WeakMap();
-  #eventController = null;
+  #eventController = new AbortController();
   #animationController = new AbortController();
   #isDestroyed = false;
   constructor(root, options = {}) {
