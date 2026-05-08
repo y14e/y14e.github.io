@@ -174,15 +174,12 @@ export default class Menu {
     if (this.#submenus) {
       await Promise.all(this.#submenus.map((submenu) => submenu.destroy()));
     }
-    if (!this.#animation) {
-      throw new Error('Unreachable');
-    }
     if (!force) {
       try {
-        await this.#animation.finished;
+        await this.#animation?.finished;
       } catch {}
     }
-    this.#animation.cancel();
+    this.#animation?.cancel();
     this.#triggerElement = null;
     this.#listElement = null;
     this.#itemElements.length = 0;
@@ -193,9 +190,6 @@ export default class Menu {
     this.#rootElement.removeAttribute('data-menu-initialized');
   }
   #initialize() {
-    if (!this.#controller) {
-      throw new Error('Unreachable');
-    }
     const { signal } = this.#controller;
     document.addEventListener('pointerdown', this.#onOutsidePointerDown, {
       signal,
@@ -383,9 +377,6 @@ export default class Menu {
     event.stopPropagation();
     const focusables = this.#itemElements.filter(isFocusable);
     const active = getActiveElement();
-    if (!(active instanceof HTMLElement)) {
-      throw new Error('Unreachable');
-    }
     const currentIndex = focusables.indexOf(active);
     let newIndex = currentIndex;
     let targetFocusables = focusables;
@@ -425,26 +416,14 @@ export default class Menu {
     targetFocusables.at(newIndex)?.focus();
   };
   #onItemBlur = (event) => {
-    const target = event.currentTarget;
-    if (!(target instanceof HTMLElement)) {
-      throw new Error('Unreachable');
-    }
-    target.setAttribute('tabindex', '-1');
+    event.currentTarget.setAttribute('tabindex', '-1');
   };
   #onItemFocus = (event) => {
-    const target = event.currentTarget;
-    if (!(target instanceof HTMLElement)) {
-      throw new Error('Unreachable');
-    }
-    target.setAttribute('tabindex', '0');
+    event.currentTarget.setAttribute('tabindex', '0');
   };
   #onItemPointerEnter = (event) => {
     this.#clearSubmenuTimer();
-    const target = event.currentTarget;
-    if (!(target instanceof HTMLElement)) {
-      throw new Error('Unreachable');
-    }
-    const item = target;
+    const item = event.currentTarget;
     this.#submenuTimer = setTimeout(() => {
       this.#submenus.forEach((submenu) => {
         submenu.#toggle(submenu.#triggerElement === item);
@@ -458,9 +437,6 @@ export default class Menu {
   };
   #onCheckboxItemClick = (event) => {
     const item = event.currentTarget;
-    if (!(item instanceof HTMLElement)) {
-      throw new Error('Unreachable');
-    }
     item.setAttribute(
       'aria-checked',
       String(item.getAttribute('aria-checked') === 'false'),
@@ -468,9 +444,6 @@ export default class Menu {
   };
   #onRadioItemClick = (event) => {
     const item = event.currentTarget;
-    if (!(item instanceof HTMLElement)) {
-      throw new Error('Unreachable');
-    }
     const group =
       item.closest(this.#settings.selector.group) ?? this.#rootElement;
     this.#radioItemElementsByGroup.get(group)?.forEach((i) => {
@@ -538,9 +511,6 @@ export default class Menu {
     const cleanupAnimation = () => {
       this.#animation = null;
     };
-    if (!this.#controller) {
-      throw new Error('Unreachable');
-    }
     const { signal } = this.#controller;
     this.#animation.addEventListener('cancel', cleanupAnimation, {
       once: true,
@@ -608,7 +578,7 @@ export default class Menu {
         const { style: listStyle } = this.#listElement;
         listStyle.setProperty('left', `${listX}px`);
         listStyle.setProperty('top', `${listY}px`);
-        this.#listElement?.setAttribute('data-menu-placement', placement);
+        this.#listElement.setAttribute('data-menu-placement', placement);
         if (this.#settings.popover.transformOrigin) {
           listStyle.setProperty(
             'transform-origin',
@@ -632,11 +602,8 @@ export default class Menu {
         if (!this.#arrowElement) {
           return;
         }
-        const data = middlewareData.arrow;
-        if (!data) {
-          throw new Error('Unreachable');
-        }
-        const { x: arrowX, y: arrowY } = data;
+        const arrowX = middlewareData.arrow?.x;
+        const arrowY = middlewareData.arrow?.y;
         const { style: arrowStyle } = this.#arrowElement;
         arrowStyle.setProperty('left', arrowX ? `${arrowX}px` : '');
         arrowStyle.setProperty(
