@@ -13,7 +13,7 @@
 export default class Accordion {
   #rootElement;
   #defaults = {
-    animation: { duration: 300, easing: 'ease' },
+    animation: { duration: 3000, easing: 'ease' },
     selector: {
       content: ':has(> [data-accordion-trigger]) + *',
       trigger: '[data-accordion-trigger]',
@@ -284,11 +284,7 @@ function waitAnimation(animation) {
   if (playState === 'idle' || playState === 'finished') {
     return Promise.resolve();
   }
-  return new Promise((resolve) => {
-    function done() {
-      resolve();
-    }
-    animation.addEventListener('cancel', done, { once: true });
-    animation.addEventListener('finish', done, { once: true });
-  });
+  return new Promise((resolve) =>
+    animation.addEventListener('finish', () => resolve(), { once: true }),
+  );
 }
