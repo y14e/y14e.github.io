@@ -141,19 +141,24 @@ var MojiSplitter = class {
       node.replaceWith(fragment);
       return;
     }
-    for (let child = node.firstChild; child; ) {
+    let child = node.firstChild;
+    while (child) {
       const next = child.nextSibling;
       this.#nobr(child);
       child = next;
     }
   }
   #split(granularity, node = this.#fragment) {
+    let child = node.firstChild;
     const items = granularity === "word" ? this.#wordElements : this.#charElements;
-    for (let child = node.firstChild; child; ) {
+    while (child) {
       const next = child.nextSibling;
       if (child.nodeType === Node.TEXT_NODE) {
         const fragment = document.createDocumentFragment();
-        for (const segment of this.#getSegmenter(granularity, child.parentNode).segment(
+        for (const segment of this.#getSegmenter(
+          granularity,
+          child.parentNode
+        ).segment(
           child.textContent.replace(/[\r\n\t]/g, "").replace(/\s{2,}/g, " ")
         )) {
           const span = document.createElement("span");
@@ -179,21 +184,22 @@ var MojiSplitter = class {
     }
   }
   #lbr(granularity) {
+    let count = 0;
     const items = granularity === "word" ? this.#wordElements : this.#charElements;
     let previous = null;
-    for (let i = 0; i < items.length; ) {
-      const item = items[i];
+    while (count < items.length) {
+      const item = items[count];
       let text = item.textContent ?? "";
       if (previous?.textContent?.trim() && LBR_PROHIBIT_START_REGEX.test(text)) {
         text = (previous.textContent ?? "") + text;
         previous.textContent = text;
         previous.setAttribute(`data-${granularity}`, text);
         item.remove();
-        items.splice(i, 1);
+        items.splice(count, 1);
         continue;
       }
       previous = item;
-      i++;
+      count++;
     }
     function concat(index, regex) {
       const item = items[index];
@@ -234,7 +240,7 @@ var MojiSplitter = class {
     }
     if (granularity === "char") {
       const spans = this.#fragment.querySelectorAll("[data-word]:not([data-whitespace])");
-      for (let i = 0; i < spans.length; i++) {
+      for (let i = 0, l = spans.length; i < l; i++) {
         const span = spans[i];
         const text = span.textContent;
         if (text) {
@@ -271,7 +277,7 @@ var MojiSplitter = class {
  * Flexible text splitting utility for CSS animations.
  * Supports complex line breaking rules (ja: Kinsoku shori).
  *
- * @version 1.4.0
+ * @version 1.4.1
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
