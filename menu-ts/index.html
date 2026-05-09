@@ -296,10 +296,13 @@
   </div>
 </div>
 <a id="anchor"></a>
+<br><br><br><br><br>
+<button id="destroy" type="button">Destroy all splitters</button>
 <script type="module">
 import { flip, offset, shift } from 'https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.7.6/+esm';
 import Menu from './menu.js';
 
+const menus = [];
 const myMenuOptions = {
   popover: {
     menu: { middleware: [flip({ padding: 4 }), offset(8), shift()] },
@@ -308,6 +311,7 @@ const myMenuOptions = {
 };
 document.querySelectorAll('[data-menu]').forEach((element) => {
   const myMenu = new Menu(element, myMenuOptions);
+  menus.push(myMenu);
   element.querySelectorAll('[role="menuitem"]:not([aria-haspopup])').forEach((item) => {
     item.addEventListener('click', () => {
       console.log(item.textContent);
@@ -321,6 +325,17 @@ document.querySelectorAll('[data-menu]').forEach((element) => {
     item.addEventListener('click', () => console.log([...(item.closest('[role="group"]') || item.closest('[role="menu"]')).querySelectorAll('[role="menuitemradio"]')].filter((item) => item.getAttribute('aria-checked') === 'true').map((item) => item.textContent)));
   });
   window.addEventListener('blur', () => myMenu.close());
+});
+
+const destroy = document.querySelector('#destroy');
+
+destroy.addEventListener('click', () => {
+  menus.forEach((menu) => {
+    menu.destroy();
+  });
+
+  destroy.disabled = true;
+  destroy.textContent = 'Destroyed';
 });
 </script>
 </body>
