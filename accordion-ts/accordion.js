@@ -254,8 +254,7 @@ function getActiveElement() {
   return current;
 }
 function isFocusable(element) {
-  const index = element.getAttribute('tabindex');
-  return !element.hasAttribute('disabled') && (!index || Number(index) >= 0);
+  return !element.hasAttribute('disabled') && element.tabIndex >= 0;
 }
 function waitAnimation(animation) {
   const { playState } = animation;
