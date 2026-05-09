@@ -7,13 +7,14 @@ body {
   background: linear-gradient(90deg, rgb(230 245 255 / 0.5) 0.1rem, transparent 0.1rem), linear-gradient(180deg, rgb(230 245 255 / 0.5) 0.1rem, transparent 0.1rem);
   background-size: 0.8rem 0.8rem;
   font:
-    3.6rem / 1.5 Inter,
+    1.6rem / 1.5 Inter,
     'Noto Sans JP',
     sans-serif;
   font-feature-settings: 'palt';
   padding: 3.2rem;
 }
 [data-moji-splitter] {
+  font-size: 3.2rem;
   margin: -0.2rem;
 }
 [data-word] {
@@ -36,4 +37,11 @@ body {
 [data-whitespace] {
   margin-inline: 0.2rem;
   opacity: 0.5;
+}
+
+#destroy {
+  background-color: rgb(255 0 0 / 0.2);
+  border-radius: 0.4rem;
+  color: #e00;
+  padding: 1.6rem;
 }
