@@ -111,7 +111,7 @@ export default class Menu {
       return;
     }
     this.#itemElements.forEach((item) => {
-      const shortcuts = item.getAttribute('aria-keyshortcuts');
+      const shortcuts = item.ariaKeyShortcuts;
       const keys = (
         shortcuts?.split(/\s+/) ?? [item.textContent?.trim()[0] ?? '']
       )
@@ -126,7 +126,7 @@ export default class Menu {
       if (!shortcuts && first) {
         item.setAttribute('aria-keyshortcuts', first);
       }
-      const role = item.getAttribute('role');
+      const role = item.role;
       if (role === 'menuitemcheckbox') {
         this.#checkboxItemElements.push(item);
       } else if (role === 'menuitemradio') {
@@ -235,13 +235,9 @@ export default class Menu {
     });
     this.#itemElements.forEach((item) => {
       const parent = item.parentElement;
-      const index = item.getAttribute('tabindex');
       if (parent?.querySelector(this.#settings.selector.list)) {
         this.#submenus.push(new Menu(parent, this.#settings, true));
-      } else if (
-        item.hasAttribute('disabled') ||
-        (index && Number(index) < 0)
-      ) {
+      } else if (item.hasAttribute('disabled') || item.tabIndex < 0) {
         item.setAttribute('aria-disabled', 'true');
         item.setAttribute('data-menu-disabled', '');
         item.style.setProperty('pointer-events', 'none');
@@ -309,7 +305,7 @@ export default class Menu {
     event.preventDefault();
     this.#toggle(
       !this.#isSubmenu
-        ? this.#triggerElement?.getAttribute('aria-expanded') !== 'true'
+        ? this.#triggerElement?.ariaExpanded !== 'true'
         : event.currentTarget === this.#triggerElement,
     );
   };
@@ -437,10 +433,7 @@ export default class Menu {
   };
   #onCheckboxItemClick = (event) => {
     const item = event.currentTarget;
-    item.setAttribute(
-      'aria-checked',
-      String(item.getAttribute('aria-checked') === 'false'),
-    );
+    item.setAttribute('aria-checked', String(item.ariaChecked !== 'true'));
   };
   #onRadioItemClick = (event) => {
     const item = event.currentTarget;
@@ -451,9 +444,7 @@ export default class Menu {
     });
   };
   #toggle(isOpen) {
-    if (
-      this.#triggerElement?.getAttribute('aria-expanded') === String(isOpen)
-    ) {
+    if (this.#triggerElement?.ariaExpanded === String(isOpen)) {
       return;
     }
     if (this.#triggerElement) {
