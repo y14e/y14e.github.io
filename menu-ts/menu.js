@@ -1,7 +1,7 @@
 /**
  * menu.ts
  *
- * @version 1.1.0
+ * @version 1.1.1
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -207,7 +207,17 @@ export default class Menu {
     if (this.#triggerElement) {
       const id = Math.random().toString(36).slice(-8);
       this.#listElement.id ||= `menu-list-${id}`;
-      this.#triggerElement.setAttribute('aria-controls', this.#listElement.id);
+      const controls = new Set(
+        this.#triggerElement
+          .getAttribute('aria-controls')
+          ?.trim()
+          .split(/\s+/) ?? [],
+      );
+      controls.add(this.#listElement.id);
+      this.#triggerElement.setAttribute(
+        'aria-controls',
+        [...controls].join(' '),
+      );
       this.#triggerElement.setAttribute('aria-expanded', 'false');
       this.#triggerElement.setAttribute('aria-haspopup', 'true');
       this.#triggerElement.id ||= `menu-trigger-${id}`;
@@ -225,9 +235,16 @@ export default class Menu {
       this.#triggerElement.addEventListener('keydown', this.#onTriggerKeyDown, {
         signal,
       });
+      const labelledBy = new Set(
+        this.#listElement
+          .getAttribute('aria-labelledby')
+          ?.trim()
+          .split(/\s+/) ?? [],
+      );
+      labelledBy.add(this.#triggerElement.id);
       this.#listElement.setAttribute(
         'aria-labelledby',
-        `${this.#listElement.getAttribute('aria-labelledby') ?? ''} ${this.#triggerElement.id}`.trim(),
+        [...labelledBy].join(' '),
       );
     }
     this.#listElement.setAttribute('role', 'menu');
