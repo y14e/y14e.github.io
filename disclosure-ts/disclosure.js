@@ -172,11 +172,11 @@ export default class Disclosure {
   #onSummaryClick = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    const target = event.currentTarget;
-    if (!(target instanceof HTMLElement)) {
+    const summary = event.currentTarget;
+    if (!(summary instanceof HTMLElement)) {
       return;
     }
-    const binding = this.#bindings.get(target);
+    const binding = this.#bindings.get(summary);
     if (!binding) {
       return;
     }
