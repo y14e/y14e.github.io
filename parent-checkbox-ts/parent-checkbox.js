@@ -1,7 +1,7 @@
 /**
  * parent-checkbox.ts
  *
- * @version 1.0.3
+ * @version 1.0.4
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -44,7 +44,7 @@ export default class ParentCheckbox {
     this.#rootElement.removeAttribute('data-parent-checkbox-initialized');
   }
   #initialize() {
-    const { signal } = this.#controller;
+    const { signal } = this.#controller ?? new AbortController();
     this.#rootElement.addEventListener('change', this.#onRootChange, {
       signal,
     });
