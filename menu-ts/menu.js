@@ -59,7 +59,7 @@ export default class Menu {
   #radioItemElements = [];
   #radioItemElementsByGroup = new WeakMap();
   #arrowElement;
-  #controller = null;
+  #controller = new AbortController();
   #animation = null;
   #submenus = [];
   #submenuTimer;
@@ -191,8 +191,7 @@ export default class Menu {
     this.#rootElement.removeAttribute('data-menu-initialized');
   }
   #initialize() {
-    this.#controller = new AbortController();
-    const { signal } = this.#controller;
+    const { signal } = this.#controller ?? new AbortController();
     document.addEventListener('pointerdown', this.#onOutsidePointerDown, {
       signal,
     });

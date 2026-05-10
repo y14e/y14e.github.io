@@ -23,8 +23,8 @@ export default class Disclosure {
   #summaryElements;
   #contentElements;
   #bindings = new WeakMap();
-  #eventController = null;
-  #animationController = null;
+  #eventController = new AbortController();
+  #animationController = new AbortController();
   #observers = [];
   #isDestroyed = false;
   constructor(root, options = {}) {
@@ -135,8 +135,7 @@ export default class Disclosure {
     this.#rootElement.removeAttribute('data-disclosure-initialized');
   }
   #initialize() {
-    this.#eventController = new AbortController();
-    const { signal } = this.#eventController;
+    const { signal } = this.#eventController ?? new AbortController();
     this.#detailsElements.forEach((details, i) => {
       if (details.name) {
         details.setAttribute('data-disclosure-name', details.name);
@@ -261,8 +260,7 @@ export default class Disclosure {
         binding.animation = null;
       }
     }
-    this.#animationController = new AbortController();
-    const { signal } = this.#animationController;
+    const { signal } = this.#animationController ?? new AbortController();
     animation.addEventListener('cancel', cleanup, { once: true, signal });
     animation.addEventListener(
       'finish',

@@ -16,7 +16,7 @@ export default class Disclosure {
   #summaryElements;
   #contentElements;
   #bindings = new WeakMap();
-  #controller = null;
+  #controller = new AbortController();
   #isDestroyed = false;
   constructor(root) {
     if (!(root instanceof HTMLElement)) {
@@ -86,8 +86,7 @@ export default class Disclosure {
     this.#rootElement.removeAttribute('data-disclosure-initialized');
   }
   #initialize() {
-    this.#controller = new AbortController();
-    const { signal } = this.#controller;
+    const { signal } = this.#controller ?? new AbortController();
     this.#detailsElements.forEach((details, i) => {
       const summary = this.#summaryElements[i];
       if (!summary) {
