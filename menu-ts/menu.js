@@ -1,7 +1,7 @@
 /**
  * menu.ts
  *
- * @version 1.1.1
+ * @version 1.1.2
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -191,7 +191,7 @@ export default class Menu {
     this.#rootElement.removeAttribute('data-menu-initialized');
   }
   #initialize() {
-    const { signal } = this.#controller;
+    const { signal } = this.#controller ?? new AbortController();
     document.addEventListener('pointerdown', this.#onOutsidePointerDown, {
       signal,
     });
@@ -391,9 +391,12 @@ export default class Menu {
     event.stopPropagation();
     const focusables = this.#itemElements.filter(isFocusable);
     const active = getActiveElement();
+    if (!(active instanceof HTMLElement)) {
+      return;
+    }
     const currentIndex = focusables.indexOf(active);
     let newIndex = currentIndex;
-    let targetFocusables = focusables;
+    let target = focusables;
     switch (key) {
       case 'Tab':
       case 'Escape':
@@ -417,27 +420,38 @@ export default class Menu {
         newIndex = (currentIndex + 1) % focusables.length;
         break;
       default: {
-        targetFocusables =
+        target =
           this.#itemElementsByFirstChar
             .get(key.toLowerCase())
             ?.filter(isFocusable) ?? [];
-        const foundIndex = targetFocusables.findIndex(
+        const foundIndex = target.findIndex(
           (focusable) => focusables.indexOf(focusable) > currentIndex,
         );
         newIndex = foundIndex !== -1 ? foundIndex : 0;
       }
     }
-    targetFocusables.at(newIndex)?.focus();
+    target.at(newIndex)?.focus();
   };
   #onItemBlur = (event) => {
-    event.currentTarget.setAttribute('tabindex', '-1');
+    const item = event.currentTarget;
+    if (!(item instanceof HTMLElement)) {
+      return;
+    }
+    item.setAttribute('tabindex', '-1');
   };
   #onItemFocus = (event) => {
-    event.currentTarget.setAttribute('tabindex', '0');
+    const item = event.currentTarget;
+    if (!(item instanceof HTMLElement)) {
+      return;
+    }
+    item.setAttribute('tabindex', '0');
   };
   #onItemPointerEnter = (event) => {
     this.#clearSubmenuTimer();
     const item = event.currentTarget;
+    if (!(item instanceof HTMLElement)) {
+      return;
+    }
     this.#submenuTimer = setTimeout(() => {
       this.#submenus.forEach((submenu) => {
         submenu.#toggle(submenu.#triggerElement === item);
@@ -451,10 +465,16 @@ export default class Menu {
   };
   #onCheckboxItemClick = (event) => {
     const item = event.currentTarget;
+    if (!(item instanceof HTMLElement)) {
+      return;
+    }
     item.setAttribute('aria-checked', String(item.ariaChecked !== 'true'));
   };
   #onRadioItemClick = (event) => {
     const item = event.currentTarget;
+    if (!(item instanceof HTMLElement)) {
+      return;
+    }
     const group =
       item.closest(this.#settings.selector.group) ?? this.#rootElement;
     this.#radioItemElementsByGroup.get(group)?.forEach((i) => {
@@ -520,7 +540,7 @@ export default class Menu {
     const cleanupAnimation = () => {
       this.#animation = null;
     };
-    const { signal } = this.#controller;
+    const { signal } = this.#controller ?? new AbortController();
     this.#animation.addEventListener('cancel', cleanupAnimation, {
       once: true,
       signal,
@@ -619,12 +639,19 @@ export default class Menu {
           'top',
           arrowY ? `${arrowY - this.#arrowElement.offsetHeight / 2}px` : '',
         );
+        const side = placement.split('-')[0];
+        if (!side) {
+          return;
+        }
         const styles = {
           top: { position: 'bottom', rotate: '225deg' },
           right: { position: 'left', rotate: '315deg' },
           bottom: { position: 'top', rotate: '45deg' },
           left: { position: 'right', rotate: '135deg' },
-        }[placement.split('-')[0]];
+        }[side];
+        if (!styles) {
+          return;
+        }
         arrowStyle.setProperty(
           styles.position,
           `${this.#arrowElement.offsetWidth / -2}px`,
