@@ -1,7 +1,7 @@
 /**
  * disclosure-css.ts
  *
- * @version 1.1.0
+ * @version 1.1.1
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -86,9 +86,12 @@ export default class Disclosure {
     this.#rootElement.removeAttribute('data-disclosure-initialized');
   }
   #initialize() {
-    const { signal } = this.#controller;
+    const { signal } = this.#controller ?? new AbortController();
     this.#detailsElements.forEach((details, i) => {
       const summary = this.#summaryElements[i];
+      if (!summary) {
+        return;
+      }
       if (!isFocusable(details)) {
         summary.setAttribute('aria-disabled', 'true');
         summary.setAttribute('tabindex', '-1');
@@ -96,6 +99,9 @@ export default class Disclosure {
       }
       summary.addEventListener('keydown', this.#onSummaryKeyDown, { signal });
       const content = this.#contentElements[i];
+      if (!content) {
+        return;
+      }
       const binding = createBinding(details, summary, content);
       this.#bindings.set(details, binding);
       this.#bindings.set(summary, binding);
@@ -112,6 +118,9 @@ export default class Disclosure {
     event.stopPropagation();
     const focusables = this.#summaryElements.filter(isFocusable);
     const active = getActiveElement();
+    if (!(active instanceof HTMLElement)) {
+      return;
+    }
     const currentIndex = focusables.indexOf(active);
     let newIndex = currentIndex;
     switch (key) {
