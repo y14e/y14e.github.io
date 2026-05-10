@@ -302,22 +302,25 @@ export default class Menu {
   };
   #onRootFocusIn = (event) => {
     const target = event.currentTarget;
-    if (
-      target instanceof HTMLElement &&
-      this.#rootElement.contains(target) &&
-      this.#rootElement.contains(getActiveElement())
-    ) {
+    if (!(target instanceof HTMLElement)) {
       return;
     }
-    this.#resetTabIndex(true);
+    if (
+      !this.#rootElement.contains(target) ||
+      !this.#rootElement.contains(getActiveElement())
+    ) {
+      this.#resetTabIndex(true);
+    }
   };
   #onRootFocusOut = (event) => {
     const target = event.relatedTarget;
-    if (target instanceof HTMLElement && this.#rootElement.contains(target)) {
-      return;
+    if (
+      !(target instanceof HTMLElement) || // Not a type guard
+      !this.#rootElement.contains(target)
+    ) {
+      this.#resetTabIndex();
+      this.close();
     }
-    this.#resetTabIndex();
-    this.close();
   };
   #onTriggerClick = (event) => {
     event.preventDefault();
