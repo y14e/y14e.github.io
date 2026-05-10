@@ -180,6 +180,7 @@ export default class Menu {
       } catch {}
     }
     this.#animation?.cancel();
+    this.#animation = null;
     this.#triggerElement = null;
     this.#listElement = null;
     this.#itemElements.length = 0;
