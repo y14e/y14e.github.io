@@ -1,7 +1,7 @@
 /**
  * tabs.ts
  *
- * @version 0.1.1
+ * @version 0.1.2
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -130,15 +130,16 @@ export default class Tabs {
       return;
     }
     this.#tabElements.forEach((tab) => {
-      const selected = tab
+      const isSelected = tab
         .getAttribute('aria-controls')
         ?.trim()
         .split(/\s+/)
         .some((id) => ids.includes(id));
-      tab.setAttribute('aria-selected', String(selected));
+      tab.setAttribute('aria-selected', String(isSelected));
       tab.setAttribute(
         'tabindex',
-        selected && (!this.#settings.avoidDuplicates || !this.isDuplicates(tab))
+        isSelected &&
+          (!this.#settings.avoidDuplicates || !this.isDuplicates(tab))
           ? '0'
           : '-1',
       );
@@ -233,17 +234,17 @@ export default class Tabs {
       return;
     }
     this.#panelElements.forEach((panel, i) => {
-      const selected = ids.includes(panel.id);
+      const isSelected = ids.includes(panel.id);
       const opacity = getComputedStyle(panel).getPropertyValue('opacity');
       let animation = this.#panelAnimations[i];
       animation?.cancel();
       animation = panel.animate(
         {
           opacity: fade
-            ? selected
+            ? isSelected
               ? [opacity, opacity, '1']
               : [opacity, '0', '0']
-            : selected
+            : isSelected
               ? [opacity, '1']
               : [opacity, '0'],
         },
@@ -326,15 +327,15 @@ export default class Tabs {
       if (!tab.hasAttribute('aria-selected')) {
         tab.setAttribute('aria-selected', 'false');
       }
-      const duplicates = this.isDuplicates(tab);
-      if (!this.#settings.avoidDuplicates || !duplicates) {
+      const isDuplicates = this.isDuplicates(tab);
+      if (!this.#settings.avoidDuplicates || !isDuplicates) {
         tab.id ||= `tabs-tab-${id}`;
       }
       tab.setAttribute('role', 'tab');
       tab.setAttribute(
         'tabindex',
         tab.ariaSelected === 'true' &&
-          (!this.#settings.avoidDuplicates || !duplicates)
+          (!this.#settings.avoidDuplicates || !isDuplicates)
           ? '0'
           : '-1',
       );
@@ -469,40 +470,39 @@ export default class Tabs {
   }
 }
 class TabsIndicator {
-  indicatorElement;
-  listElement;
+  #indicatorElement;
+  #listElement;
   #settings;
-  animation;
-  resizeObserver;
-  mutationObserver;
+  #animation = null;
+  #resizeObserver = null;
+  #mutationObserver = null;
   constructor(indicator, list, settings) {
-    this.indicatorElement = indicator;
-    this.listElement = list;
+    this.#indicatorElement = indicator;
+    this.#listElement = list;
     this.#settings = settings;
-    this.animation = null;
     this.update = this.update.bind(this);
-    this.resizeObserver = new ResizeObserver(this.update);
-    this.resizeObserver.observe(this.listElement);
-    this.mutationObserver = new MutationObserver(this.update);
-    this.mutationObserver.observe(this.listElement, {
+    this.#resizeObserver = new ResizeObserver(this.update);
+    this.#resizeObserver.observe(this.#listElement);
+    this.#mutationObserver = new MutationObserver(this.update);
+    this.#mutationObserver.observe(this.#listElement, {
       attributeFilter: ['aria-selected'],
       subtree: true,
     });
   }
   update() {
-    if (!this.indicatorElement.checkVisibility()) {
+    if (!this.#indicatorElement.checkVisibility()) {
       return;
     }
-    const horizontal = this.listElement.ariaOrientation !== 'vertical';
+    const horizontal = this.#listElement.ariaOrientation !== 'vertical';
     const position = `inset${horizontal ? 'Inline' : 'Block'}Start`;
     const size = `${horizontal ? 'inline' : 'block'}Size`;
-    const tab = this.listElement.querySelector('[aria-selected="true"]');
+    const tab = this.#listElement.querySelector('[aria-selected="true"]');
     if (!tab) {
       return;
     }
     const { x: tabX, y: tabY, width, height } = tab.getBoundingClientRect();
-    const { x: listX, y: listY } = this.listElement.getBoundingClientRect();
-    this.animation = this.indicatorElement.animate(
+    const { x: listX, y: listY } = this.#listElement.getBoundingClientRect();
+    this.#animation = this.#indicatorElement.animate(
       {
         [position]: `${horizontal ? tabX - listX : tabY - listY}px`,
         [size]: `${horizontal ? width : height}px`,
@@ -515,19 +515,20 @@ class TabsIndicator {
     );
   }
   async destroy(force = false) {
-    this.resizeObserver?.disconnect();
-    this.resizeObserver = null;
-    this.mutationObserver?.disconnect();
-    this.mutationObserver = null;
-    if (!this.animation) {
+    this.#resizeObserver?.disconnect();
+    this.#resizeObserver = null;
+    this.#mutationObserver?.disconnect();
+    this.#mutationObserver = null;
+    if (!this.#animation) {
       return;
     }
     if (!force) {
       try {
-        await this.animation.finished;
+        await this.#animation.finished;
       } catch {}
     }
-    this.animation.cancel();
+    this.#animation.cancel();
+    this.#animation = null;
   }
 }
 // -----------------------------------------------------------------------------
