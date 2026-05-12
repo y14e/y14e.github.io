@@ -1,7 +1,7 @@
 /**
  * tabs.ts
  *
- * @version 0.1.3
+ * @version 0.1.4
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -110,7 +110,7 @@ export default class Tabs {
         this.#panelAnimations = Array(length).fill(null);
         this.#initialize();
     }
-    activate(tab, match = false) {
+    async activate(tab, match = false) {
         if (!this.#tabElements.includes(tab) || tab.ariaSelected === 'true') {
             return;
         }
@@ -186,27 +186,6 @@ export default class Tabs {
             this.#contentAnimation = null;
         };
         this.#contentAnimation.addEventListener('cancel', cleanupContentAnimation);
-        this.#contentAnimation.addEventListener('finish', () => {
-            cleanupContentAnimation();
-            this.#rootElement.removeAttribute('data-tabs-animating');
-            if (!this.#contentElement) {
-                return;
-            }
-            const { style } = this.#contentElement;
-            style.removeProperty('block-size');
-            style.removeProperty('overflow');
-            style.removeProperty('position');
-            this.#panelElements.forEach((panel) => {
-                const { style } = panel;
-                style.removeProperty('content-visibility');
-                style.removeProperty('display');
-                style.removeProperty('position');
-                style.removeProperty('width');
-            });
-        });
-        if (!fade && !crossFade) {
-            return;
-        }
         this.#panelElements.forEach((panel, i) => {
             const isSelected = ids.includes(panel.id);
             const opacity = getComputedStyle(panel).getPropertyValue('opacity');
@@ -221,7 +200,9 @@ export default class Tabs {
                         ? [opacity, '1']
                         : [opacity, '0'],
             }, {
-                duration: !match ? this.#settings.animation.content.duration : 0,
+                duration: !match || fade || crossFade
+                    ? this.#settings.animation.content.duration
+                    : 0,
                 easing: 'ease',
             });
             this.#panelAnimations[i] = animation;
@@ -235,6 +216,29 @@ export default class Tabs {
                 cleanupPanelAnimation();
                 panel.style.removeProperty('opacity');
             });
+        });
+        const promises = [];
+        this.#panelAnimations.forEach((animation) => {
+            if (animation) {
+                promises.push(waitAnimation(animation));
+            }
+        });
+        await Promise.allSettled(promises);
+        cleanupContentAnimation();
+        this.#rootElement.removeAttribute('data-tabs-animating');
+        if (!this.#contentElement) {
+            return;
+        }
+        const { style: contentStyle } = this.#contentElement;
+        contentStyle.removeProperty('block-size');
+        contentStyle.removeProperty('overflow');
+        contentStyle.removeProperty('position');
+        this.#panelElements.forEach((panel) => {
+            const { style } = panel;
+            style.removeProperty('content-visibility');
+            style.removeProperty('display');
+            style.removeProperty('position');
+            style.removeProperty('width');
         });
     }
     async destroy(force = false) {
@@ -505,4 +509,11 @@ function hasFocusable(element) {
 }
 function isFocusable(element) {
     return !element.hasAttribute('disabled');
+}
+function waitAnimation(animation) {
+    const { playState } = animation;
+    if (playState === 'idle' || playState === 'finished') {
+        return Promise.resolve();
+    }
+    return new Promise((resolve) => animation.addEventListener('finish', () => resolve(), { once: true }));
 }
