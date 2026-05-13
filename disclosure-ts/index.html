@@ -158,6 +158,12 @@
 <script type="module">
 import Disclosure from './disclosure.js';
 
+Disclosure.defaults = {
+  animation: {
+    duration: 3000,
+  }
+}
+
 const disclosures = [];
 
 document.querySelectorAll('[data-disclosure]').forEach((element) => {
