@@ -32,20 +32,8 @@ export default class Accordion {
       throw new TypeError('Invalid root element');
     }
     this.#rootElement = root;
-    this.#defaults = {
-      animation: {
-        ...this.#defaults.animation,
-        ...(Accordion.defaults.animation ?? {}),
-      },
-      selector: {
-        ...this.#defaults.selector,
-        ...(Accordion.defaults.selector ?? {}),
-      },
-    };
-    this.#settings = {
-      animation: { ...this.#defaults.animation, ...(options.animation ?? {}) },
-      selector: { ...this.#defaults.selector, ...(options.selector ?? {}) },
-    };
+    this.#defaults = this.#mergeOptions(this.#defaults, Accordion.defaults);
+    this.#settings = this.#mergeOptions(this.#defaults, options);
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
       Object.assign(this.#settings.animation, { duration: 0 });
     }
@@ -256,6 +244,12 @@ export default class Accordion {
       },
       { once: true, signal },
     );
+  }
+  #mergeOptions(target, source) {
+    return {
+      animation: { ...target.animation, ...(source.animation ?? {}) },
+      selector: { ...target.selector, ...(source.selector ?? {}) },
+    };
   }
   #onAnimationFinish(content) {
     const trigger = this.#bindings.get(content)?.trigger;
