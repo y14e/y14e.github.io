@@ -35,11 +35,11 @@ export default class Accordion {
     this.#defaults = {
       animation: {
         ...this.#defaults.animation,
-        ...(Accordion.defaults?.animation ?? {}),
+        ...(Accordion.defaults.animation ?? {}),
       },
       selector: {
         ...this.#defaults.selector,
-        ...(Accordion.defaults?.selector ?? {}),
+        ...(Accordion.defaults.selector ?? {}),
       },
     };
     this.#settings = {
@@ -271,8 +271,8 @@ export default class Accordion {
   }
   async #waitAnimationsFinish() {
     const promises = [];
-    this.#triggerElements.forEach((trigger) => {
-      const animation = this.#bindings.get(trigger)?.animation;
+    this.#contentElements.forEach((content) => {
+      const animation = this.#bindings.get(content)?.animation;
       if (animation) {
         promises.push(waitAnimationFinish(animation));
       }
