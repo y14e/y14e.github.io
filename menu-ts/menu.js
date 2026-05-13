@@ -1,7 +1,7 @@
 /**
  * menu.ts
  *
- * @version 1.1.3
+ * @version 1.2.0
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -22,6 +22,7 @@ import {
 // APIs
 // -----------------------------------------------------------------------------
 export default class Menu {
+  static defaults = {};
   static #menus = [];
   #rootElement;
   #defaults = {
@@ -70,24 +71,8 @@ export default class Menu {
       throw new TypeError('Invalid root element');
     }
     this.#rootElement = root;
-    this.#settings = {
-      ...this.#defaults,
-      ...options,
-      animation: { ...this.#defaults.animation, ...(options.animation ?? {}) },
-      popover: {
-        ...this.#defaults.popover,
-        ...(options.popover ?? {}),
-        menu: {
-          ...this.#defaults.popover.menu,
-          ...(options.popover?.menu ?? {}),
-        },
-        submenu: {
-          ...this.#defaults.popover.submenu,
-          ...(options.popover?.submenu ?? {}),
-        },
-      },
-      selector: { ...this.#defaults.selector, ...(options.selector ?? {}) },
-    };
+    this.#defaults = this.#mergeOptions(this.#defaults, Menu.defaults);
+    this.#settings = this.#mergeOptions(this.#defaults, options);
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
       Object.assign(this.#settings.animation, { duration: 0 });
     }
@@ -567,6 +552,26 @@ export default class Menu {
       clearTimeout(this.#submenuTimer);
       this.#submenuTimer = undefined;
     }
+  }
+  #mergeOptions(target, source) {
+    return {
+      ...target,
+      ...source,
+      animation: { ...target.animation, ...(source.animation ?? {}) },
+      popover: {
+        ...target.popover,
+        ...(source.popover ?? {}),
+        menu: {
+          ...target.popover?.menu,
+          ...(source.popover?.menu ?? {}),
+        },
+        submenu: {
+          ...target.popover?.submenu,
+          ...(source.popover?.submenu ?? {}),
+        },
+      },
+      selector: { ...target.selector, ...(source.selector ?? {}) },
+    };
   }
   #resetTabIndex(isForce = false) {
     if (this.#triggerElement || isForce) {
