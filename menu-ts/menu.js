@@ -1,7 +1,7 @@
 /**
  * menu.ts
  *
- * @version 1.1.2
+ * @version 1.1.3
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -207,16 +207,10 @@ export default class Menu {
     if (this.#triggerElement) {
       const id = Math.random().toString(36).slice(-8);
       this.#listElement.id ||= `menu-list-${id}`;
-      const controls = new Set(
-        this.#triggerElement
-          .getAttribute('aria-controls')
-          ?.trim()
-          .split(/\s+/) ?? [],
-      );
-      controls.add(this.#listElement.id);
-      this.#triggerElement.setAttribute(
+      addTokenToAttribute(
+        this.#triggerElement,
         'aria-controls',
-        [...controls].join(' '),
+        this.#listElement.id,
       );
       this.#triggerElement.setAttribute('aria-expanded', 'false');
       this.#triggerElement.setAttribute('aria-haspopup', 'true');
@@ -235,16 +229,10 @@ export default class Menu {
       this.#triggerElement.addEventListener('keydown', this.#onTriggerKeyDown, {
         signal,
       });
-      const labelledBy = new Set(
-        this.#listElement
-          .getAttribute('aria-labelledby')
-          ?.trim()
-          .split(/\s+/) ?? [],
-      );
-      labelledBy.add(this.#triggerElement.id);
-      this.#listElement.setAttribute(
+      addTokenToAttribute(
+        this.#listElement,
         'aria-labelledby',
-        [...labelledBy].join(' '),
+        this.#triggerElement.id,
       );
     }
     this.#listElement.setAttribute('role', 'menu');
@@ -675,6 +663,13 @@ export default class Menu {
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
+function addTokenToAttribute(element, attribute, token) {
+  const tokens = new Set(
+    element.getAttribute(attribute)?.trim().split(/\s+/) ?? [],
+  );
+  tokens.add(token);
+  element.setAttribute(attribute, [...tokens].join(' '));
+}
 function getActiveElement() {
   let current = document.activeElement;
   while (current?.shadowRoot?.activeElement) {

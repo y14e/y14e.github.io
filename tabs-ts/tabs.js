@@ -1,7 +1,7 @@
 /**
  * tabs.ts
  *
- * @version 1.0.0
+ * @version 1.0.1
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -313,9 +313,7 @@ export default class Tabs {
         return;
       }
       panel.id ||= `tabs-panel-${id}`;
-      const controls = new Set(getAriaControlsIds(tab));
-      controls.add(panel.id);
-      tab.setAttribute('aria-controls', [...controls].join(' '));
+      addTokenToAttribute(tab, 'aria-controls', panel.id);
       if (!tab.hasAttribute('aria-selected')) {
         tab.setAttribute('aria-selected', 'false');
       }
@@ -331,11 +329,7 @@ export default class Tabs {
       if (!isFocusable(tab)) {
         tab.style.setProperty('pointer-events', 'none');
       }
-      const labelledBy = new Set(
-        panel.getAttribute('aria-labelledby')?.trim().split(/\s+/) ?? [],
-      );
-      labelledBy.add(tab.id);
-      panel.setAttribute('aria-labelledby', [...labelledBy].join(' '));
+      addTokenToAttribute(panel, 'aria-labelledby', tab.id);
       tab.addEventListener('click', this.#onTabClick, { signal });
       tab.addEventListener('keydown', this.#onTabKeyDown, { signal });
     });
@@ -549,6 +543,13 @@ class TabsIndicator {
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
+function addTokenToAttribute(element, attribute, token) {
+  const tokens = new Set(
+    element.getAttribute(attribute)?.trim().split(/\s+/) ?? [],
+  );
+  tokens.add(token);
+  element.setAttribute(attribute, [...tokens].join(' '));
+}
 function createBinding(tab, panel) {
   return { tab, panel, animation: null };
 }
