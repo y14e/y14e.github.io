@@ -11,7 +11,7 @@
 // APIs
 // -----------------------------------------------------------------------------
 export default class Disclosure {
-  static defaults;
+  static defaults = {};
   #rootElement;
   #defaults = {
     animation: {

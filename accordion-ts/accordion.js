@@ -11,7 +11,7 @@
 // APIs
 // -----------------------------------------------------------------------------
 export default class Accordion {
-  static defaults;
+  static defaults = {};
   #rootElement;
   #defaults = {
     animation: { duration: 300, easing: 'ease' },
