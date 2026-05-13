@@ -1,7 +1,7 @@
 /**
  * accordion.ts
  *
- * @version 1.1.3
+ * @version 1.2.0
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -11,6 +11,7 @@
 // APIs
 // -----------------------------------------------------------------------------
 export default class Accordion {
+  static defaults;
   #rootElement;
   #defaults = {
     animation: { duration: 300, easing: 'ease' },
@@ -31,6 +32,16 @@ export default class Accordion {
       throw new TypeError('Invalid root element');
     }
     this.#rootElement = root;
+    this.#defaults = {
+      animation: {
+        ...this.#defaults.animation,
+        ...(Accordion.defaults?.animation ?? {}),
+      },
+      selector: {
+        ...this.#defaults.selector,
+        ...(Accordion.defaults?.selector ?? {}),
+      },
+    };
     this.#settings = {
       animation: { ...this.#defaults.animation, ...(options.animation ?? {}) },
       selector: { ...this.#defaults.selector, ...(options.selector ?? {}) },
@@ -84,17 +95,13 @@ export default class Accordion {
     this.#eventController?.abort();
     this.#eventController = null;
     if (!force) {
-      const promises = [];
-      this.#triggerElements.forEach((trigger) => {
-        const animation = this.#bindings.get(trigger)?.animation;
-        if (animation) {
-          promises.push(waitAnimation(animation));
-        }
-      });
-      await Promise.allSettled(promises);
+      await this.#waitAnimationsFinish();
     }
-    this.#triggerElements.forEach((trigger) => {
-      this.#bindings.get(trigger)?.animation?.cancel();
+    this.#contentElements.forEach((content) => {
+      if (force) {
+        this.#bindings.get(content)?.animation?.finish();
+      }
+      this.#onAnimationFinish(content);
     });
     this.#animationController?.abort();
     this.#animationController = null;
@@ -244,16 +251,33 @@ export default class Accordion {
     animation.addEventListener(
       'finish',
       () => {
+        this.#onAnimationFinish(content);
         cleanup();
-        if (!isOpen) {
-          content.setAttribute('hidden', 'until-found');
-        }
-        const { style } = content;
-        style.removeProperty('block-size');
-        style.removeProperty('overflow');
       },
       { once: true, signal },
     );
+  }
+  #onAnimationFinish(content) {
+    const trigger = this.#bindings.get(content)?.trigger;
+    if (!trigger) {
+      return;
+    }
+    if (trigger.ariaExpanded === 'false') {
+      content.setAttribute('hidden', 'until-found');
+    }
+    const { style } = content;
+    style.removeProperty('block-size');
+    style.removeProperty('overflow');
+  }
+  async #waitAnimationsFinish() {
+    const promises = [];
+    this.#triggerElements.forEach((trigger) => {
+      const animation = this.#bindings.get(trigger)?.animation;
+      if (animation) {
+        promises.push(waitAnimationFinish(animation));
+      }
+    });
+    await Promise.allSettled(promises);
   }
 }
 // -----------------------------------------------------------------------------
@@ -279,7 +303,7 @@ function getActiveElement() {
 function isFocusable(element) {
   return !element.hasAttribute('disabled') && element.tabIndex >= 0;
 }
-function waitAnimation(animation) {
+function waitAnimationFinish(animation) {
   const { playState } = animation;
   if (playState === 'idle' || playState === 'finished') {
     return Promise.resolve();
