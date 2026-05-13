@@ -7,9 +7,6 @@
  * @copyright Copyright (c) Yusuke Kamiyamane
  * @see {@link https://github.com/y14e/menu-ts}
  */
-// -----------------------------------------------------------------------------
-// Imports
-// -----------------------------------------------------------------------------
 import {
   arrow,
   autoUpdate,
@@ -591,12 +588,19 @@ export default class Menu {
     }
   }
   #updatePopover() {
+    if (!this.#triggerElement) {
+      return;
+    }
     const compute = () => {
-      computePosition(
-        this.#triggerElement,
-        this.#listElement,
-        this.#settings.popover[!this.#isSubmenu ? 'menu' : 'submenu'],
-      ).then(({ x: listX, y: listY, placement, middlewareData }) => {
+      if (!this.#triggerElement || !this.#listElement) {
+        return;
+      }
+      const options =
+        this.#settings.popover[!this.#isSubmenu ? 'menu' : 'submenu'];
+      computePosition(this.#triggerElement, this.#listElement, {
+        ...options,
+        placement: options.placement,
+      }).then(({ x: listX, y: listY, placement, middlewareData }) => {
         if (!this.#listElement) {
           throw new Error('Unreachable');
         }
