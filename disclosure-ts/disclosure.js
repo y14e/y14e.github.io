@@ -258,7 +258,11 @@ export default class Disclosure {
     };
   }
   #onAnimationFinish(content) {
-    const details = this.#bindings.get(content)?.details;
+    const binding = this.#bindings.get(content);
+    if (!binding) {
+      return;
+    }
+    const details = binding.details;
     if (!details) {
       return;
     }
@@ -268,7 +272,10 @@ export default class Disclosure {
       details.removeAttribute('data-disclosure-name');
     }
     if (details.hasAttribute('data-disclosure-open')) {
-      details.removeAttribute('data-disclosure-open');
+      binding.timer = requestAnimationFrame(() => {
+        binding.timer = undefined;
+        details.removeAttribute('data-disclosure-open');
+      });
     } else {
       details.open = false;
     }
