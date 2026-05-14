@@ -137,7 +137,7 @@ export default class Tabs {
       t.setAttribute('aria-selected', String(isSelected));
       t.setAttribute(
         'tabindex',
-        isSelected && !this.#isAvoidingTab(t) ? '0' : '-1',
+        isSelected && !this.#isAvoidanceTab(t) ? '0' : '-1',
       );
     });
     if (!this.#contentElement) {
@@ -314,14 +314,14 @@ export default class Tabs {
       if (!tab.hasAttribute('aria-selected')) {
         tab.setAttribute('aria-selected', 'false');
       }
-      const isAvoiding = this.#isAvoidingTab(tab);
-      if (!isAvoiding) {
+      const isAvoidance = this.#isAvoidanceTab(tab);
+      if (!isAvoidance) {
         tab.id ||= `tabs-tab-${id}`;
       }
       tab.setAttribute('role', 'tab');
       tab.setAttribute(
         'tabindex',
-        tab.ariaSelected === 'true' && !isAvoiding ? '0' : '-1',
+        tab.ariaSelected === 'true' && !isAvoidance ? '0' : '-1',
       );
       if (!isFocusable(tab)) {
         tab.style.setProperty('pointer-events', 'none');
@@ -438,7 +438,7 @@ export default class Tabs {
     }
     this.activate(tab, true);
   };
-  #isAvoidingTab(tab) {
+  #isAvoidanceTab(tab) {
     const binding = this.#bindings.get(tab);
     if (!binding) {
       return false;
