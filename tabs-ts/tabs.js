@@ -1,7 +1,7 @@
 /**
  * tabs.ts
  *
- * @version 1.1.0
+ * @version 1.2.0
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -11,6 +11,7 @@
 // APIs
 // -----------------------------------------------------------------------------
 export default class Tabs {
+  static defaults = {};
   #rootElement;
   #defaults = {
     animation: {
@@ -53,24 +54,8 @@ export default class Tabs {
       throw new TypeError('Invalid root element');
     }
     this.#rootElement = root;
-    this.#settings = {
-      ...this.#defaults,
-      ...options,
-      animation: {
-        content: {
-          ...this.#defaults.animation.content,
-          ...(options.animation?.content ?? {}),
-        },
-        indicator: {
-          ...this.#defaults.animation.indicator,
-          ...(options.animation?.indicator ?? {}),
-        },
-      },
-      selector: {
-        ...this.#defaults.selector,
-        ...(options.selector ?? {}),
-      },
-    };
+    this.#defaults = this.#mergeOptions(this.#defaults, Tabs.defaults);
+    this.#settings = this.#mergeOptions(this.#defaults, options);
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
       Object.assign(this.#settings.animation, {
         content: { duration: 0 },
@@ -118,12 +103,17 @@ export default class Tabs {
       console.warn('Missing panel elements');
       return;
     }
+    const tabs = [];
     this.#tabElements.forEach((tab, i) => {
-      const panel = this.#panelElements[i % this.#panelElements.length];
+      const index = i % this.#panelElements.length;
+      const tabsByIndex = tabs[index] ?? [];
+      tabsByIndex.push(tab);
+      tabs[index] = tabsByIndex;
+      const panel = this.#panelElements[index];
       if (!panel) {
         return;
       }
-      const binding = createBinding(tab, panel);
+      const binding = createBinding(tabsByIndex, panel);
       this.#bindings.set(tab, binding);
       if (i < this.#panelElements.length) {
         this.#bindings.set(panel, binding);
@@ -146,12 +136,12 @@ export default class Tabs {
     if (!ids.length) {
       return;
     }
-    this.#tabElements.forEach((tab) => {
-      const isSelected = getAriaControlsIds(tab).some((id) => ids.includes(id));
-      tab.setAttribute('aria-selected', String(isSelected));
-      tab.setAttribute(
+    this.#tabElements.forEach((t) => {
+      const isSelected = this.#bindings.get(t)?.tabs.some((tt) => tt === tab);
+      t.setAttribute('aria-selected', String(isSelected));
+      t.setAttribute(
         'tabindex',
-        isSelected && !this.#isAvoidedTab(tab) ? '0' : '-1',
+        isSelected && !this.#isAvoidTab(t) ? '0' : '-1',
       );
     });
     if (!this.#contentElement) {
@@ -219,7 +209,7 @@ export default class Tabs {
     this.#animation.addEventListener(
       'finish',
       () => {
-        this.#onContentAnimationFinish();
+        this.#onAnimationFinish();
         cleanup();
       },
       {
@@ -297,7 +287,7 @@ export default class Tabs {
         animation.cancel();
       }
     });
-    this.#onContentAnimationFinish();
+    this.#onAnimationFinish();
     this.#animationController?.abort();
     this.#animationController = null;
     this.#listElements.length = 0;
@@ -328,7 +318,7 @@ export default class Tabs {
       if (!tab.hasAttribute('aria-selected')) {
         tab.setAttribute('aria-selected', 'false');
       }
-      const isAvoided = this.#isAvoidedTab(tab);
+      const isAvoided = this.#isAvoidTab(tab);
       if (!isAvoided) {
         tab.id ||= `tabs-tab-${id}`;
       }
@@ -446,13 +436,40 @@ export default class Tabs {
     if (!(panel instanceof HTMLElement)) {
       return;
     }
-    const tab = this.#bindings.get(panel)?.tab;
+    const tab = this.#bindings.get(panel)?.tabs[0];
     if (!tab) {
       return;
     }
     this.activate(tab, true);
   };
-  #onContentAnimationFinish() {
+  #isAvoidTab(tab) {
+    const binding = this.#bindings.get(tab);
+    if (!binding) {
+      return false;
+    }
+    return this.#settings.avoidDuplicates && binding.tabs.indexOf(tab) > 0;
+  }
+  #mergeOptions(target, source) {
+    return {
+      ...target,
+      ...source,
+      animation: {
+        content: {
+          ...target.animation.content,
+          ...(source.animation?.content ?? {}),
+        },
+        indicator: {
+          ...target.animation.indicator,
+          ...(source.animation?.indicator ?? {}),
+        },
+      },
+      selector: {
+        ...target.selector,
+        ...(source.selector ?? {}),
+      },
+    };
+  }
+  #onAnimationFinish() {
     if (!this.#contentElement) {
       return;
     }
@@ -469,12 +486,6 @@ export default class Tabs {
       style.removeProperty('position');
     });
     this.#rootElement.removeAttribute('data-tabs-animating');
-  }
-  #isAvoidedTab(tab) {
-    return (
-      this.#settings.avoidDuplicates &&
-      this.#tabElements.indexOf(tab) >= this.#panelElements.length
-    );
   }
 }
 class TabsIndicator {
@@ -552,8 +563,8 @@ function addTokenToAttribute(element, attribute, token) {
   tokens.add(token);
   element.setAttribute(attribute, [...tokens].join(' '));
 }
-function createBinding(tab, panel) {
-  return { tab, panel, animation: null };
+function createBinding(tabs, panel) {
+  return { tabs, panel, animation: null };
 }
 function getActiveElement() {
   let current = document.activeElement;
