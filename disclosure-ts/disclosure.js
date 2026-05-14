@@ -1,7 +1,7 @@
 /**
  * disclosure.ts
  *
- * @version 1.2.0
+ * @version 1.2.1
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -60,6 +60,17 @@ export default class Disclosure {
       console.warn('Missing content elements');
       return;
     }
+    this.#detailsElements.forEach((details, i) => {
+      const summary = this.#summaryElements[i];
+      const content = this.#contentElements[i];
+      if (!summary || !content) {
+        return;
+      }
+      const binding = createBinding(details, summary, content);
+      this.#bindings.set(details, binding);
+      this.#bindings.set(summary, binding);
+      this.#bindings.set(content, binding);
+    });
     this.#initialize();
   }
   open(details) {
@@ -139,14 +150,6 @@ export default class Disclosure {
       }
       summary.addEventListener('click', this.#onSummaryClick, { signal });
       summary.addEventListener('keydown', this.#onSummaryKeyDown, { signal });
-      const content = this.#contentElements[i];
-      if (!content) {
-        return;
-      }
-      const binding = createBinding(details, summary, content);
-      this.#bindings.set(details, binding);
-      this.#bindings.set(summary, binding);
-      this.#bindings.set(content, binding);
     });
     this.#rootElement.setAttribute('data-disclosure-initialized', '');
   }

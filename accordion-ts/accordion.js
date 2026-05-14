@@ -1,7 +1,7 @@
 /**
  * accordion.ts
  *
- * @version 1.2.0
+ * @version 1.2.1
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -53,6 +53,15 @@ export default class Accordion {
       console.warn('Missing content elements');
       return;
     }
+    this.#triggerElements.forEach((trigger, i) => {
+      const content = this.#contentElements[i];
+      if (!content) {
+        return;
+      }
+      const binding = createBinding(trigger, content);
+      this.#bindings.set(trigger, binding);
+      this.#bindings.set(content, binding);
+    });
     this.#initialize();
   }
   open(trigger) {
@@ -124,9 +133,6 @@ export default class Accordion {
       content.addEventListener('beforematch', this.#onContentBeforeMatch, {
         signal,
       });
-      const binding = createBinding(trigger, content);
-      this.#bindings.set(trigger, binding);
-      this.#bindings.set(content, binding);
     });
     this.#rootElement.setAttribute('data-accordion-initialized', '');
   }
