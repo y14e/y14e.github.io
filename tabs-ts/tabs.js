@@ -314,14 +314,14 @@ export default class Tabs {
       if (!tab.hasAttribute('aria-selected')) {
         tab.setAttribute('aria-selected', 'false');
       }
-      const isAvoided = this.#isAvoidingTab(tab);
-      if (!isAvoided) {
+      const isAvoiding = this.#isAvoidingTab(tab);
+      if (!isAvoiding) {
         tab.id ||= `tabs-tab-${id}`;
       }
       tab.setAttribute('role', 'tab');
       tab.setAttribute(
         'tabindex',
-        tab.ariaSelected === 'true' && !isAvoided ? '0' : '-1',
+        tab.ariaSelected === 'true' && !isAvoiding ? '0' : '-1',
       );
       if (!isFocusable(tab)) {
         tab.style.setProperty('pointer-events', 'none');
