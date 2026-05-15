@@ -53,13 +53,9 @@ var MojiSplitter = class {
     this.#applyNonBreakingRules();
     this.#split("word");
     const { concatChar, lineBreakingRules } = this.#settings;
-    if (!concatChar && lineBreakingRules) {
-      this.#applyLineBreakingRules("word");
-    }
+    !concatChar && lineBreakingRules && this.#applyLineBreakingRules("word");
     this.#split("char");
-    if (concatChar && lineBreakingRules) {
-      this.#applyLineBreakingRules("char");
-    }
+    concatChar && lineBreakingRules && this.#applyLineBreakingRules("char");
     for (let i = 0, l = this.#charElements.length; i < l; i++) {
       const char = this.#charElements[i];
       if (!char) {
@@ -78,11 +74,9 @@ var MojiSplitter = class {
       }
       const { style: style2 } = span;
       style2.setProperty("display", "inline-block");
-      if (Array.from(
+      Array.from(
         (this.#segmenter ?? new Intl.Segmenter()).segment(span.textContent)
-      ).length) {
-        style2.setProperty("white-space", "nowrap");
-      }
+      ).length && style2.setProperty("white-space", "nowrap");
     }
     for (let i = 0, l = this.#wordElements.length; i < l; i++) {
       const word = this.#wordElements[i];
@@ -129,9 +123,7 @@ var MojiSplitter = class {
       const fragment = document.createDocumentFragment();
       for (const match of text.matchAll(NOBR_REGEX)) {
         const index = match.index;
-        if (index > lastIndex) {
-          fragment.append(text.slice(lastIndex, index));
-        }
+        index > lastIndex && fragment.append(text.slice(lastIndex, index));
         const span = document.createElement("span");
         span.setAttribute("data-_nobr", "");
         const matched = match[0];
@@ -139,9 +131,7 @@ var MojiSplitter = class {
         fragment.append(span);
         lastIndex = index + matched.length;
       }
-      if (lastIndex < text.length) {
-        fragment.append(text.slice(lastIndex));
-      }
+      lastIndex < text.length && fragment.append(text.slice(lastIndex));
       if (!(node instanceof Text)) {
         return;
       }
@@ -172,9 +162,7 @@ var MojiSplitter = class {
           const span = document.createElement("span");
           const text = segment.segment;
           span.textContent = text;
-          if (text.charCodeAt(0) === 32) {
-            span.setAttribute("data-whitespace", "");
-          }
+          text.charCodeAt(0) === 32 && span.setAttribute("data-whitespace", "");
           span.setAttribute(`data-${granularity}`, text);
           items.push(span);
           fragment.append(span);
@@ -252,9 +240,7 @@ var MojiSplitter = class {
         }
         continue;
       }
-      if (LBR_INSEPARATABLE_REGEX.test(text)) {
-        concat(i, LBR_INSEPARATABLE_REGEX);
-      }
+      LBR_INSEPARATABLE_REGEX.test(text) && concat(i, LBR_INSEPARATABLE_REGEX);
     }
     if (granularity === "char") {
       const spans = (this.#fragment ?? new DocumentFragment()).querySelectorAll("[data-word]:not([data-whitespace])");
@@ -301,7 +287,7 @@ var MojiSplitter = class {
  * Flexible text splitting utility for CSS animations.
  * Supports complex line breaking rules (ja: Kinsoku shori).
  *
- * @version 1.4.3
+ * @version 1.4.4
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
