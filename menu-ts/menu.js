@@ -1,7 +1,7 @@
 /**
  * menu.ts
  *
- * @version 1.2.0
+ * @version 1.2.1
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -70,9 +70,8 @@ export default class Menu {
     this.#rootElement = root;
     this.#defaults = this.#mergeOptions(this.#defaults, Menu.defaults);
     this.#settings = this.#mergeOptions(this.#defaults, options);
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    matchMedia('(prefers-reduced-motion: reduce)').matches &&
       Object.assign(this.#settings.animation, { duration: 0 });
-    }
     this.#isSubmenu = isSubmenu;
     const { selector } = this.#settings;
     this.#triggerElement = this.#rootElement.querySelector(
@@ -105,9 +104,7 @@ export default class Menu {
         this.#itemElementsByFirstChar.set(key, items);
       });
       const first = keys[0];
-      if (!shortcuts && first) {
-        item.setAttribute('aria-keyshortcuts', first);
-      }
+      !shortcuts && first && item.setAttribute('aria-keyshortcuts', first);
       const role = item.role;
       if (role === 'menuitemcheckbox') {
         this.#checkboxItemElements.push(item);
@@ -153,9 +150,8 @@ export default class Menu {
     this.#cleanupPopover = null;
     this.#clearSubmenuTimer();
     Menu.#menus = Menu.#menus.filter((menu) => menu !== this);
-    if (this.#submenus) {
-      await Promise.all(this.#submenus.map((submenu) => submenu.destroy()));
-    }
+    this.#submenus &&
+      (await Promise.all(this.#submenus.map((submenu) => submenu.destroy())));
     if (!force) {
       try {
         await this.#animation?.finished;
@@ -230,13 +226,9 @@ export default class Menu {
         item.setAttribute('data-menu-disabled', '');
         item.style.setProperty('pointer-events', 'none');
       }
-      if (
-        [this.#checkboxItemElements, this.#radioItemElements].every(
-          (list) => !list.includes(item),
-        )
-      ) {
-        item.setAttribute('role', 'menuitem');
-      }
+      [this.#checkboxItemElements, this.#radioItemElements].every(
+        (list) => !list.includes(item),
+      ) && item.setAttribute('role', 'menuitem');
       item.addEventListener('blur', this.#onItemBlur, { signal });
       item.addEventListener('focus', this.#onItemFocus, { signal });
       item.addEventListener('pointerenter', this.#onItemPointerEnter, {
@@ -255,9 +247,8 @@ export default class Menu {
       item.addEventListener('click', this.#onRadioItemClick, { signal });
     });
     this.#resetTabIndex();
-    if (!this.#isSubmenu) {
+    !this.#isSubmenu &&
       this.#rootElement.setAttribute('data-menu-initialized', '');
-    }
     Menu.#menus.push(this);
   }
   #onOutsidePointerDown = (event) => {
@@ -275,12 +266,9 @@ export default class Menu {
     if (!(target instanceof HTMLElement)) {
       return;
     }
-    if (
-      !this.#rootElement.contains(target) ||
-      !this.#rootElement.contains(getActiveElement())
-    ) {
+    (!this.#rootElement.contains(target) ||
+      !this.#rootElement.contains(getActiveElement())) &&
       this.#resetTabIndex(true);
-    }
   };
   #onRootFocusOut = (event) => {
     const target = event.relatedTarget;
@@ -354,9 +342,7 @@ export default class Menu {
         !isChar ||
         !this.#itemElementsByFirstChar.get(key.toLowerCase())?.some(isFocusable)
       ) {
-        if (isChar) {
-          event.stopPropagation();
-        }
+        isChar && event.stopPropagation();
         return;
       }
     }
@@ -475,21 +461,16 @@ export default class Menu {
       const { style } = this.#listElement;
       style.setProperty('display', 'block');
       style.setProperty('opacity', '0');
-      if (this.#triggerElement) {
-        this.#updatePopover();
-      }
+      this.#triggerElement && this.#updatePopover();
       this.#itemElements.find(isFocusable)?.focus();
     } else {
       this.#clearSubmenuTimer();
       this.#submenus.forEach((submenu) => {
         submenu.close();
       });
-      if (
-        this.#triggerElement &&
-        this.#rootElement.contains(getActiveElement())
-      ) {
+      this.#triggerElement &&
+        this.#rootElement.contains(getActiveElement()) &&
         this.#triggerElement.focus();
-      }
     }
     // Skip if not in popover mode
     if (!this.#triggerElement) {
