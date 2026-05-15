@@ -1,7 +1,7 @@
 /**
  * parent-checkbox.ts
  *
- * @version 1.0.4
+ * @version 1.0.5
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -21,16 +21,12 @@ export default class ParentCheckbox {
     }
     this.#rootElement = root;
     const ids = root.getAttribute('aria-controls')?.trim() ?? '';
-    if (!ids) {
-      console.warn('Invalid aria-controls attribute');
-    }
+    !ids && console.warn('Invalid aria-controls attribute');
     this.#childElements = ids
       .split(/\s+/)
       .map((id) => document.getElementById(id))
       .filter((element) => element instanceof HTMLInputElement);
-    if (!this.#childElements.length) {
-      console.warn('Missing child elements');
-    }
+    !this.#childElements.length && console.warn('Missing child elements');
     this.#initialize();
   }
   destroy() {
