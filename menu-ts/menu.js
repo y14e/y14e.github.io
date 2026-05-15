@@ -1,7 +1,7 @@
 /**
  * menu.ts
  *
- * @version 1.2.1
+ * @version 1.2.2
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -171,6 +171,7 @@ export default class Menu {
   #initialize() {
     const { signal } = this.#controller ?? new AbortController();
     document.addEventListener('pointerdown', this.#onOutsidePointerDown, {
+      capture: true,
       signal,
     });
     this.#rootElement.addEventListener('focusin', this.#onRootFocusIn, {
