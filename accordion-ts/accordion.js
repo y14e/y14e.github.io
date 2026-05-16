@@ -1,7 +1,7 @@
 /**
  * accordion.ts
  *
- * @version 1.2.2
+ * @version 1.2.3
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -24,8 +24,8 @@ export default class Accordion {
   #triggerElements;
   #contentElements;
   #bindings = new WeakMap();
-  #eventController = new AbortController();
-  #animationController = new AbortController();
+  #eventController = null;
+  #animationController = null;
   #isDestroyed = false;
   constructor(root, options = {}) {
     if (!(root instanceof HTMLElement)) {
@@ -102,7 +102,8 @@ export default class Accordion {
     this.#rootElement.removeAttribute('data-accordion-initialized');
   }
   #initialize() {
-    const { signal } = this.#eventController ?? new AbortController();
+    this.#eventController = new AbortController();
+    const { signal } = this.#eventController;
     this.#triggerElements.forEach((trigger, i) => {
       const id = Math.random().toString(36).slice(-8);
       const content = this.#contentElements[i];
@@ -234,7 +235,8 @@ export default class Accordion {
         binding.animation = null;
       }
     }
-    const { signal } = this.#animationController ?? new AbortController();
+    this.#animationController = new AbortController();
+    const { signal } = this.#animationController;
     animation.addEventListener('cancel', cleanup, { once: true, signal });
     animation.addEventListener(
       'finish',

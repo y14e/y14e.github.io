@@ -1,7 +1,7 @@
 /**
  * tabs.ts
  *
- * @version 1.3.1
+ * @version 1.3.2
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -44,8 +44,8 @@ export default class Tabs {
   #contentElement;
   #panelElements;
   #bindings = new WeakMap();
-  #eventController = new AbortController();
-  #animationController = new AbortController();
+  #eventController = null;
+  #animationController = null;
   #animation = null;
   #indicators = [];
   #isDestroyed = false;
@@ -197,7 +197,8 @@ export default class Tabs {
     const cleanup = () => {
       this.#animation = null;
     };
-    const { signal } = this.#animationController ?? new AbortController();
+    this.#animationController = new AbortController();
+    const { signal } = this.#animationController;
     this.#animation.addEventListener('cancel', cleanup, {
       once: true,
       signal,
@@ -246,7 +247,8 @@ export default class Tabs {
           binding.animation = null;
         }
       };
-      const { signal } = this.#animationController ?? new AbortController();
+      this.#animationController = new AbortController();
+      const { signal } = this.#animationController;
       animation.addEventListener('cancel', cleanup, { once: true, signal });
       animation.addEventListener('finish', cleanup, { once: true, signal });
     });

@@ -1,7 +1,7 @@
 /**
  * menu.ts
  *
- * @version 1.2.2
+ * @version 1.2.3
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -57,7 +57,7 @@ export default class Menu {
   #radioItemElements = [];
   #radioItemElementsByGroup = new WeakMap();
   #arrowElement;
-  #controller = new AbortController();
+  #controller = null;
   #animation = null;
   #submenus = [];
   #submenuTimer;
@@ -169,7 +169,8 @@ export default class Menu {
     this.#rootElement.removeAttribute('data-menu-initialized');
   }
   #initialize() {
-    const { signal } = this.#controller ?? new AbortController();
+    this.#controller = new AbortController();
+    const { signal } = this.#controller;
     document.addEventListener('pointerdown', this.#onOutsidePointerDown, {
       capture: true,
       signal,
