@@ -1,7 +1,7 @@
 /**
  * menu.ts
  *
- * @version 1.3.0
+ * @version 1.3.1
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -66,7 +66,7 @@ export default class Menu {
   #isDestroyed = false;
   #cleanupPortal = null;
   #cleanupPopover = null;
-  constructor(root, options = {}, isSubmenu = false, isPortal = false) {
+  constructor(root, options = {}, _internal = {}) {
     if (!(root instanceof HTMLElement)) {
       throw new TypeError('Invalid root element');
     }
@@ -75,6 +75,7 @@ export default class Menu {
     this.#settings = this.#mergeOptions(this.#defaults, options);
     matchMedia('(prefers-reduced-motion: reduce)').matches &&
       Object.assign(this.#settings.animation, { duration: 0 });
+    const { isSubmenu = false, isPortal = false } = _internal;
     this.#isSubmenu = isSubmenu;
     this.#isPortal = isPortal;
     const { selector } = this.#settings;
@@ -229,7 +230,10 @@ export default class Menu {
       const parent = item.parentElement;
       if (parent?.querySelector(this.#settings.selector.list)) {
         this.#submenus.push(
-          new Menu(parent, this.#settings, true, !!this.#triggerElement),
+          new Menu(parent, this.#settings, {
+            isSubmenu: true,
+            isPortal: !!this.#triggerElement,
+          }),
         );
       } else if (item.hasAttribute('disabled') || item.tabIndex < 0) {
         item.setAttribute('aria-disabled', 'true');
@@ -483,10 +487,10 @@ export default class Menu {
     } else {
       this.#clearSubmenuTimer();
       /*
-      this.#submenus.forEach((submenu) => {
-        submenu.close();
-      });
-      */
+            this.#submenus.forEach((submenu) => {
+              submenu.close();
+            });
+            */
       const active = getActiveElement();
       if (!(active instanceof HTMLElement)) {
         return;
