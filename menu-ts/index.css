@@ -57,12 +57,13 @@ body {
     0 0.4rem 0.8rem rgb(0 0 0 / 0.2);
   padding: 0.4rem;
   white-space: nowrap;
-  :is([data-menu-trigger], [aria-haspopup]) + & {
+  :is([data-menu-trigger], [aria-haspopup]) + &,
+  &[data-portal] {
     display: none;
     position: absolute;
     transition: 0.3s transform;
     z-index: calc(infinity);
-    &:not([aria-expanded='true'] + &):not([data-context-menu-open]) {
+    &:not([data-menu-open]) {
       transform: scale(0.9);
     }
   }
@@ -148,7 +149,8 @@ hr {
   position: absolute;
   visibility: hidden;
   width: 0.8rem;
-  :is([data-menu-trigger], [aria-haspopup]) + * > & {
+  :is([data-menu-trigger], [aria-haspopup]) + * > &,
+  [data-portal] > & {
     visibility: visible;
   }
   [data-menu-placement^='top'] & {

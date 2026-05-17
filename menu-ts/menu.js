@@ -1,12 +1,15 @@
 /**
  * menu.ts
  *
- * @version 1.2.3
+ * @version 1.3.0
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
  * @see {@link https://github.com/y14e/menu-ts}
  */
+// -----------------------------------------------------------------------------
+// Imports
+// -----------------------------------------------------------------------------
 import {
   arrow,
   autoUpdate,
@@ -15,6 +18,7 @@ import {
   offset,
   shift,
 } from 'https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.7.6/+esm';
+import { createPortal } from 'https://esm.sh/@y14e/portal';
 // -----------------------------------------------------------------------------
 // APIs
 // -----------------------------------------------------------------------------
@@ -62,6 +66,7 @@ export default class Menu {
   #submenus = [];
   #submenuTimer;
   #isDestroyed = false;
+  #cleanupPortal = null;
   #cleanupPopover = null;
   constructor(root, options = {}, isSubmenu = false) {
     if (!(root instanceof HTMLElement)) {
@@ -254,10 +259,7 @@ export default class Menu {
     Menu.#menus.push(this);
   }
   #onOutsidePointerDown = (event) => {
-    if (
-      !this.#triggerElement ||
-      event.composedPath().includes(this.#rootElement)
-    ) {
+    if (!this.#triggerElement || this.#includesRoot(event)) {
       return;
     }
     this.#resetTabIndex();
@@ -265,18 +267,19 @@ export default class Menu {
   };
   #onRootFocusIn = (event) => {
     const target = event.currentTarget;
-    if (!(target instanceof HTMLElement)) {
+    const active = getActiveElement();
+    if (!(target instanceof HTMLElement) || !(active instanceof HTMLElement)) {
       return;
     }
-    (!this.#rootElement.contains(target) ||
-      !this.#rootElement.contains(getActiveElement())) &&
+    !this.#containsRoot(target) &&
+      !this.#containsRoot(active) &&
       this.#resetTabIndex(true);
   };
   #onRootFocusOut = (event) => {
     const target = event.relatedTarget;
     if (
       !(target instanceof HTMLElement) || // Not a type guard
-      !this.#rootElement.contains(target)
+      !this.#containsRoot(target)
     ) {
       this.#resetTabIndex();
       this.close();
@@ -447,19 +450,28 @@ export default class Menu {
       return;
     }
     if (this.#triggerElement) {
-      requestAnimationFrame(() => {
-        this.#triggerElement?.setAttribute('aria-expanded', String(isOpen));
-      });
+      requestAnimationFrame(() =>
+        this.#triggerElement?.setAttribute('aria-expanded', String(isOpen)),
+      );
     }
     if (isOpen) {
       Menu.#menus
-        .filter((m) => !m.#rootElement.contains(this.#rootElement))
+        .filter((m) => !m.#containsRoot(this.#rootElement))
         .forEach((menu) => {
           menu.close();
         });
       if (!this.#listElement) {
         throw new Error('Unreachable');
       }
+      if (!this.#isSubmenu && this.#triggerElement) {
+        const style = this.#listElement.style;
+        style.setProperty('position', 'fixed');
+        this.#cleanupPortal = createPortal(this.#listElement);
+        requestAnimationFrame(() => style.removeProperty('position'));
+      }
+      requestAnimationFrame(() =>
+        this.#listElement?.setAttribute('data-menu-open', ''),
+      );
       const { style } = this.#listElement;
       style.setProperty('display', 'block');
       style.setProperty('opacity', '0');
@@ -470,20 +482,25 @@ export default class Menu {
       this.#submenus.forEach((submenu) => {
         submenu.close();
       });
+      const active = getActiveElement();
+      if (!(active instanceof HTMLElement)) {
+        return;
+      }
       this.#triggerElement &&
-        this.#rootElement.contains(getActiveElement()) &&
+        this.#containsRoot(active) &&
         this.#triggerElement.focus();
     }
     // Skip if not in popover mode
     if (!this.#triggerElement) {
       return;
     }
-    if (!isOpen) {
-      this.#cleanupPopover?.();
-      this.#cleanupPopover = null;
-    }
     if (!this.#listElement) {
       throw new Error('Unreachable');
+    }
+    if (!isOpen) {
+      this.#listElement.removeAttribute('data-menu-open');
+      this.#cleanupPopover?.();
+      this.#cleanupPopover = null;
     }
     const opacity = getComputedStyle(this.#listElement).getPropertyValue(
       'opacity',
@@ -510,6 +527,8 @@ export default class Menu {
         }
         const { style: listStyle } = this.#listElement;
         if (!isOpen) {
+          this.#cleanupPortal?.();
+          this.#cleanupPortal = null;
           this.#listElement.removeAttribute('data-menu-placement');
           listStyle.setProperty('display', 'none');
           listStyle.removeProperty('left');
@@ -532,6 +551,19 @@ export default class Menu {
       clearTimeout(this.#submenuTimer);
       this.#submenuTimer = undefined;
     }
+  }
+  #containsRoot(element) {
+    return (
+      this.#rootElement.contains(element) ||
+      this.#listElement?.contains(element)
+    );
+  }
+  #includesRoot(event) {
+    const path = event.composedPath();
+    if (!this.#listElement) {
+      return false;
+    }
+    return path.includes(this.#rootElement) || path.includes(this.#listElement);
   }
   #mergeOptions(target, source) {
     return {
