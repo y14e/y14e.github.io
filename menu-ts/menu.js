@@ -150,6 +150,8 @@ export default class Menu {
     this.#isDestroyed = true;
     this.#controller?.abort();
     this.#controller = null;
+    this.#cleanupPortal?.();
+    this.#cleanupPortal = null;
     this.#cleanupPopover?.();
     this.#cleanupPopover = null;
     this.#clearSubmenuTimer();
