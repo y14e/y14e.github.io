@@ -14,7 +14,7 @@ import {
   flip,
   offset,
   shift,
-} from 'https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.7.6/+esm';
+} from 'https://esm.sh/@floating-ui/dom';
 import { createPortal } from 'https://esm.sh/@y14e/portal';
 // -----------------------------------------------------------------------------
 // APIs
