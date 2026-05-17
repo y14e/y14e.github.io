@@ -7,9 +7,6 @@
  * @copyright Copyright (c) Yusuke Kamiyamane
  * @see {@link https://github.com/y14e/menu-ts}
  */
-// -----------------------------------------------------------------------------
-// Imports
-// -----------------------------------------------------------------------------
 import {
   arrow,
   autoUpdate,
@@ -53,6 +50,7 @@ export default class Menu {
   };
   #settings;
   #isSubmenu;
+  #isPortal;
   #triggerElement;
   #listElement;
   #itemElements;
@@ -68,7 +66,7 @@ export default class Menu {
   #isDestroyed = false;
   #cleanupPortal = null;
   #cleanupPopover = null;
-  constructor(root, options = {}, isSubmenu = false) {
+  constructor(root, options = {}, isSubmenu = false, isPortal = false) {
     if (!(root instanceof HTMLElement)) {
       throw new TypeError('Invalid root element');
     }
@@ -78,6 +76,7 @@ export default class Menu {
     matchMedia('(prefers-reduced-motion: reduce)').matches &&
       Object.assign(this.#settings.animation, { duration: 0 });
     this.#isSubmenu = isSubmenu;
+    this.#isPortal = isPortal;
     const { selector } = this.#settings;
     this.#triggerElement = this.#rootElement.querySelector(
       selector[!this.#isSubmenu ? 'trigger' : 'item'],
@@ -227,7 +226,9 @@ export default class Menu {
     this.#itemElements.forEach((item) => {
       const parent = item.parentElement;
       if (parent?.querySelector(this.#settings.selector.list)) {
-        this.#submenus.push(new Menu(parent, this.#settings, true));
+        this.#submenus.push(
+          new Menu(parent, this.#settings, true, !!this.#triggerElement),
+        );
       } else if (item.hasAttribute('disabled') || item.tabIndex < 0) {
         item.setAttribute('aria-disabled', 'true');
         item.setAttribute('data-menu-disabled', '');
@@ -463,7 +464,7 @@ export default class Menu {
       if (!this.#listElement) {
         throw new Error('Unreachable');
       }
-      if (!this.#isSubmenu && this.#triggerElement) {
+      if ((!this.#isSubmenu && this.#triggerElement) || !this.#isPortal) {
         const style = this.#listElement.style;
         style.setProperty('position', 'fixed');
         this.#cleanupPortal = createPortal(this.#listElement);
@@ -479,9 +480,11 @@ export default class Menu {
       this.#itemElements.find(isFocusable)?.focus();
     } else {
       this.#clearSubmenuTimer();
+      /*
       this.#submenus.forEach((submenu) => {
         submenu.close();
       });
+      */
       const active = getActiveElement();
       if (!(active instanceof HTMLElement)) {
         return;
