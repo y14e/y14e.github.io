@@ -150,10 +150,6 @@ export default class Menu {
     this.#isDestroyed = true;
     this.#controller?.abort();
     this.#controller = null;
-    this.#cleanupPortal?.();
-    this.#cleanupPortal = null;
-    this.#cleanupPopover?.();
-    this.#cleanupPopover = null;
     this.#clearSubmenuTimer();
     Menu.#menus = Menu.#menus.filter((menu) => menu !== this);
     this.#submenus &&
@@ -165,6 +161,10 @@ export default class Menu {
     }
     this.#animation?.cancel();
     this.#animation = null;
+    this.#cleanupPortal?.();
+    this.#cleanupPortal = null;
+    this.#cleanupPopover?.();
+    this.#cleanupPopover = null;
     this.#triggerElement = null;
     this.#listElement = null;
     this.#itemElements.length = 0;
