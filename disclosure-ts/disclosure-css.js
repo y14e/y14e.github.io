@@ -1,7 +1,7 @@
 /**
  * disclosure-css.ts
  *
- * @version 1.2.1
+ * @version 1.2.2
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -21,6 +21,10 @@ export default class Disclosure {
   constructor(root) {
     if (!(root instanceof HTMLElement)) {
       throw new TypeError('Invalid root element');
+    }
+    if (root.hasAttribute('data-disclosure-initialized')) {
+      console.warn('Already initialized');
+      return;
     }
     this.#rootElement = root;
     const NOT_NESTED = ':not(:scope summary + * *)';

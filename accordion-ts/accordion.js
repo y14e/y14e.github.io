@@ -1,7 +1,7 @@
 /**
  * accordion.ts
  *
- * @version 1.2.3
+ * @version 1.2.4
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -30,6 +30,10 @@ export default class Accordion {
   constructor(root, options = {}) {
     if (!(root instanceof HTMLElement)) {
       throw new TypeError('Invalid root element');
+    }
+    if (root.hasAttribute('data-accordion-initialized')) {
+      console.warn('Already initialized');
+      return;
     }
     this.#rootElement = root;
     this.#defaults = this.#mergeOptions(this.#defaults, Accordion.defaults);

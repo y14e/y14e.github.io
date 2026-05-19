@@ -1,12 +1,15 @@
 /**
  * menu.ts
  *
- * @version 1.3.2
+ * @version 1.3.3
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
  * @see {@link https://github.com/y14e/menu-ts}
  */
+// -----------------------------------------------------------------------------
+// Imports
+// -----------------------------------------------------------------------------
 import {
   arrow,
   autoUpdate,
@@ -69,6 +72,10 @@ export default class Menu {
   constructor(root, options = {}, _internal = {}) {
     if (!(root instanceof HTMLElement)) {
       throw new TypeError('Invalid root element');
+    }
+    if (root.hasAttribute('data-menu-initialized')) {
+      console.warn('Already initialized');
+      return;
     }
     this.#rootElement = root;
     this.#defaults = this.#mergeOptions(this.#defaults, Menu.defaults);
