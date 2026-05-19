@@ -1,7 +1,7 @@
 /**
  * machine-translation.ts
  *
- * @version 1.0.3
+ * @version 1.0.4
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -10,7 +10,12 @@
 // -----------------------------------------------------------------------------
 // APIs
 // -----------------------------------------------------------------------------
+let isInitialized = false;
 export function detectMachineTranslation() {
+  if (isInitialized) {
+    console.warn('Already initialized');
+    return () => {};
+  }
   const html = document.documentElement;
   const title = document.querySelector('title');
   if (!title) {
@@ -42,7 +47,7 @@ export function detectMachineTranslation() {
     (map.has(element)
       ? map.get(element)
       : map.set(element, []).get(element)
-    )?.push(attribute);
+    ).push(attribute);
   }
   let timer;
   function callback() {
@@ -62,6 +67,7 @@ export function detectMachineTranslation() {
   for (const [element, attributes] of map) {
     observer.observe(element, { attributeFilter: attributes });
   }
+  isInitialized = true;
   return () => {
     observer?.disconnect();
     observer = null;

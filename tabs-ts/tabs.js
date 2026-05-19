@@ -1,7 +1,7 @@
 /**
  * tabs.ts
  *
- * @version 1.3.2
+ * @version 1.3.3
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -52,6 +52,10 @@ export default class Tabs {
   constructor(root, options = {}) {
     if (!(root instanceof HTMLElement)) {
       throw new TypeError('Invalid root element');
+    }
+    if (root.hasAttribute('data-tabs-initialized')) {
+      console.warn('Already initialized');
+      return;
     }
     this.#rootElement = root;
     this.#defaults = this.#mergeOptions(this.#defaults, Tabs.defaults);

@@ -1,7 +1,7 @@
 /**
  * parent-checkbox.ts
  *
- * @version 1.0.6
+ * @version 1.0.7
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -18,6 +18,10 @@ export default class ParentCheckbox {
   constructor(root) {
     if (!(root instanceof HTMLInputElement)) {
       throw new TypeError('Invalid root element');
+    }
+    if (root.hasAttribute('data-parent-checkbox-initialized')) {
+      console.warn('Already initialized');
+      return;
     }
     this.#rootElement = root;
     const ids = root.getAttribute('aria-controls')?.trim() ?? '';
