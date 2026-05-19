@@ -58,7 +58,7 @@ body {
   padding: 0.4rem;
   white-space: nowrap;
   :is([data-menu-trigger], [aria-haspopup]) + &,
-  &[data-portal] {
+  &[data-portaled] {
     display: none;
     position: absolute;
     transition: 0.3s transform;
@@ -150,7 +150,7 @@ hr {
   visibility: hidden;
   width: 0.8rem;
   :is([data-menu-trigger], [aria-haspopup]) + * > &,
-  [data-portal] > & {
+  [data-portaled] > & {
     visibility: visible;
   }
   [data-menu-placement^='top'] & {
