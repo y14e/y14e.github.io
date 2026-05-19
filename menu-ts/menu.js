@@ -1,7 +1,7 @@
 /**
  * menu.ts
  *
- * @version 1.3.1
+ * @version 1.3.2
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -313,7 +313,9 @@ export default class Menu {
     }
     event.preventDefault();
     event.stopPropagation();
-    this.open();
+    if (key !== 'Enter' && key !== ' ') {
+      this.open();
+    }
     const focusables = this.#itemElements.filter(isFocusable);
     let index = 0;
     switch (key) {
@@ -456,11 +458,7 @@ export default class Menu {
     if (this.#triggerElement?.ariaExpanded === String(isOpen)) {
       return;
     }
-    if (this.#triggerElement) {
-      requestAnimationFrame(() =>
-        this.#triggerElement?.setAttribute('aria-expanded', String(isOpen)),
-      );
-    }
+    this.#triggerElement?.setAttribute('aria-expanded', String(isOpen));
     if (isOpen) {
       Menu.#menus
         .filter((m) => !m.#containsRoot(this.#rootElement))
