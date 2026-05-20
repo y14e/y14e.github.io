@@ -156,6 +156,9 @@ hr {
   [data-menu-placement^='top'] & {
     box-shadow: -0.1rem -0.1rem 0.1rem rgb(0 0 0 / 0.2);
   }
+  :is([data-menu-placement^='left'], [data-menu-placement^='right']) & {
+    margin-top: 4px;
+  }
 }
 
 #destroy {

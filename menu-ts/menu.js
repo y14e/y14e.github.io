@@ -1,7 +1,7 @@
 /**
  * menu.ts
  *
- * @version 1.3.3
+ * @version 1.3.4
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -19,6 +19,7 @@ import {
   shift,
 } from 'https://esm.sh/@floating-ui/dom';
 import { createPortal } from 'https://esm.sh/@y14e/portal';
+import clone from 'https://esm.sh/bunshin-clone';
 // -----------------------------------------------------------------------------
 // APIs
 // -----------------------------------------------------------------------------
@@ -139,7 +140,12 @@ export default class Menu {
       this.#arrowElement = document.createElement('div');
       this.#arrowElement.setAttribute('data-menu-arrow', '');
       this.#listElement.appendChild(this.#arrowElement);
-      settings.middleware.push(arrow({ element: this.#arrowElement }));
+      const index = settings.middleware.findIndex((m) => m.name === 'arrow');
+      const option = arrow({ element: this.#arrowElement });
+      if (index !== -1) {
+        settings.middleware.splice(index, 1);
+      }
+      settings.middleware.push(option);
     } else {
       this.#arrowElement = null;
     }
@@ -237,7 +243,7 @@ export default class Menu {
       const parent = item.parentElement;
       if (parent?.querySelector(this.#settings.selector.list)) {
         this.#submenus.push(
-          new Menu(parent, this.#settings, {
+          new Menu(parent, clone(this.#settings), {
             isSubmenu: true,
             isPortal: !!this.#triggerElement,
           }),
