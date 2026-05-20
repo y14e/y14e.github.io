@@ -1,7 +1,7 @@
 /**
  * menu.ts
  *
- * @version 1.3.4
+ * @version 1.3.5
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -19,7 +19,6 @@ import {
   shift,
 } from 'https://esm.sh/@floating-ui/dom';
 import { createPortal } from 'https://esm.sh/@y14e/portal';
-import clone from 'https://esm.sh/bunshin-clone';
 // -----------------------------------------------------------------------------
 // APIs
 // -----------------------------------------------------------------------------
@@ -243,7 +242,7 @@ export default class Menu {
       const parent = item.parentElement;
       if (parent?.querySelector(this.#settings.selector.list)) {
         this.#submenus.push(
-          new Menu(parent, clone(this.#settings), {
+          new Menu(parent, this.#settings, {
             isSubmenu: true,
             isPortal: !!this.#triggerElement,
           }),
@@ -596,10 +595,18 @@ export default class Menu {
         menu: {
           ...target.popover?.menu,
           ...(source.popover?.menu ?? {}),
+          middleware: Object.assign(
+            [...(target.popover?.menu?.middleware ?? [])],
+            [...(source.popover?.menu?.middleware ?? [])],
+          ),
         },
         submenu: {
           ...target.popover?.submenu,
           ...(source.popover?.submenu ?? {}),
+          middleware: Object.assign(
+            [...(target.popover?.submenu?.middleware ?? [])],
+            [...(source.popover?.submenu?.middleware ?? [])],
+          ),
         },
       },
       selector: { ...target.selector, ...(source.selector ?? {}) },

@@ -18,6 +18,12 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 1.6rem;
+  /*
+  transition: 0.3s filter;
+  &:has([data-portal-sentinel]) {
+    filter: blur(2px);
+  }
+  */
 }
 [data-menu] [data-menu-trigger] {
   align-items: center;
