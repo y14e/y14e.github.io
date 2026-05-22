@@ -2,173 +2,173 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>accordion.ts</title>
+<title>Disclosure</title>
 <link href="./index.css" rel="stylesheet">
 </head>
 <body>
-<div data-accordion>
-  <div>
-    <h3><button aria-expanded="true" aria-label="Close" data-accordion-collapsed-label="Open" data-accordion-expanded-label="Close" data-accordion-trigger type="button">Header</button></h3>
+<div data-disclosure>
+  <details open>
+    <summary>Header</summary>
     <div>
       <div>
         1 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
       </div>
     </div>
-  </div>
-  <div>
-    <h3><button data-accordion-trigger disabled type="button">Header (disabled)</button></h3>
-    <div hidden>
+  </details>
+  <details>
+    <summary tabindex="-1">Header (disabled)</summary>
+    <div>
       <div>
         Disabled Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
       </div>
     </div>
-  </div>
-  <div>
-    <h3><button aria-label="Open" data-accordion-collapsed-label="Open" data-accordion-expanded-label="Close" data-accordion-trigger type="button">Header</button></h3>
-    <div hidden="until-found">
+  </details>
+  <details>
+    <summary>Header</summary>
+    <div>
       <div>
         2 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        <div data-accordion>
-          <div>
-            <h4><button aria-label="Open" data-accordion-collapsed-label="Open" data-accordion-expanded-label="Close" data-accordion-name="accordion-2" data-accordion-trigger type="button">Named header</button></h4>
-            <div hidden="until-found">
+        <div data-disclosure>
+          <details name="disclosure-1">
+            <summary>Named header</summary>
+            <div>
               <div>
                 1 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
               </div>
             </div>
-          </div>
-          <div>
-            <h4><button aria-expanded="true" aria-label="Close" data-accordion-collapsed-label="Open" data-accordion-expanded-label="Close" data-accordion-name="accordion-2" data-accordion-trigger type="button">Named header</button></h4>
+          </details>
+          <details name="disclosure-1" open>
+            <summary>Named header</summary>
             <div>
               <div>
                 2 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                <div data-accordion>
-                  <div>
-                    <h4><button aria-label="Open" data-accordion-collapsed-label="Open" data-accordion-expanded-label="Close" data-accordion-name="accordion-2b" data-accordion-trigger type="button">Named header</button></h4>
-                    <div hidden="until-found">
+                <div data-disclosure>
+                  <details name="disclosure-1a">
+                    <summary>Named header</summary>
+                    <div>
                       <div>
                         1 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                       </div>
                     </div>
-                  </div>
-                  <div>
-                    <h4><button aria-label="Open" data-accordion-collapsed-label="Open" data-accordion-expanded-label="Close" data-accordion-name="accordion-2b" data-accordion-trigger type="button">Named header</button></h4>
-                    <div hidden="until-found">
+                  </details>
+                  <details name="disclosure-1a" open>
+                    <summary>Named header</summary>
+                    <div>
                       <div>
                         2 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                       </div>
                     </div>
-                  </div>
-                  <div>
-                    <h4><button aria-expanded="true" aria-label="Close" data-accordion-collapsed-label="Open" data-accordion-expanded-label="Close" data-accordion-name="accordion-2b" data-accordion-trigger type="button">Named header</button></h4>
+                  </details>
+                  <details name="disclosure-1a">
+                    <summary>Named header</summary>
                     <div>
                       <div>
                         3 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                       </div>
                     </div>
-                  </div>
+                  </details>
                 </div>
               </div>
             </div>
-          </div>
-          <div>
-            <h4><button aria-label="Open" data-accordion-collapsed-label="Open" data-accordion-expanded-label="Close" data-accordion-name="accordion-2" data-accordion-trigger type="button">Named header</button></h4>
-            <div hidden="until-found">
+          </details>
+          <details name="disclosure-1">
+            <summary>Named header</summary>
+            <div>
               <div>
                 3 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
               </div>
             </div>
-          </div>
+          </details>
         </div>
       </div>
     </div>
-  </div>
-  <div>
-    <h3><button aria-label="Open" data-accordion-collapsed-label="Open" data-accordion-expanded-label="Close" data-accordion-trigger type="button">Header</button></h3>
-    <div hidden="until-found">
+  </details>
+  <details>
+    <summary>Header</summary>
+    <div>
       <div>
         3 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
       </div>
     </div>
-  </div>
+  </details>
 </div>
 <br><br><br><br><br>
-<div data-accordion>
-  <div>
-    <h3><button aria-expanded="true" aria-label="Close" data-accordion-collapsed-label="Open" data-accordion-expanded-label="Close" data-accordion-name="accordion-10" data-accordion-trigger type="button">Named header</button></h3>
+<div data-disclosure>
+  <details name="disclosure-2" open>
+    <summary>Named header</summary>
     <div>
       <div>
         1 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
       </div>
     </div>
-  </div>
-  <div>
-    <h3><button data-accordion-trigger disabled type="button">Named header (disabled)</button></h3>
-    <div hidden>
+  </details>
+  <details name="disclosure-2">
+    <summary tabindex="-1">Named header (disabled)</summary>
+    <div>
       <div>
         Disabled Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
       </div>
     </div>
-  </div>
-  <div>
-    <h3><button aria-label="Open" data-accordion-collapsed-label="Open" data-accordion-expanded-label="Close" data-accordion-name="accordion-10" data-accordion-trigger type="button">Named header</button></h3>
-    <div hidden="until-found">
+  </details>
+  <details name="disclosure-2">
+    <summary>Named header</summary>
+    <div>
       <div>
         2 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-        <div data-accordion>
-          <div>
-            <h4><button aria-expanded="true" aria-label="Close" data-accordion-collapsed-label="Open" data-accordion-expanded-label="Close" data-accordion-trigger type="button">Header</button></h4>
+        <div data-disclosure>
+          <details open>
+            <summary>Header</summary>
             <div>
               <div>
                 1 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
               </div>
             </div>
-          </div>
-          <div>
-            <h4><button aria-label="Open" data-accordion-collapsed-label="Open" data-accordion-expanded-label="Close" data-accordion-trigger type="button">Header</button></h4>
-            <div hidden="until-found">
+          </details>
+          <details>
+            <summary>Header</summary>
+            <div>
               <div>
                 2 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
               </div>
             </div>
-          </div>
-          <div>
-            <h4><button aria-label="Open" data-accordion-collapsed-label="Open" data-accordion-expanded-label="Close" data-accordion-trigger type="button">Header</button></h4>
-            <div hidden="until-found">
+          </details>
+          <details>
+            <summary>Header</summary>
+            <div>
               <div>
                 3 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
               </div>
             </div>
-          </div>
+          </details>
         </div>
       </div>
     </div>
-  </div>
-  <div>
-    <h3><button aria-label="Open" data-accordion-collapsed-label="Open" data-accordion-expanded-label="Close" data-accordion-name="accordion-10" data-accordion-trigger type="button">Named header</button></h3>
-    <div hidden="until-found">
+  </details>
+  <details name="disclosure-2">
+    <summary>Named header</summary>
+    <div>
       <div>
         3 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
       </div>
     </div>
-  </div>
+  </details>
 </div>
 <br><br><br><br><br>
-<button id="destroy" type="button">Destroy all accordions</button>
+<button id="destroy" type="button">Destroy all disclosures</button>
 <script type="module">
-import Accordion from 'https://esm.sh/@y14e/accordion';
+import Disclosure from 'https://esm.sh/@y14e/disclosure';
 
-const accordions = [];
+const disclosures = [];
 
-document.querySelectorAll('[data-accordion]').forEach((element) => {
-  accordions.push(new Accordion(element));
+document.querySelectorAll('[data-disclosure]').forEach((element) => {
+  disclosures.push(new Disclosure(element));
 });
 
 const destroy = document.querySelector('#destroy');
 
 destroy.addEventListener('click', () => {
-  accordions.forEach((accordion) => {
-    accordion.destroy();
+  disclosures.forEach((disclosure) => {
+    disclosure.destroy();
   });
 
   destroy.disabled = true;
