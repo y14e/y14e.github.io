@@ -154,7 +154,7 @@
   </div>
 </div>
 <br><br><br><br><br>
-<button id="destroy" type="button">Destroy all accordions</button>
+<button class="cleanup-or-destroy" type="button">Destroy all accordions</button>
 <script type="module">
 import Accordion from 'https://esm.sh/@y14e/accordion';
 
@@ -164,7 +164,7 @@ document.querySelectorAll('[data-accordion]').forEach((element) => {
   accordions.push(new Accordion(element));
 });
 
-const destroy = document.querySelector('#destroy');
+const destroy = document.querySelector('.cleanup-or-destroy');
 
 destroy.addEventListener('click', () => {
   accordions.forEach((accordion) => {

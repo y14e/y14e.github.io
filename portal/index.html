@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Portal</title>
+<link href="./index.css" rel="stylesheet">
+</head>
+<body>
+<div class="stack">
+  <ul>
+    <li><a href="https://www.example.com" target="_blank">Link 1</a></li>
+    <li><a href="https://www.example.com" target="_blank">Link 2</a></li>
+  </ul>
+  <p class="placeholder">Portal 1</p>
+  <div class="host" id="host-1">
+    <p class="label">Portal 1</p>
+    <ul>
+      <li><a href="https://www.example.com" target="_blank">Portal link 1-1</a></li>
+      <li><a href="https://www.example.com" target="_blank">Portal link 1-2</a></li>
+    </ul>
+    <p><button class="cleanup-or-destroy" type="button">Cleanup portal 1</button></p>
+  </div>
+  <ul>
+    <li><a href="https://www.example.com" target="_blank">Link between 1</a></li>
+    <li><a href="https://www.example.com" target="_blank">Link between 2</a></li>
+  </ul>
+  <p class="placeholder">Portal 2</p>
+  <div class="host" id="host-2">
+    <p class="label">Portal 2</p>
+    <ul>
+      <li><a href="https://www.example.com" target="_blank">Portal link 2-1</a></li>
+      <li><a href="https://www.example.com" target="_blank">Portal link 2-2</a></li>
+    </ul>
+    <p><button class="cleanup-or-destroy" type="button">Cleanup portal 2</button></p>
+  </div>
+  <p class="placeholder">Portal 3</p>
+  <div class="host" id="host-3">
+    <p class="label">Portal 3</p>
+    <p><button class="cleanup-or-destroy" type="button">Cleanup portal 3</button></p>
+  </div>
+  <ul>
+    <li><a href="https://www.example.com" target="_blank">Link 3</a></li>
+    <li><a href="https://www.example.com" target="_blank">Link 4</a></li>
+  </ul>
+</div>
+<div id="container"></div>
+<script type="module">
+import { createPortal } from 'https://esm.sh/@y14e/portal';
+
+const hosts = document.querySelectorAll('.host');
+const cleanups = [];
+const container = document.getElementById('container');
+
+hosts.forEach((host) => {
+  cleanups.push(createPortal(host, container));
+
+  host.querySelector('.cleanup-or-destroy').addEventListener('click', (event) => {
+    cleanups.shift()();
+    const button = event.currentTarget;
+    button.disabled = true;
+    button.textContent = 'Cleaned up';
+  });
+});
+</script>
+</body>
+</html>
