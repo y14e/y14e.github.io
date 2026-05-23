@@ -51,11 +51,11 @@ const hosts = document.querySelectorAll('.host');
 const cleanups = [];
 const container = document.getElementById('container');
 
-hosts.forEach((host) => {
+hosts.forEach((host, i) => {
   cleanups.push(createPortal(host, container));
 
   host.querySelector('.cleanup-or-destroy').addEventListener('click', (event) => {
-    cleanups.shift()();
+    cleanups[i]();
     const button = event.currentTarget;
     button.disabled = true;
     button.textContent = 'Cleaned up';
