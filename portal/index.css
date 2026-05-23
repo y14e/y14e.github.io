@@ -9,7 +9,7 @@
 .placeholder {
   background-color: #fff;
   border-radius: calc(infinity * 1px);
-  border: 0.2rem solid rgb(0 0 0 / 0.35);
+  border: 0.2rem solid rgb(0 0 0 / 0.3);
   color: rgb(0 0 0 / 0.4);
   font-size: 1.2rem;
   font-weight: bold;
