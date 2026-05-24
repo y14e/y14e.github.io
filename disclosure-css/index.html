@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>Disclosure (CSS)</title>
+<title>Disclosure (CSS Animation)</title>
 <link href="./index.css" rel="stylesheet">
 </head>
 <body>
@@ -72,7 +72,7 @@
     </div>
   </details>
 </div>
-<br><br><br><br><br>
+<div class="spacer"></div>
 <div data-disclosure>
   <details name="disclosure-2" open>
     <summary>Named header</summary>
@@ -121,8 +121,8 @@
     </div>
   </details>
 </div>
-<br><br><br><br><br>
-<button id="destroy" type="button">Destroy all disclosures</button>
+<div class="spacer"></div>
+<button class="cleanup-or-destroy" type="button">Destroy all disclosures</button>
 <script type="module">
 import Disclosure from 'https://esm.sh/@y14e/disclosure-css';
 
@@ -132,7 +132,7 @@ document.querySelectorAll('[data-disclosure]').forEach((element) => {
   disclosures.push(new Disclosure(element));
 });
 
-const destroy = document.querySelector('#destroy');
+const destroy = document.querySelector('.cleanup-or-destroy');
 
 destroy.addEventListener('click', () => {
   disclosures.forEach((disclosure) => {
