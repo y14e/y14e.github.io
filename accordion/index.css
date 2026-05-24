@@ -1,4 +1,4 @@
-@import '../common/stylesheets/common.css';
+@import '//y14e.github.io/common/stylesheets/common.css';
 
 [data-accordion] > * {
   background-color: rgb(0 0 0 / 0.1);
