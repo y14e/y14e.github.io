@@ -24,6 +24,8 @@ body {
   border-radius: 0.4rem;
   color: #e00;
   padding: 0.8rem 1.6rem;
+  transition-duration: 0.3s;
+  transition-property: background-color, color;
   &[disabled] {
     background-color: rgb(255 0 0 / 0.1);
     color: rgb(224 0 0 / 0.4);
