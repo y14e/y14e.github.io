@@ -1,18 +1,5 @@
-@import 'https://cdn.jsdelivr.net/npm/destyle.css@4.0.1/destyle.min.css';
-@import 'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap';
-:root {
-  font-size: 10px;
-}
-body {
-  background-color: #f6f6f6;
-  background-image: linear-gradient(90deg, rgb(221 238 246 / 0.5) 0.1rem, transparent 0.1rem), linear-gradient(180deg, rgb(221 238 246 / 0.5) 0.1rem, transparent 0.1rem);
-  background-size: 0.8rem 0.8rem;
-  font:
-    1.6rem / 1.5 Inter,
-    sans-serif;
-  font-feature-settings: 'palt';
-  padding: 3.2rem;
-}
+@import '//y14e.github.io/common/stylesheets/common.css';
+
 [role='tablist'] {
   --a: 0.4rem;
   --r1: 0.4rem;
@@ -193,11 +180,4 @@ body {
   div + & [data-tabs-indicator] {
     left: 0;
   }
-}
-
-#destroy {
-  background-color: rgb(255 0 0 / 0.2);
-  border-radius: 0.4rem;
-  color: #e00;
-  padding: 1.6rem;
 }
