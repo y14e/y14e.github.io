@@ -86,7 +86,7 @@
     <span data-tabs-indicator></span>
   </div>
 </div>
-<br><br><br><br><br>
+<div class="spacer"></div>
 <div data-tabs="manual">
   <div role="tablist">
     <button role="tab" type="button">Manual tab</button>
@@ -117,7 +117,7 @@
     <span data-tabs-indicator></span>
   </div>
 </div>
-<br><br><br><br><br>
+<div class="spacer"></div>
 <div data-tabs="vertical">
   <div role="tablist" aria-orientation="vertical">
     <button aria-selected="true" role="tab" type="button">Vertical tab</button>
@@ -164,8 +164,8 @@
     </div>
   </div>
 </div>
-<br><br><br><br><br>
-<button id="destroy" type="button">Destroy all tabs</button>
+<div class="spacer"></div>
+<button class="cleanup-or-destroy" type="button">Destroy all tabs</button>
 <script type="module">
 import Tabs from 'https://esm.sh/@y14e/tabs';
 
@@ -186,7 +186,7 @@ document.querySelectorAll('[data-tabs="vertical"]').forEach((element) => {
   }));
 });
 
-const destroy = document.querySelector('#destroy');
+const destroy = document.querySelector('.cleanup-or-destroy');
 
 destroy.addEventListener('click', () => {
   tabs.forEach((tab) => {
