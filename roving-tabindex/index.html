@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Roving Tabindex</title>
+<link href="./index.css" rel="stylesheet">
+</head>
+<body>
+<div class="stack">
+  <p>direction: 'horizontal', typeahead: true, wrap: true</p>
+  <div class="buttons -horizontal" id="horizontal-typeahead-wrap">
+    <a href="#">Link</a>
+    <button type="button">Apple</button>
+    <button type="button">Avocado</button>
+    <button type="button" disabled>Disabled</button>
+    <button type="button">Banana</button>
+    <a href="#">Link</a>
+    <button type="button">Blueberry</button>
+    <button type="button">Cherry</button>
+  </div>
+  <p><button class="cleanup-or-destroy" id="cleanup-1" type="button">Cleanup this roving</button></p>
+</div>
+<div class="spacer"></div>
+<div class="stack">
+  <p>direction: 'vertical', selector: 'button', typeahead: true, wrap: true</p>
+  <div class="buttons -vertical" id="vertical-selector-typeahead-wrap">
+    <a href="#">Link</a>
+    <button type="button">Apple</button>
+    <button type="button">Avocado</button>
+    <button type="button" disabled>Disabled</button>
+    <button type="button">Banana</button>
+    <a href="#">Link</a>
+    <button type="button">Blueberry</button>
+    <button type="button">Cherry</button>
+  </div>
+  <p><button class="cleanup-or-destroy" id="cleanup-2" type="button">Cleanup this roving</button></p>
+</div>
+<div class="spacer"></div>
+<div class="stack">
+  <p>direction: both (undefined), typeahead: false, wrap: false</p>
+  <div class="buttons -horizontal" id="both">
+    <a href="#">Link</a>
+    <button type="button">Apple</button>
+    <button type="button">Avocado</button>
+    <button type="button" disabled>Disabled</button>
+    <button type="button">Banana</button>
+    <a href="#">Link</a>
+    <button type="button">Blueberry</button>
+    <button type="button">Cherry</button>
+  </div>
+  <p><button class="cleanup-or-destroy" id="cleanup-3" type="button">Cleanup this roving</button></p>
+</div>
+<script type="module">
+import { createRovingTabIndex } from 'https://esm.sh/@y14e/roving-tabindex';
+
+const cleanupRoving1 = createRovingTabIndex(document.getElementById('horizontal-typeahead-wrap'), {
+  direction: 'horizontal',
+  typeahead: true,
+  wrap: true,
+});
+const cleanupRoving2 = createRovingTabIndex(document.getElementById('vertical-selector-typeahead-wrap'), {
+  direction: 'vertical',
+  selector: 'button',
+  typeahead: true,
+  wrap: true,
+});
+const cleanupRoving3 = createRovingTabIndex(document.getElementById('both'));
+
+document.getElementById('cleanup-1').addEventListener('click', (event) => {
+  cleanupRoving1();
+  const button = event.currentTarget;
+  button.disabled = true;
+  button.textContent = 'Cleaned up';
+});
+
+document.getElementById('cleanup-2').addEventListener('click', (event) => {
+  cleanupRoving2();
+  const button = event.currentTarget;
+  button.disabled = true;
+  button.textContent = 'Cleaned up';
+});
+
+document.getElementById('cleanup-3').addEventListener('click', (event) => {
+  cleanupRoving3();
+  const button = event.currentTarget;
+  button.disabled = true;
+  button.textContent = 'Cleaned up';
+});
+</script>
+</body>
+</html>
