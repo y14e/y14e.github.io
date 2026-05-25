@@ -22,8 +22,8 @@
 </div>
 <div class="spacer"></div>
 <div class="stack">
-  <p>direction: 'vertical', selector: 'button', typeahead: true, wrap: true</p>
-  <div class="buttons -vertical" id="vertical-selector-typeahead-wrap">
+  <p>direction: 'vertical', typeahead: true, wrap: true</p>
+  <div class="buttons -vertical" id="vertical-typeahead-wrap">
     <a href="#">Link</a>
     <button type="button">Apple</button>
     <button type="button">Avocado</button>
@@ -73,9 +73,8 @@ const cleanupRoving1 = createRovingTabIndex(document.getElementById('horizontal-
   typeahead: true,
   wrap: true,
 });
-const cleanupRoving2 = createRovingTabIndex(document.getElementById('vertical-selector-typeahead-wrap'), {
+const cleanupRoving2 = createRovingTabIndex(document.getElementById('vertical-typeahead-wrap'), {
   direction: 'vertical',
-  selector: 'button',
   typeahead: true,
   wrap: true,
 });
