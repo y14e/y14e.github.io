@@ -9,17 +9,12 @@
 .placeholder {
   background-color: #fff;
   border-radius: calc(infinity * 1px);
-  border: 0.2rem solid rgb(0 0 0 / 0.3);
+  border: 0.1rem dashed rgb(0 0 0 / 0.3);
   color: rgb(0 0 0 / 0.4);
   font-size: 1.2rem;
   font-weight: bold;
-  padding: 0.1rem 1rem;
+  padding: 0.2rem 1.1rem;
   width: fit-content;
-  &::after {
-    content: '↗';
-    display: inline-block;
-    margin-left: 0.4rem;
-  }
 }
 
 .host {
