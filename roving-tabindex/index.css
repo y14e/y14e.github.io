@@ -55,6 +55,9 @@
     &.pink {
       background-color: #c69;
       color: #fff;
+      &:hover {
+        background-color: #936;
+      }
     }
   }
 }
