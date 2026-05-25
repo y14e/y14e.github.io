@@ -50,6 +50,21 @@
   </div>
   <p><button class="cleanup-or-destroy" id="cleanup-3" type="button">Cleanup this roving</button></p>
 </div>
+<div class="spacer"></div>
+<div class="stack">
+  <p>direction: both (undefined), selector: '.pink', typeahead: true, wrap: true</p>
+  <div class="buttons -horizontal" id="both-selector-typeahead-wrap">
+    <a href="#">Link</a>
+    <button class="pink" type="button">Apple</button>
+    <button class="pink" type="button">Avocado</button>
+    <button type="button" disabled>Disabled</button>
+    <button type="button">Banana</button>
+    <a href="#">Link</a>
+    <button class="pink" type="button">Blueberry</button>
+    <button type="button">Cherry</button>
+  </div>
+  <p><button class="cleanup-or-destroy" id="cleanup-4" type="button">Cleanup this roving</button></p>
+</div>
 <script type="module">
 import { createRovingTabIndex } from 'https://esm.sh/@y14e/roving-tabindex';
 
@@ -65,6 +80,12 @@ const cleanupRoving2 = createRovingTabIndex(document.getElementById('vertical-se
   wrap: true,
 });
 const cleanupRoving3 = createRovingTabIndex(document.getElementById('both'));
+const cleanupRoving4 = createRovingTabIndex(document.getElementById('both-selector-typeahead-wrap'), {
+  direction: 'both',
+  selector: '.pink',
+  typeahead: true,
+  wrap: true,
+});
 
 document.getElementById('cleanup-1').addEventListener('click', (event) => {
   cleanupRoving1();
@@ -82,6 +103,13 @@ document.getElementById('cleanup-2').addEventListener('click', (event) => {
 
 document.getElementById('cleanup-3').addEventListener('click', (event) => {
   cleanupRoving3();
+  const button = event.currentTarget;
+  button.disabled = true;
+  button.textContent = 'Cleaned up';
+});
+
+document.getElementById('cleanup-4').addEventListener('click', (event) => {
+  cleanupRoving4();
   const button = event.currentTarget;
   button.disabled = true;
   button.textContent = 'Cleaned up';
