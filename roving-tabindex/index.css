@@ -52,7 +52,7 @@
   }
   button {
     background-color: rgb(0 0 0 / 0.2);
-    &.pink {
+    &.pink:not([disabled]) {
       background-color: #c69;
       color: #fff;
       &:hover {
