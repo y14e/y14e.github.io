@@ -37,23 +37,8 @@
 </div>
 <div class="spacer"></div>
 <div class="stack">
-  <p>direction: both (undefined), typeahead: false, wrap: false</p>
-  <div class="buttons -horizontal" id="both">
-    <a href="#">Link</a>
-    <button type="button">Apple</button>
-    <button type="button">Avocado</button>
-    <button type="button" disabled>Disabled</button>
-    <button type="button">Banana</button>
-    <a href="#">Link</a>
-    <button type="button">Blueberry</button>
-    <button type="button">Cherry</button>
-  </div>
-  <p><button class="cleanup-or-destroy" id="cleanup-3" type="button">Cleanup this roving</button></p>
-</div>
-<div class="spacer"></div>
-<div class="stack">
-  <p>direction: both (undefined), selector: '.pink', typeahead: true, wrap: true</p>
-  <div class="buttons -horizontal" id="both-selector-typeahead-wrap">
+  <p>selector: 'button.pink', typeahead: true, wrap: true</p>
+  <div class="buttons -horizontal" id="selector-typeahead-wrap">
     <a href="#">Link</a>
     <button class="pink" type="button">Apple</button>
     <button class="pink" type="button">Avocado</button>
@@ -61,6 +46,21 @@
     <button type="button">Banana</button>
     <a href="#">Link</a>
     <button class="pink" type="button">Blueberry</button>
+    <button type="button">Cherry</button>
+  </div>
+  <p><button class="cleanup-or-destroy" id="cleanup-3" type="button">Cleanup this roving</button></p>
+</div>
+<div class="spacer"></div>
+<div class="stack">
+  <p>No options</p>
+  <div class="buttons -horizontal" id="no-options">
+    <a href="#">Link</a>
+    <button type="button">Apple</button>
+    <button type="button">Avocado</button>
+    <button type="button" disabled>Disabled</button>
+    <button type="button">Banana</button>
+    <a href="#">Link</a>
+    <button type="button">Blueberry</button>
     <button type="button">Cherry</button>
   </div>
   <p><button class="cleanup-or-destroy" id="cleanup-4" type="button">Cleanup this roving</button></p>
@@ -79,12 +79,12 @@ const cleanupRoving2 = createRovingTabIndex(document.getElementById('vertical-se
   typeahead: true,
   wrap: true,
 });
-const cleanupRoving3 = createRovingTabIndex(document.getElementById('both'));
-const cleanupRoving4 = createRovingTabIndex(document.getElementById('both-selector-typeahead-wrap'), {
-  selector: '.pink',
+const cleanupRoving3 = createRovingTabIndex(document.getElementById('selector-typeahead-wrap'), {
+  selector: 'button.pink',
   typeahead: true,
   wrap: true,
 });
+const cleanupRoving4 = createRovingTabIndex(document.getElementById('no-options'));
 
 document.getElementById('cleanup-1').addEventListener('click', (event) => {
   cleanupRoving1();
