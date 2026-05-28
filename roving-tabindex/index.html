@@ -7,7 +7,7 @@
 </head>
 <body>
 <div class="stack">
-  <p>direction: 'horizontal', typeahead: true, wrap: true</p>
+  <p>direction: 'horizontal' / typeahead: true / wrap: true</p>
   <div class="buttons -horizontal" id="horizontal-typeahead-wrap">
     <a href="#">Link</a>
     <button type="button">Apple</button>
@@ -22,8 +22,8 @@
 </div>
 <div class="spacer"></div>
 <div class="stack">
-  <p>direction: 'vertical', typeahead: true, wrap: true</p>
-  <div class="buttons -vertical" id="vertical-typeahead-wrap">
+  <p>direction: 'vertical' / navigationOnly: true / typeahead: true / wrap: true</p>
+  <div class="buttons -vertical" id="vertical-navigationonly-typeahead-wrap">
     <a href="#">Link</a>
     <button type="button">Apple</button>
     <button type="button">Avocado</button>
@@ -37,7 +37,7 @@
 </div>
 <div class="spacer"></div>
 <div class="stack">
-  <p>selector: 'button.pink', typeahead: true, wrap: true</p>
+  <p>selector: 'button.pink' / typeahead: true / wrap: true</p>
   <div class="buttons -horizontal" id="selector-typeahead-wrap">
     <a href="#">Link</a>
     <button class="pink" type="button">Apple</button>
@@ -52,8 +52,8 @@
 </div>
 <div class="spacer"></div>
 <div class="stack">
-  <p>No options</p>
-  <div class="buttons -horizontal" id="no-options">
+  <p>navigationOnly: true</p>
+  <div class="buttons -horizontal" id="navigationonly">
     <a href="#">Link</a>
     <button type="button">Apple</button>
     <button type="button">Avocado</button>
@@ -65,6 +65,21 @@
   </div>
   <p><button class="cleanup-or-destroy" id="cleanup-4" type="button">Cleanup this roving</button></p>
 </div>
+<div class="spacer"></div>
+<div class="stack">
+  <p>No options</p>
+  <div class="buttons -horizontal" id="no-options">
+    <a href="#">Link</a>
+    <button type="button">Apple</button>
+    <button type="button">Avocado</button>
+    <button type="button" disabled>Disabled</button>
+    <button type="button">Banana</button>
+    <a href="#">Link</a>
+    <button type="button">Blueberry</button>
+    <button type="button">Cherry</button>
+  </div>
+  <p><button class="cleanup-or-destroy" id="cleanup-5" type="button">Cleanup this roving</button></p>
+</div>
 <script type="module">
 import { createRovingTabIndex } from 'https://esm.sh/@y14e/roving-tabindex';
 
@@ -73,8 +88,9 @@ const cleanupRoving1 = createRovingTabIndex(document.getElementById('horizontal-
   typeahead: true,
   wrap: true,
 });
-const cleanupRoving2 = createRovingTabIndex(document.getElementById('vertical-typeahead-wrap'), {
+const cleanupRoving2 = createRovingTabIndex(document.getElementById('vertical-navigationonly-typeahead-wrap'), {
   direction: 'vertical',
+  navigationOnly: true,
   typeahead: true,
   wrap: true,
 });
@@ -83,7 +99,10 @@ const cleanupRoving3 = createRovingTabIndex(document.getElementById('selector-ty
   typeahead: true,
   wrap: true,
 });
-const cleanupRoving4 = createRovingTabIndex(document.getElementById('no-options'));
+const cleanupRoving4 = createRovingTabIndex(document.getElementById('navigationonly'), {
+  navigationOnly: true,
+});
+const cleanupRoving5 = createRovingTabIndex(document.getElementById('no-options'));
 
 document.getElementById('cleanup-1').addEventListener('click', (event) => {
   cleanupRoving1();
@@ -108,6 +127,13 @@ document.getElementById('cleanup-3').addEventListener('click', (event) => {
 
 document.getElementById('cleanup-4').addEventListener('click', (event) => {
   cleanupRoving4();
+  const button = event.currentTarget;
+  button.disabled = true;
+  button.textContent = 'Cleaned up';
+});
+
+document.getElementById('cleanup-5').addEventListener('click', (event) => {
+  cleanupRoving5();
   const button = event.currentTarget;
   button.disabled = true;
   button.textContent = 'Cleaned up';
