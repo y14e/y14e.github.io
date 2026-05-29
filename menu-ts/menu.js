@@ -1,7 +1,7 @@
 /**
  * menu.ts
  *
- * @version 1.3.5
+ * @version 1.3.6
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -18,6 +18,7 @@ import {
   offset,
   shift,
 } from 'https://esm.sh/@floating-ui/dom';
+import { addTokenToAttribute } from 'https://esm.sh/@y14e/attributes-utils';
 import { createPortal } from 'https://esm.sh/@y14e/portal';
 // -----------------------------------------------------------------------------
 // APIs
@@ -544,23 +545,22 @@ export default class Menu {
         if (!this.#listElement) {
           throw new Error('Unreachable');
         }
-        const { style: listStyle } = this.#listElement;
+        const { style } = this.#listElement;
         if (!isOpen) {
           this.#cleanupPortal?.();
           this.#cleanupPortal = null;
           this.#listElement.removeAttribute('data-menu-placement');
-          listStyle.setProperty('display', 'none');
-          listStyle.removeProperty('left');
-          listStyle.removeProperty('top');
-          listStyle.removeProperty('transform-origin');
+          style.setProperty('display', 'none');
+          ['left', 'top', 'transform-origin'].forEach((name) => {
+            style.removeProperty(name);
+          });
           if (this.#arrowElement) {
-            const { style: arrowStyle } = this.#arrowElement;
-            arrowStyle.removeProperty('left');
-            arrowStyle.removeProperty('rotate');
-            arrowStyle.removeProperty('top');
+            ['left', 'top', 'rotate'].forEach((name) => {
+              this.#arrowElement?.style.removeProperty(name);
+            });
           }
         }
-        listStyle.removeProperty('opacity');
+        style.removeProperty('opacity');
       },
       { once: true, signal },
     );
@@ -714,13 +714,6 @@ export default class Menu {
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
-function addTokenToAttribute(element, attribute, token) {
-  const tokens = new Set(
-    element.getAttribute(attribute)?.trim().split(/\s+/) ?? [],
-  );
-  tokens.add(token);
-  element.setAttribute(attribute, [...tokens].join(' '));
-}
 function getActiveElement() {
   let current = document.activeElement;
   while (current?.shadowRoot?.activeElement) {
