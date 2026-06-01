@@ -1,7 +1,7 @@
 /**
  * menu.ts
  *
- * @version 1.3.6
+ * @version 1.3.7
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -18,7 +18,11 @@ import {
   offset,
   shift,
 } from 'https://esm.sh/@floating-ui/dom';
-import { addTokenToAttribute } from 'https://esm.sh/@y14e/attributes-utils';
+import {
+  addTokenToAttribute,
+  restoreAttributes,
+  saveAttributes,
+} from 'https://esm.sh/@y14e/attributes-utils';
 import { createPortal } from 'https://esm.sh/@y14e/portal';
 // -----------------------------------------------------------------------------
 // APIs
@@ -105,10 +109,8 @@ export default class Menu {
       return;
     }
     this.#itemElements.forEach((item) => {
-      const shortcuts = item.ariaKeyShortcuts;
-      const keys = (
-        shortcuts?.split(/\s+/) ?? [item.textContent?.trim()[0] ?? '']
-      )
+      const value = item.ariaKeyShortcuts;
+      const keys = (value?.split(/\s+/) ?? [item.textContent?.trim()[0] ?? ''])
         .filter((key) => /^\S$/i.test(key))
         .map((key) => key.toLowerCase());
       keys.forEach((key) => {
@@ -117,7 +119,10 @@ export default class Menu {
         this.#itemElementsByFirstChar.set(key, items);
       });
       const first = keys[0];
-      !shortcuts && first && item.setAttribute('aria-keyshortcuts', first);
+      if (!value && first) {
+        saveAttributes([item], ['aria-keyshortcuts']);
+        item.setAttribute('aria-keyshortcuts', first);
+      }
       const role = item.role;
       if (role === 'menuitemcheckbox') {
         this.#checkboxItemElements.push(item);
@@ -179,6 +184,11 @@ export default class Menu {
     }
     this.#animation?.cancel();
     this.#animation = null;
+    restoreAttributes([
+      this.#triggerElement,
+      this.#listElement,
+      ...this.#itemElements,
+    ]);
     this.#triggerElement = null;
     this.#listElement = null;
     this.#itemElements.length = 0;
@@ -204,7 +214,19 @@ export default class Menu {
     if (!this.#listElement) {
       throw new Error('Unreachable');
     }
+    saveAttributes([this.#listElement], ['aria-labelledby', 'id', 'role']);
     if (this.#triggerElement) {
+      saveAttributes(
+        [this.#triggerElement],
+        [
+          'aria-controls',
+          'aria-disabled',
+          'aria-expanded',
+          'aria-haspopup',
+          'id',
+          'tabindex',
+        ],
+      );
       const id = Math.random().toString(36).slice(-8);
       this.#listElement.id ||= `menu-list-${id}`;
       addTokenToAttribute(
@@ -239,6 +261,13 @@ export default class Menu {
     this.#listElement.addEventListener('keydown', this.#onListKeyDown, {
       signal,
     });
+    saveAttributes(this.#itemElements, [
+      'aria-disabled',
+      'data-menu-disabled',
+      'role',
+      'style',
+      'tabindex',
+    ]);
     this.#itemElements.forEach((item) => {
       const parent = item.parentElement;
       if (parent?.querySelector(this.#settings.selector.list)) {
