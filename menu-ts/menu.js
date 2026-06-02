@@ -1,7 +1,7 @@
 /**
  * menu.ts
  *
- * @version 1.3.7
+ * @version 1.3.8
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -381,6 +381,12 @@ export default class Menu {
     if (key === 'Tab' && ((!this.#triggerElement && shiftKey) || !shiftKey)) {
       return;
     }
+    if (shiftKey && key === 'Tab') {
+      this.close();
+      requestAnimationFrame(() => this.#triggerElement?.focus());
+      return;
+    }
+    console.log;
     if (
       ![
         'Enter',
