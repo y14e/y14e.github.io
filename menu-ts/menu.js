@@ -224,6 +224,7 @@ export default class Menu {
           'aria-expanded',
           'aria-haspopup',
           'id',
+          'style',
           'tabindex',
         ],
       );
@@ -386,7 +387,6 @@ export default class Menu {
       requestAnimationFrame(() => this.#triggerElement?.focus());
       return;
     }
-    console.log;
     if (
       ![
         'Enter',
