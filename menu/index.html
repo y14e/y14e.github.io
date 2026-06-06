@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>menu.ts</title>
+<title>Menu</title>
 <link href="./index.css" rel="stylesheet">
 </head>
 <body>
@@ -150,7 +150,7 @@
     </ul>
   </div>
 </div>
-<br><br><br><br><br>
+<div class="spacer"></div>
 <div class="menu">
   <div data-menu>
     <button data-menu-trigger type="button">Button</button>
@@ -295,12 +295,11 @@
     </ul>
   </div>
 </div>
-<a id="anchor"></a>
-<br><br><br><br><br>
-<button id="destroy" type="button">Destroy all menus</button>
+<div class="spacer"></div>
+<button class="cleanup-or-destroy" type="button">Destroy all menus</button>
 <script type="module">
 import { flip, offset, shift } from 'https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.7.6/+esm';
-import Menu from './menu.js';
+import Menu from 'https://esm.sh/@y14e/menu';
 
 const menus = [];
 const myMenuOptions = {
@@ -327,7 +326,7 @@ document.querySelectorAll('[data-menu]').forEach((element) => {
   window.addEventListener('blur', () => myMenu.close());
 });
 
-const destroy = document.querySelector('#destroy');
+const destroy = document.querySelector('.cleanup-or-destroy');
 
 destroy.addEventListener('click', () => {
   menus.forEach((menu) => {
