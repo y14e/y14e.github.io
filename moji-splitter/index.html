@@ -20,9 +20,9 @@ import { createMojiSplitter } from 'https://esm.sh/moji-splitter';
 
 const cleanups = [];
 cleanups.push(createMojiSplitter(document.querySelector('[data-moji-splitter="1"]')));
-cleanups.push(createMojiSplitter(document.querySelector('[data-moji-splitter="2"]'), { lineBreakingRules: false }));
+cleanups.push(createMojiSplitter(document.querySelector('[data-moji-splitter="2"]'), { nolineBreakingRules: true }));
 cleanups.push(createMojiSplitter(document.querySelector('[data-moji-splitter="3"]')));
-cleanups.push(createMojiSplitter(document.querySelector('[data-moji-splitter="4"]'), { lineBreakingRules: false }));
+cleanups.push(createMojiSplitter(document.querySelector('[data-moji-splitter="4"]'), { nolineBreakingRules: true }));
 window.addEventListener('load', () => {
   document.querySelectorAll('[data-moji-splitter]').forEach((element) => {
     element.classList.add('is-animate');
