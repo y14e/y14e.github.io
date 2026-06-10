@@ -302,28 +302,33 @@ import { flip, offset, shift } from 'https://cdn.jsdelivr.net/npm/@floating-ui/d
 import Menu from 'https://esm.sh/@y14e/menu';
 
 const menus = [];
-const myMenuOptions = {
+const options = {
   popover: {
-    menu: { middleware: [flip({ padding: 4 }), offset(8), shift()] },
-    submenu: { middleware: [flip(), offset({ alignmentAxis: -4 }), shift({ mainAxis: false })] },
+    menu: { middleware: [flip({ padding: 32 }), offset(8)] },
+    submenu: { middleware: [flip({ padding: 32 }), offset({ alignmentAxis: -4 })] },
   },
 };
+
 document.querySelectorAll('[data-menu]').forEach((element) => {
-  const myMenu = new Menu(element, myMenuOptions);
-  menus.push(myMenu);
+  const menu = new Menu(element, options);
+  menus.push(menu);
+
   element.querySelectorAll('[role="menuitem"]:not([aria-haspopup])').forEach((item) => {
     item.addEventListener('click', () => {
       console.log(item.textContent);
-      myMenu.close();
+      menu.close();
     });
   });
+
   element.querySelectorAll('[role="menuitemcheckbox"]').forEach((item) => {
     item.addEventListener('click', () => console.log([...(item.closest('[role="group"]') || item.closest('[role="menu"]')).querySelectorAll('[role="menuitemcheckbox"]')].filter((item) => item.getAttribute('aria-checked') === 'true').map((item) => item.textContent)));
   });
+
   element.querySelectorAll('[role="menuitemradio"]').forEach((item) => {
     item.addEventListener('click', () => console.log([...(item.closest('[role="group"]') || item.closest('[role="menu"]')).querySelectorAll('[role="menuitemradio"]')].filter((item) => item.getAttribute('aria-checked') === 'true').map((item) => item.textContent)));
   });
-  window.addEventListener('blur', () => myMenu.close());
+
+  window.addEventListener('blur', () => menu.close());
 });
 
 const destroy = document.querySelector('.cleanup-or-destroy');
