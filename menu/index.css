@@ -12,6 +12,7 @@
   }
   */
 }
+
 [data-menu-trigger] {
   align-items: center;
   background-color: rgb(0 0 0 / 0.2);
@@ -42,6 +43,7 @@
     background-color: rgb(0 0 0 / 0.3);
   }
 }
+
 [role='menu'] {
   background-color: #fff;
   border-radius: 0.4rem;
@@ -64,6 +66,7 @@
     display: none;
   }
 }
+
 [role^='menuitem'] {
   border-radius: 0.4rem;
   cursor: pointer;
@@ -99,6 +102,7 @@
     background-color: rgb(0 0 0 / 0.1);
   }
 }
+
 :is([role='menuitemcheckbox'], [role='menuitemradio']) {
   align-items: center;
   display: flex;
@@ -114,18 +118,22 @@
     opacity: 1;
   }
 }
+
 [role='menuitemcheckbox']::before {
   clip-path: polygon(0 50%, 20% 50%, 32.5% 72.5%, 35% 75%, 80% 0, 100% 0, 40% 100%, 30% 100%);
 }
+
 [role='menuitemradio']::before {
   clip-path: circle(30%);
 }
+
 hr {
   background-color: rgb(0 0 0 / 0.1);
   border: 0;
   height: 0.1rem;
   margin: 0.8rem 1.6rem;
 }
+
 [data-menu-arrow] {
   aspect-ratio: 1;
   background-color: #fff;
