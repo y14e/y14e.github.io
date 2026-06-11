@@ -12,7 +12,7 @@
   }
   */
 }
-[data-menu] [data-menu-trigger] {
+[data-menu-trigger] {
   align-items: center;
   background-color: rgb(0 0 0 / 0.2);
   border-radius: 0.4rem;
@@ -125,15 +125,6 @@ hr {
   border: 0;
   height: 0.1rem;
   margin: 0.8rem 1.6rem;
-}
-[data-context-menu] [data-menu-trigger] {
-  border: 0.2rem solid rgb(0 0 0 / 0.1);
-  border-radius: 0.4rem;
-  cursor: context-menu;
-  padding: 15.6rem 7.6rem;
-  text-align: center;
-  -webkit-user-select: none;
-  user-select: none;
 }
 [data-menu-arrow] {
   aspect-ratio: 1;
