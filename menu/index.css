@@ -56,7 +56,7 @@
   &[data-portaled] {
     display: none;
     position: absolute;
-    transition: 0.3s transform;
+    transition: 0.3s transform cubic-bezier(0.33, 1, 0.68, 1);
     z-index: calc(infinity);
   }
   &:not([data-menu-open]):not([data-menu] > &) {
