@@ -58,9 +58,9 @@
     position: absolute;
     transition: 0.3s transform;
     z-index: calc(infinity);
-    &:not([data-menu-open]) {
-      transform: scale(0.9);
-    }
+  }
+  &:not([data-menu-open]):not([data-menu] > &) {
+    transform: scale(0.9);
   }
   & & {
     display: none;
