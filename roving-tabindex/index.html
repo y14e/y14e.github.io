@@ -98,35 +98,35 @@
 <script type="module">
 import { createRovingTabIndex } from 'https://esm.sh/@y14e/roving-tabindex';
 
-const cleanupRoving1 = createRovingTabIndex(document.getElementById('horizontal-typeahead-wrap'), {
+const cleanups = [];
+cleanups.push(createRovingTabIndex(document.getElementById('horizontal-typeahead-wrap'), {
   direction: 'horizontal',
   typeahead: true,
   wrap: true,
-});
-const cleanupRoving2 = createRovingTabIndex(document.getElementById('vertical-navigationonly-typeahead-wrap'), {
+}));
+cleanups.push(createRovingTabIndex(document.getElementById('vertical-navigationonly-typeahead-wrap'), {
   direction: 'vertical',
   navigationOnly: true,
   typeahead: true,
   wrap: true,
-});
-const cleanupRoving3 = createRovingTabIndex(document.getElementById('selector-typeahead-wrap'), {
+}));
+cleanups.push(createRovingTabIndex(document.getElementById('selector-typeahead-wrap'), {
   selector: 'button.pink',
   typeahead: true,
   wrap: true,
-});
-const cleanupRoving4 = createRovingTabIndex(document.getElementById('navigationonly'), {
+}));
+cleanups.push(createRovingTabIndex(document.getElementById('navigationonly'), {
   navigationOnly: true,
-});
-const cleanupRoving5 = createRovingTabIndex(document.getElementById('nomemory'), {
+}));
+cleanups.push(createRovingTabIndex(document.getElementById('nomemory'), {
   noMemory: true,
-});
-const cleanupRoving6 = createRovingTabIndex(document.getElementById('no-options'));
+}));
+cleanups.push(createRovingTabIndex(document.getElementById('no-options')));
 const buttons = document.querySelectorAll('.cleanup-or-destroy');
 
-for (let i = 1; i <= buttons.length; i++) {
-  document.getElementById(`cleanup-${i}`).addEventListener('click', (event) => {
-    const fn = window[`cleanupRoving${i}`];
-    fn();
+for (let i = 0; i < buttons.length; i++) {
+  document.getElementById(`cleanup-${i + 1}`).addEventListener('click', (event) => {
+    cleanups[i]();
     const button = event.currentTarget;
     button.disabled = true;
     button.textContent = 'Cleaned up';
