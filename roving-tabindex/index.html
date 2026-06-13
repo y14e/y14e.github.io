@@ -125,7 +125,8 @@ const buttons = document.querySelectorAll('.cleanup-or-destroy');
 
 for (let i = 1; i <= buttons.length; i++) {
   document.getElementById(`cleanup-${i}`).addEventListener('click', (event) => {
-    window[`cleanupRoving${i}`]();
+    const fn = window[`cleanupRoving${i}`];
+    fn();
     const button = event.currentTarget;
     button.disabled = true;
     button.textContent = 'Cleaned up';
