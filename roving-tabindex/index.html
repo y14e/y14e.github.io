@@ -67,6 +67,21 @@
 </div>
 <div class="spacer"></div>
 <div class="stack">
+  <p>noMemory: true</p>
+  <div class="buttons -horizontal" id="nomemory">
+    <a href="#">Link</a>
+    <button type="button">Apple</button>
+    <button type="button">Avocado</button>
+    <button type="button" disabled>Disabled</button>
+    <button type="button">Banana</button>
+    <a href="#">Link</a>
+    <button type="button">Blueberry</button>
+    <button type="button">Cherry</button>
+  </div>
+  <p><button class="cleanup-or-destroy" id="cleanup-5" type="button">Cleanup this roving</button></p>
+</div>
+<div class="spacer"></div>
+<div class="stack">
   <p>No options</p>
   <div class="buttons -horizontal" id="no-options">
     <a href="#">Link</a>
@@ -78,7 +93,7 @@
     <button type="button">Blueberry</button>
     <button type="button">Cherry</button>
   </div>
-  <p><button class="cleanup-or-destroy" id="cleanup-5" type="button">Cleanup this roving</button></p>
+  <p><button class="cleanup-or-destroy" id="cleanup-6" type="button">Cleanup this roving</button></p>
 </div>
 <script type="module">
 import { createRovingTabIndex } from 'https://esm.sh/@y14e/roving-tabindex';
@@ -102,42 +117,20 @@ const cleanupRoving3 = createRovingTabIndex(document.getElementById('selector-ty
 const cleanupRoving4 = createRovingTabIndex(document.getElementById('navigationonly'), {
   navigationOnly: true,
 });
-const cleanupRoving5 = createRovingTabIndex(document.getElementById('no-options'));
-
-document.getElementById('cleanup-1').addEventListener('click', (event) => {
-  cleanupRoving1();
-  const button = event.currentTarget;
-  button.disabled = true;
-  button.textContent = 'Cleaned up';
+const cleanupRoving5 = createRovingTabIndex(document.getElementById('nomemory'), {
+  noMemory: true,
 });
+const cleanupRoving6 = createRovingTabIndex(document.getElementById('no-options'));
+const buttons = document.querySelectorAll('.cleanup-or-destroy');
 
-document.getElementById('cleanup-2').addEventListener('click', (event) => {
-  cleanupRoving2();
-  const button = event.currentTarget;
-  button.disabled = true;
-  button.textContent = 'Cleaned up';
-});
-
-document.getElementById('cleanup-3').addEventListener('click', (event) => {
-  cleanupRoving3();
-  const button = event.currentTarget;
-  button.disabled = true;
-  button.textContent = 'Cleaned up';
-});
-
-document.getElementById('cleanup-4').addEventListener('click', (event) => {
-  cleanupRoving4();
-  const button = event.currentTarget;
-  button.disabled = true;
-  button.textContent = 'Cleaned up';
-});
-
-document.getElementById('cleanup-5').addEventListener('click', (event) => {
-  cleanupRoving5();
-  const button = event.currentTarget;
-  button.disabled = true;
-  button.textContent = 'Cleaned up';
-});
+for (let i = 1; i <= buttons.length; i++) {
+  document.getElementById(`cleanup-${i}`).addEventListener('click', (event) => {
+    window[`cleanupRoving${i}`]();
+    const button = event.currentTarget;
+    button.disabled = true;
+    button.textContent = 'Cleaned up';
+  });
+}
 </script>
 </body>
 </html>
