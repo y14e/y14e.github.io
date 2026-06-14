@@ -1,4 +1,4 @@
-@import "//y14e.github.io/common/stylesheets/common.css";
+@import '//y14e.github.io/common/stylesheets/common.css';
 
 .path-bar {
   ol {
@@ -13,7 +13,7 @@
   a {
     display: block;
     padding-inline: 0.8rem;
-    &:has(~ [data-menu]) {
+    &:has(~ [data-menu-trigger]) {
       padding-right: 3.2rem;
       margin-right: -3.2rem;
     }
@@ -33,12 +33,12 @@
     aspect-ratio: 1;
     background-color: currentColor;
     clip-path: polygon(0 30%, 25% 30%, 50% 55%, 75% 30%, 100% 30%, 50% 80%);
-    content: "";
+    content: '';
     transition: 0.3s rotate;
     rotate: -90deg;
     width: 1rem;
   }
-  [aria-expanded="true"] + * & {
+  [aria-expanded='true'] + & {
     background-color: rgb(0 0 0 / 0.1);
     &::after {
       rotate: 0deg;
@@ -48,7 +48,7 @@
     background-color: rgb(0 0 0 / 0.1);
   }
 }
-[role="menu"] {
+[role='menu'] {
   background-color: #fff;
   border-radius: 0.4rem;
   box-shadow:
@@ -70,7 +70,7 @@
     display: none;
   }
 }
-[role^="menuitem"] {
+[role^='menuitem'] {
   border-radius: 0.4rem;
   cursor: pointer;
   display: block;
@@ -91,7 +91,7 @@
       aspect-ratio: 1;
       background-color: currentColor;
       clip-path: polygon(30% 0%, 80% 50%, 30% 100%, 30% 75%, 55% 50%, 30% 25%);
-      content: "";
+      content: '';
       width: 1rem;
     }
   }
@@ -101,7 +101,7 @@
   &:hover {
     background-color: rgb(0 0 0 / 0.1);
   }
-  &[aria-expanded="true"] {
+  &[aria-expanded='true'] {
     background-color: rgb(0 0 0 / 0.1);
   }
 }
@@ -116,10 +116,10 @@
   [data-portaled] > & {
     visibility: visible;
   }
-  [data-menu-placement^="top"] & {
+  [data-menu-placement^='top'] & {
     box-shadow: -0.1rem -0.1rem 0.1rem rgb(0 0 0 / 0.2);
   }
-  :is([data-menu-placement^="left"], [data-menu-placement^="right"]) & {
+  :is([data-menu-placement^='left'], [data-menu-placement^='right']) & {
     margin-top: 4px;
   }
 }
