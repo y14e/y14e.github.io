@@ -2,11 +2,11 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>Path Bar</title>
+<title>Path</title>
 <link href="./index.css" rel="stylesheet">
 </head>
 <body>
-<nav class="path-bar">
+<nav class="path">
   <ol>
     <li>
       <a href="../../../..">Home</a>
@@ -57,7 +57,7 @@
 <div class="spacer"></div>
 <div class="spacer"></div>
 <div class="spacer"></div>
-<nav class="path-bar">
+<nav class="path">
   <ol>
     <li>
       <a href="../../../..">
@@ -109,22 +109,22 @@
   </ol>
 </nav>
 <div class="spacer"></div>
-<button class="cleanup-or-destroy" type="button">Destroy all path bars</button>
+<button class="cleanup-or-destroy" type="button">Destroy all paths</button>
 <script type="module">
-import PathBar, { flip, offset, shift } from 'https://esm.sh/@y14e/path-bar';
+import Path, { flip, offset, shift } from './index.js';
 
-const pathBars = [];
+const paths = [];
 const options = { popover: { middleware: [flip({ padding: 32 }), offset(8)] } };
 
-document.querySelectorAll('.path-bar').forEach((pathBar) => {
-  pathBars.push(new PathBar(pathBar, options));
+document.querySelectorAll('.path').forEach((element) => {
+  paths.push(new Path(element, options));
 });
 
 const destroy = document.querySelector('.cleanup-or-destroy');
 
 destroy.addEventListener('click', () => {
-  pathBars.forEach((pathBar) => {
-    pathBar.destroy();
+  paths.forEach((path) => {
+    path.destroy();
   });
 
   destroy.disabled = true;
