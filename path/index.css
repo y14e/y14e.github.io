@@ -1,6 +1,6 @@
 @import '//y14e.github.io/common/stylesheets/common.css';
 
-.path-bar {
+.path {
   ol {
     display: flex;
     flex-wrap: wrap;

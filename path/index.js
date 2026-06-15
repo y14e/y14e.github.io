@@ -4180,7 +4180,7 @@ function isUngroupedRadio4(element) {
 }
 
 // src/index.ts
-var PathBar = class _PathBar {
+var Path = class _Path {
   static defaults = {};
   #rootElement;
   #defaults = {
@@ -4215,12 +4215,12 @@ var PathBar = class _PathBar {
     if (!(root instanceof HTMLElement)) {
       throw new TypeError("Invalid root element");
     }
-    if (root.hasAttribute("data-path-bar-initialized")) {
+    if (root.hasAttribute("data-path-initialized")) {
       console.warn("Already initialized");
       return;
     }
     this.#rootElement = root;
-    this.#defaults = this.#mergeOptions(this.#defaults, _PathBar.defaults);
+    this.#defaults = this.#mergeOptions(this.#defaults, _Path.defaults);
     this.#settings = this.#mergeOptions(this.#defaults, options);
     matchMedia("(prefers-reduced-motion: reduce)").matches && Object.assign(this.#settings.animation, { duration: 0 });
     const { selector } = this.#settings;
@@ -4268,7 +4268,7 @@ var PathBar = class _PathBar {
     }
     this.#listElement = null;
     this.#itemElements.length = 0;
-    this.#rootElement.removeAttribute("data-path-bar-initialized");
+    this.#rootElement.removeAttribute("data-path-initialized");
   }
   #initialize() {
     this.#controller = new AbortController();
@@ -4309,7 +4309,7 @@ var PathBar = class _PathBar {
       selector: `${this.#settings.selector.list} > * > a`,
       wrap: true
     });
-    this.#rootElement.setAttribute("data-path-bar-initialized", "");
+    this.#rootElement.setAttribute("data-path-initialized", "");
   }
   #onFocusIn = (event) => {
     if (!this.#autoOpen && !this.#hasOpenMenu()) {
@@ -4394,15 +4394,15 @@ function createBinding(link, menu) {
   return { link, menu };
 }
 /**
- * Path Bar
+ * Path
  * Breadcrumb-style path bar implementation in TypeScript.
  * Supports keyboard navigation, integrated menus, and seamless menu traversal.
  *
- * @version 1.0.3
+ * @version 1.0.4
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
- * @see {@link https://github.com/y14e/path-bar}
+ * @see {@link https://github.com/y14e/path}
  */
 /*! Bundled license information:
 
@@ -4574,4 +4574,4 @@ power-focusable/dist/index.js:
    *)
 */
 
-export { PathBar as default, flip2 as flip, offset2 as offset, shift2 as shift };
+export { Path as default, flip2 as flip, offset2 as offset, shift2 as shift };
