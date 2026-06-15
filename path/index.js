@@ -1447,60 +1447,6 @@ function saveAttributes(elements, attributes) {
     });
   });
 }
-var Button = class {
-  #element;
-  #controller = null;
-  #isDestroyed = false;
-  constructor(element) {
-    if (!(element instanceof HTMLElement)) {
-      throw new TypeError("Invalid element");
-    }
-    if (element.hasAttribute("data-button-initialized")) {
-      console.warn("Already initialized");
-      return;
-    }
-    this.#element = element;
-    this.#initialize();
-  }
-  destroy() {
-    if (this.#isDestroyed) {
-      return;
-    }
-    this.#isDestroyed = true;
-    this.#controller?.abort();
-    this.#controller = null;
-    this.#element.removeAttribute("data-button-initialized");
-  }
-  #initialize() {
-    this.#controller = new AbortController();
-    this.#element.addEventListener("keydown", this.#onKeyDown, {
-      signal: this.#controller.signal
-    });
-    this.#element.setAttribute("data-button-initialized", "");
-  }
-  #onKeyDown = (event) => {
-    const { key, altKey, ctrlKey, metaKey, shiftKey } = event;
-    if (altKey || ctrlKey || metaKey || shiftKey) {
-      return;
-    }
-    if (!["Enter", " "].includes(key)) {
-      return;
-    }
-    const active = getActiveElement();
-    if (!(active instanceof HTMLElement)) {
-      return;
-    }
-    event.preventDefault();
-    active.click();
-  };
-};
-function getActiveElement() {
-  let current = document.activeElement;
-  while (current?.shadowRoot?.activeElement) {
-    current = current.shadowRoot.activeElement;
-  }
-  return current;
-}
 var snapshots2 = /* @__PURE__ */ new WeakMap();
 function restoreAttributes2(elements) {
   for (const element of elements) {
@@ -1651,7 +1597,7 @@ function getRelativeFocusable(container, offset3, options) {
     container = document.body;
   }
   let {
-    anchor = getActiveElement2(),
+    anchor = getActiveElement(),
     composed = false,
     filter,
     include,
@@ -1660,7 +1606,7 @@ function getRelativeFocusable(container, offset3, options) {
     wrap = false
   } = options;
   if (!(anchor instanceof Element)) {
-    const active = getActiveElement2();
+    const active = getActiveElement();
     if (active instanceof Element) {
       console.warn("Invalid anchor element. Fallback: active element.");
       anchor = active;
@@ -1835,7 +1781,7 @@ function getComposedChildren(node) {
   }
   return getChildren(node);
 }
-function getActiveElement2() {
+function getActiveElement() {
   let current = document.activeElement;
   while (current?.shadowRoot?.activeElement) {
     current = current.shadowRoot.activeElement;
@@ -1988,7 +1934,7 @@ var Portal = class {
     if (key !== "Tab" || altKey || ctrlKey || metaKey) {
       return;
     }
-    const active = getActiveElement22();
+    const active = getActiveElement2();
     if (!(active instanceof Element)) {
       return;
     }
@@ -2073,7 +2019,7 @@ function containsComposed2(container, element) {
 function focusElement(element) {
   "focus" in element && typeof element.focus === "function" && element.focus();
 }
-function getActiveElement22() {
+function getActiveElement2() {
   let current = document.activeElement;
   while (current?.shadowRoot?.activeElement) {
     current = current.shadowRoot.activeElement;
@@ -2664,7 +2610,6 @@ var Menu = class _Menu {
   #cleanupRovingTabIndex = null;
   #timers = [];
   #animation = null;
-  #buttons = [];
   #submenus = [];
   #submenuTimer;
   #isDestroyed = false;
@@ -2759,10 +2704,6 @@ var Menu = class _Menu {
     });
     this.#timers.length = 0;
     this.#clearSubmenuTimer();
-    this.#buttons.forEach((button) => {
-      button.destroy();
-    });
-    this.#buttons.length = 0;
     _Menu.#menus = _Menu.#menus.filter((menu) => menu !== this);
     this.#submenus && await Promise.all(this.#submenus.map((submenu) => submenu.destroy()));
     if (!force) {
@@ -2847,7 +2788,6 @@ var Menu = class _Menu {
         }
       );
       addTokenToAttribute(this.#listElement, "aria-labelledby", trigger.id);
-      this.#buttons.push(new Button(trigger));
     }
     this.#listElement.setAttribute("role", "menu");
     this.#listElement.addEventListener("keydown", this.#onListKeyDown, {
@@ -2926,21 +2866,33 @@ var Menu = class _Menu {
       return;
     }
     if (![
+      "Enter",
       "Escape",
+      " ",
       ...this.#isSubmenu ? ["ArrowRight"] : ["ArrowUp", "ArrowDown"]
     ].includes(key)) {
       return;
     }
-    if (key === "Escape") {
-      this.#closeAndFocusTrigger();
-      return;
-    }
     event.preventDefault();
     event.stopPropagation();
-    const isArrowUp = key === "ArrowUp";
-    this.isOpen() ? this.#itemElements.filter(isFocusable3).at(isArrowUp ? -1 : 0)?.focus() : this.#toggle(true, {
-      initialFocus: isArrowUp ? "last" : "first"
-    });
+    switch (key) {
+      case "Enter":
+      case " ":
+        this.#triggerElement?.dispatchEvent(new PointerEvent("pointerdown"));
+        break;
+      case "Escape":
+        this.#closeAndFocusTrigger();
+        break;
+      case "ArrowUp":
+      case "ArrowRight":
+      case "ArrowDown": {
+        const isArrowUp = key === "ArrowUp";
+        this.isOpen() ? this.#itemElements.filter(isFocusable3).at(isArrowUp ? -1 : 0)?.focus() : this.#toggle(true, {
+          initialFocus: isArrowUp ? "last" : "first"
+        });
+        break;
+      }
+    }
   };
   #onTriggerPointerDown = (event) => {
     event.preventDefault();
@@ -2949,15 +2901,9 @@ var Menu = class _Menu {
       this.#isSubmenu ? event.currentTarget === this.#triggerElement : trigger?.ariaExpanded !== "true",
       { initialFocus: false }
     );
-    if (trigger) {
-      trigger.style.setProperty("outline", "0");
-      trigger.focus();
-    }
+    trigger?.focus({ focusVisible: false });
   };
   #onListKeyDown = (event) => {
-    this.#itemElements.forEach((item) => {
-      item.style.removeProperty("outline");
-    });
     if (this.#handleExitKeys(event, true)) {
       return;
     }
@@ -3001,8 +2947,7 @@ var Menu = class _Menu {
       this.#submenus.forEach((submenu) => {
         submenu.#toggle(submenu.#triggerElement === item);
       });
-      item.style.setProperty("outline", "0");
-      item.focus();
+      item.focus({ focusVisible: false });
     }, this.#settings.delay);
   };
   #onItemPointerLeave = () => {
@@ -3063,7 +3008,6 @@ var Menu = class _Menu {
       initialFocus && this.#itemElements.filter(isFocusable3).at(initialFocus === "first" ? 0 : -1)?.focus();
     } else {
       this.#clearSubmenuTimer();
-      trigger?.style.removeProperty("outline");
       restoreFocus && this.#focusTrigger();
     }
     if (!this.#triggerElement) {
@@ -4412,7 +4356,7 @@ function createBinding(link, menu) {
    * WAI-ARIA compliant menu (menu button) pattern implementation in TypeScript.
    * Supports checkbox item, radio item, and infinitely nested menus.
    *
-   * @version 1.7.3
+   * @version 1.7.4
    * @author Yusuke Kamiyamane
    * @license MIT
    * @copyright Copyright (c) Yusuke Kamiyamane
@@ -4429,17 +4373,6 @@ function createBinding(link, menu) {
      * @license MIT
      * @copyright Copyright (c) Yusuke Kamiyamane
      * @see {@link https://github.com/y14e/attributes-utils}
-     *)
-  
-  @y14e/button/dist/index.js:
-    (**
-     * Button
-     *
-     * @version 1.0.0
-     * @author Yusuke Kamiyamane
-     * @license MIT
-     * @copyright Copyright (c) Yusuke Kamiyamane
-     * @see {@link https://github.com/y14e/button}
      *)
   
   @y14e/portal/dist/index.js:
