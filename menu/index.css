@@ -17,6 +17,7 @@
   &[data-menu-focus-within] {
     border-radius: 0.4rem;
     outline-style: solid;
+    outline-width: 2px;
   }
 }
 
