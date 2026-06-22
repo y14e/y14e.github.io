@@ -100,7 +100,7 @@
   display: grid;
   grid-template-areas: '. content';
   grid-template-columns: 15rem 1fr;
-  [role='tabpanel'] & {
+  [role='tabpanel'] :where(&) {
     margin-top: 3.2rem;
   }
   & > [role='tablist'] {
@@ -145,11 +145,16 @@
 }
 
 /* indicator */
-[data-tabs-indicator]::before {
-  content: '';
-  display: block;
-  height: 100%;
-  width: 100%;
+[data-tabs-indicator] {
+  [data-tabs]:not([data-tabs-initialized]) :where(&) {
+    display: none;
+  }
+  &::before {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
 }
 [data-tabs]:not([data-tabs='vertical']) > [role='tablist'] {
   [data-tabs-indicator] {
