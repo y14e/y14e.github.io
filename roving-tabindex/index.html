@@ -22,8 +22,8 @@
 </div>
 <div class="spacer"></div>
 <div class="stack">
-  <p>direction: 'vertical' / navigationOnly: true / typeahead: true / wrap: true</p>
-  <div class="buttons -vertical" id="vertical-navigationonly-typeahead-wrap">
+  <p>direction: 'vertical' / typeahead: true / wrap: true</p>
+  <div class="buttons -vertical" id="vertical-typeahead-wrap">
     <a href="#">Link</a>
     <button type="button">Apple</button>
     <button type="button">Avocado</button>
@@ -104,9 +104,8 @@ cleanups.push(createRovingTabIndex(document.getElementById('horizontal-typeahead
   typeahead: true,
   wrap: true,
 }));
-cleanups.push(createRovingTabIndex(document.getElementById('vertical-navigationonly-typeahead-wrap'), {
+cleanups.push(createRovingTabIndex(document.getElementById('vertical-typeahead-wrap'), {
   direction: 'vertical',
-  navigationOnly: true,
   typeahead: true,
   wrap: true,
 }));
