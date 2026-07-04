@@ -56,7 +56,7 @@ hosts.forEach((host, i) => {
 
   host.querySelector('.cleanup-or-destroy').addEventListener('click', (event) => {
     cleanups[i]();
-    const button = event.currentTarget;
+    const button = event.target;
     button.disabled = true;
     button.textContent = 'Cleaned up';
   });
