@@ -9,7 +9,6 @@
 .buttons {
   align-items: center;
   display: flex;
-  flex-wrap: wrap;
   gap: 1.6rem;
   &.-vertical {
     align-items: start;
