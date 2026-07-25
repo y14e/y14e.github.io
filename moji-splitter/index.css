@@ -21,7 +21,7 @@ body {
 }
 [data-char] {
   opacity: 0;
-  transition-delay: calc(var(--char-index) / var(--char-length) * 3s);
+  transition-delay: calc(var(--char-index) / var(--char-count) * 3s);
   transition-duration: 0.3s;
   transition-property: opacity, transform;
   transform: translateY(1em) scale(0.8);
