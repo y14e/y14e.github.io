@@ -27,8 +27,8 @@ export function detectMachineTranslation() {
       attribute: 'class',
       element: html,
       test: () =>
-        [...html.classList].some((className) =>
-          /translated-(ltr|rtl)/.test(className),
+        [...html.classList].some((class_) =>
+          /translated-(ltr|rtl)/.test(class_),
         ),
     },
     {
