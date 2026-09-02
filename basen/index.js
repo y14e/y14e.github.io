@@ -15,16 +15,16 @@ function generateBase62Random(length = 8) {
 }
 async function generateBaseNHash(chars, data, length) {
   if (crypto.subtle === void 0) {
+    console.warn(
+      `Available only in secure contexts. Fallback: generateBase${chars.length}Random.`
+    );
     return generateBaseNRandom(chars, length);
   }
   if (typeof data !== "string" && !Buffer.isBuffer(data)) {
     console.warn("Invalid data. Fallback: empty string.");
     data = "";
   }
-  if (Number.isNaN(length) || length < 1 || length > 64) {
-    console.warn("Invalid length. Fallback: 8.");
-    length = 8;
-  }
+  length = normalizeLength(length);
   let result = "";
   let n = BigInt(`0x${await sha256(data)}`);
   const base = BigInt(chars.length);
@@ -35,10 +35,7 @@ async function generateBaseNHash(chars, data, length) {
   return result;
 }
 function generateBaseNRandom(chars, length) {
-  if (Number.isNaN(length) || length < 1 || length > 64) {
-    console.warn("Invalid length. Fallback: 8.");
-    length = 8;
-  }
+  length = normalizeLength(length);
   let result = "";
   const randoms = crypto.getRandomValues(new Uint8Array(length));
   const base = chars.length;
@@ -47,12 +44,22 @@ function generateBaseNRandom(chars, length) {
   }
   return result;
 }
-async function sha256(text) {
-  const encoder = new TextEncoder();
-  const data = typeof text === "string" ? encoder.encode(text) : new Uint8Array(text);
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+function normalizeLength(length) {
+  if (typeof length !== "number" || Number.isNaN(length) || length < 1 || length > 64) {
+    console.warn("Invalid length. Fallback: 8.");
+    return 8;
+  }
+  return length;
+}
+async function sha256(data) {
+  return Array.from(
+    new Uint8Array(
+      await crypto.subtle.digest(
+        "SHA-256",
+        typeof data === "string" ? new TextEncoder().encode(data) : new Uint8Array(data)
+      )
+    )
+  ).map((byte) => byte.toString(16).padStart(2, "0")).join("");
 }
 /**
  * BaseN
