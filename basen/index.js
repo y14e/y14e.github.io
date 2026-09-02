@@ -14,13 +14,13 @@ function generateBase62Random(length = 8) {
   return generateBaseNRandom(BASE62_CHARS, length);
 }
 async function generateBaseNHash(chars, data, length) {
-  if (crypto.subtle === void 0) {
+  if (crypto?.subtle === void 0) {
     console.warn(
       `Available only in secure contexts. Fallback: generateBase${chars.length}Random.`
     );
     return generateBaseNRandom(chars, length);
   }
-  if (typeof data !== "string" && !Buffer.isBuffer(data)) {
+  if (!(typeof data === "string" || data instanceof ArrayBuffer || ArrayBuffer.isView(data))) {
     console.warn("Invalid data. Fallback: empty string.");
     data = "";
   }
@@ -56,7 +56,7 @@ async function sha256(data) {
     new Uint8Array(
       await crypto.subtle.digest(
         "SHA-256",
-        typeof data === "string" ? new TextEncoder().encode(data) : new Uint8Array(data)
+        typeof data === "string" ? new TextEncoder().encode(data) : data
       )
     )
   ).map((byte) => byte.toString(16).padStart(2, "0")).join("");
