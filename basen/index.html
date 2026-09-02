@@ -6,7 +6,7 @@
   <script type="module">
     import { generateBase62Hash } from "./index.js";
 
-    const hash = await generateBase62Hash(false);
+    const hash = await generateBase36Hash('hello world', false, 16);
     console.log(hash);
   </script>
 </html>
