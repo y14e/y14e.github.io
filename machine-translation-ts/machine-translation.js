@@ -1,7 +1,7 @@
 /**
  * machine-translation.ts
  *
- * @version 1.0.6
+ * @version 1.0.7
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -47,7 +47,7 @@ export function detectMachineTranslation() {
     (map.has(element)
       ? map.get(element)
       : map.set(element, []).get(element)
-    ).push(attribute);
+    )?.push(attribute);
   }
   let timer;
   function onMutate() {
