@@ -1,7 +1,7 @@
 /**
  * machine-translation.ts
  *
- * @version 1.0.9
+ * @version 1.0.10
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -41,8 +41,11 @@ export function detectMachineTranslation() {
     },
   ];
   const map = new Map();
-  for (const { attribute: a, element: e } of strategies) {
-    (map.has(e) ? map.get(e) : map.set(e, []).get(e))?.push(a);
+  for (const { attribute, element } of strategies) {
+    (map.has(element)
+      ? map.get(element)
+      : map.set(element, []).get(element)
+    )?.push(attribute);
   }
   let timer;
   function onMutate() {
@@ -59,8 +62,8 @@ export function detectMachineTranslation() {
     });
   }
   let observer = new MutationObserver(onMutate);
-  for (const [e, a] of map) {
-    observer.observe(e, { attributeFilter: a });
+  for (const [element, attributes] of map) {
+    observer.observe(element, { attributeFilter: attributes });
   }
   isInitialized = true;
   return () => {
