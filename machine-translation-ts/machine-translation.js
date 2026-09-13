@@ -1,7 +1,7 @@
 /**
  * machine-translation.ts
  *
- * @version 1.0.8
+ * @version 1.0.9
  * @author Yusuke Kamiyamane
  * @license MIT
  * @copyright Copyright (c) Yusuke Kamiyamane
@@ -27,9 +27,7 @@ export function detectMachineTranslation() {
       attribute: 'class',
       element: html,
       test: () =>
-        [...html.classList].some((class_) =>
-          /translated-(ltr|rtl)/.test(class_),
-        ),
+        [...html.classList].some((c) => /translated-(ltr|rtl)/.test(c)),
     },
     {
       attribute: '_msttexthash',
@@ -43,11 +41,8 @@ export function detectMachineTranslation() {
     },
   ];
   const map = new Map();
-  for (const { attribute, element } of strategies) {
-    (map.has(element)
-      ? map.get(element)
-      : map.set(element, []).get(element)
-    )?.push(attribute);
+  for (const { attribute: a, element: e } of strategies) {
+    (map.has(e) ? map.get(e) : map.set(e, []).get(e))?.push(a);
   }
   let timer;
   function onMutate() {
@@ -55,7 +50,7 @@ export function detectMachineTranslation() {
       return;
     }
     timer = requestAnimationFrame(() => {
-      if (!strategies.some((strategy) => strategy.test())) {
+      if (!strategies.some((s) => s.test())) {
         return;
       }
       window.dispatchEvent(new CustomEvent('machinetranslationdetected'));
@@ -64,8 +59,8 @@ export function detectMachineTranslation() {
     });
   }
   let observer = new MutationObserver(onMutate);
-  for (const [element, attributes] of map) {
-    observer.observe(element, { attributeFilter: attributes });
+  for (const [e, a] of map) {
+    observer.observe(e, { attributeFilter: a });
   }
   isInitialized = true;
   return () => {
