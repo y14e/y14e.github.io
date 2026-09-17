@@ -12,7 +12,7 @@
     <a href="#">Link</a>
     <button type="button">Apple</button>
     <button type="button">Avocado</button>
-    <button type="button" disabled>Disabled</button>
+    <button disabled type="button" >Disabled</button>
     <button type="button">Banana</button>
     <a href="#">Link</a>
     <button type="button">Blueberry</button>
@@ -27,7 +27,7 @@
     <a href="#">Link</a>
     <button type="button">Apple</button>
     <button type="button">Avocado</button>
-    <button type="button" disabled>Disabled</button>
+    <button disabled type="button" >Disabled</button>
     <button type="button">Banana</button>
     <a href="#">Link</a>
     <button type="button">Blueberry</button>
@@ -37,28 +37,33 @@
 </div>
 <div class="spacer"></div>
 <div class="stack">
-  <p>selector: 'button.pink' / typeahead: true / wrap: true</p>
-  <div class="buttons -horizontal" id="selector-typeahead-wrap">
-    <a href="#">Link</a>
-    <button class="pink" type="button">Apple</button>
-    <button class="pink" type="button">Avocado</button>
-    <button type="button" disabled>Disabled</button>
-    <button class="pink" type="button">Banana</button>
-    <a href="#">Link</a>
-    <button type="button">Blueberry</button>
-    <button type="button">Cherry</button>
+  <p>direction: 'grid' / wrap: true</p>
+  <div class="buttons -grid" id="grid-wrap">
+    <button type="button">Cell</button>
+    <button type="button">Cell</button>
+    <button disabled type="button" >Disabled</button>
+    <button type="button">Cell</button>
+    <button type="button">Cell</button>
+    <button type="button">Cell</button>
+    <button type="button">Cell</button>
+    <button type="button">Cell</button>
+    <button disabled type="button" >Disabled</button>
+    <button type="button">Cell</button>
+    <button type="button">Cell</button>
+    <button type="button">Cell</button>
+    <button type="button">Cell</button>
   </div>
   <p><button class="cleanup-or-destroy" id="cleanup-3" type="button">Cleanup this roving</button></p>
 </div>
 <div class="spacer"></div>
 <div class="stack">
-  <p>navigationOnly: true</p>
-  <div class="buttons -horizontal" id="navigationonly">
+  <p>selector: 'button.pink' / typeahead: true / wrap: true</p>
+  <div class="buttons -horizontal" id="selector-typeahead-wrap">
     <a href="#">Link</a>
-    <button type="button">Apple</button>
-    <button type="button">Avocado</button>
-    <button type="button" disabled>Disabled</button>
-    <button type="button">Banana</button>
+    <button class="pink" type="button">Apple</button>
+    <button class="pink" type="button">Avocado</button>
+    <button disabled type="button" >Disabled</button>
+    <button class="pink" type="button">Banana</button>
     <a href="#">Link</a>
     <button type="button">Blueberry</button>
     <button type="button">Cherry</button>
@@ -67,12 +72,12 @@
 </div>
 <div class="spacer"></div>
 <div class="stack">
-  <p>noMemory: true</p>
-  <div class="buttons -horizontal" id="nomemory">
+  <p>navigationOnly: true</p>
+  <div class="buttons -horizontal" id="navigationonly">
     <a href="#">Link</a>
     <button type="button">Apple</button>
     <button type="button">Avocado</button>
-    <button type="button" disabled>Disabled</button>
+    <button disabled type="button" >Disabled</button>
     <button type="button">Banana</button>
     <a href="#">Link</a>
     <button type="button">Blueberry</button>
@@ -82,18 +87,33 @@
 </div>
 <div class="spacer"></div>
 <div class="stack">
-  <p>No options</p>
-  <div class="buttons -horizontal" id="no-options">
+  <p>noMemory: true</p>
+  <div class="buttons -horizontal" id="nomemory">
     <a href="#">Link</a>
     <button type="button">Apple</button>
     <button type="button">Avocado</button>
-    <button type="button" disabled>Disabled</button>
+    <button disabled type="button" >Disabled</button>
     <button type="button">Banana</button>
     <a href="#">Link</a>
     <button type="button">Blueberry</button>
     <button type="button">Cherry</button>
   </div>
   <p><button class="cleanup-or-destroy" id="cleanup-6" type="button">Cleanup this roving</button></p>
+</div>
+<div class="spacer"></div>
+<div class="stack">
+  <p>No options</p>
+  <div class="buttons -horizontal" id="no-options">
+    <a href="#">Link</a>
+    <button type="button">Apple</button>
+    <button type="button">Avocado</button>
+    <button disabled type="button" >Disabled</button>
+    <button type="button">Banana</button>
+    <a href="#">Link</a>
+    <button type="button">Blueberry</button>
+    <button type="button">Cherry</button>
+  </div>
+  <p><button class="cleanup-or-destroy" id="cleanup-7" type="button">Cleanup this roving</button></p>
 </div>
 <script type="module">
 import { createRovingTabIndex } from 'https://esm.sh/@y14e/roving-tabindex';
@@ -107,6 +127,10 @@ cleanups.push(createRovingTabIndex(document.getElementById('horizontal-typeahead
 cleanups.push(createRovingTabIndex(document.getElementById('vertical-typeahead-wrap'), {
   direction: 'vertical',
   typeahead: true,
+  wrap: true,
+}));
+cleanups.push(createRovingTabIndex(document.getElementById('grid-wrap'), {
+  direction: 'grid',
   wrap: true,
 }));
 cleanups.push(createRovingTabIndex(document.getElementById('selector-typeahead-wrap'), {
