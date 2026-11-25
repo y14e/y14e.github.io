@@ -18,7 +18,7 @@
     <button type="button">Blueberry</button>
     <button type="button">Cherry</button>
   </div>
-  <p><button class="cleanup-or-destroy" id="cleanup-1" type="button">Cleanup this roving</button></p>
+  <p><button class="cleanup-or-destroy" type="button">Cleanup this roving</button></p>
 </div>
 <div class="spacer"></div>
 <div class="stack">
@@ -33,7 +33,7 @@
     <button type="button">Blueberry</button>
     <button type="button">Cherry</button>
   </div>
-  <p><button class="cleanup-or-destroy" id="cleanup-2" type="button">Cleanup this roving</button></p>
+  <p><button class="cleanup-or-destroy" type="button">Cleanup this roving</button></p>
 </div>
 <div class="spacer"></div>
 <div class="stack">
@@ -53,7 +53,7 @@
     <button type="button">Cell</button>
     <button type="button">Cell</button>
   </div>
-  <p><button class="cleanup-or-destroy" id="cleanup-3" type="button">Cleanup this roving</button></p>
+  <p><button class="cleanup-or-destroy" type="button">Cleanup this roving</button></p>
 </div>
 <div class="spacer"></div>
 <div class="stack">
@@ -68,7 +68,7 @@
     <button type="button">Blueberry</button>
     <button type="button">Cherry</button>
   </div>
-  <p><button class="cleanup-or-destroy" id="cleanup-4" type="button">Cleanup this roving</button></p>
+  <p><button class="cleanup-or-destroy" type="button">Cleanup this roving</button></p>
 </div>
 <div class="spacer"></div>
 <div class="stack">
@@ -83,7 +83,7 @@
     <button type="button">Blueberry</button>
     <button type="button">Cherry</button>
   </div>
-  <p><button class="cleanup-or-destroy" id="cleanup-5" type="button">Cleanup this roving</button></p>
+  <p><button class="cleanup-or-destroy" type="button">Cleanup this roving</button></p>
 </div>
 <div class="spacer"></div>
 <div class="stack">
@@ -98,7 +98,7 @@
     <button type="button">Blueberry</button>
     <button type="button">Cherry</button>
   </div>
-  <p><button class="cleanup-or-destroy" id="cleanup-6" type="button">Cleanup this roving</button></p>
+  <p><button class="cleanup-or-destroy" type="button">Cleanup this roving</button></p>
 </div>
 <div class="spacer"></div>
 <div class="stack">
@@ -113,7 +113,7 @@
     <button type="button">Blueberry</button>
     <button type="button">Cherry</button>
   </div>
-  <p><button class="cleanup-or-destroy" id="cleanup-7" type="button">Cleanup this roving</button></p>
+  <p><button class="cleanup-or-destroy" type="button">Cleanup this roving</button></p>
 </div>
 <script type="module">
 import { createRovingTabIndex } from 'https://esm.sh/@y14e/roving-tabindex';
@@ -145,12 +145,12 @@ cleanups.push(createRovingTabIndex(document.getElementById('nomemory'), {
   noMemory: true,
 }));
 cleanups.push(createRovingTabIndex(document.getElementById('no-options')));
+
 const buttons = document.querySelectorAll('.cleanup-or-destroy');
 
-for (let i = 0; i < buttons.length; i++) {
-  document.getElementById(`cleanup-${i + 1}`).addEventListener('click', (event) => {
+for (const [i, button] of buttons.entries()) {
+  button.addEventListener('click', () => {
     cleanups[i]();
-    const button = event.currentTarget;
     button.disabled = true;
     button.textContent = 'Cleaned up';
   });
