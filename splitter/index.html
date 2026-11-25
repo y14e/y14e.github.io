@@ -23,19 +23,17 @@ cleanups.push(createSplitter(document.querySelector('[data-splitter="1"]')));
 cleanups.push(createSplitter(document.querySelector('[data-splitter="2"]'), { noLineBreakingRules: true }));
 cleanups.push(createSplitter(document.querySelector('[data-splitter="3"]')));
 cleanups.push(createSplitter(document.querySelector('[data-splitter="4"]'), { noLineBreakingRules: true }));
+
 window.addEventListener('load', () => {
-  document.querySelectorAll('[data-splitter]').forEach((element) => {
+  for (const element of document.querySelectorAll('[data-splitter]')) {
     element.classList.add('is-animate');
-  });
+  }
 });
 
 const cleanup = document.querySelector('#cleanup');
 
 cleanup.addEventListener('click', () => {
-  cleanups.forEach((cleanup) => {
-    cleanup();
-  });
-
+  cleanups.map((cleanup) => cleanup());
   cleanup.disabled = true;
   cleanup.textContent = 'Cleaned up';
 });

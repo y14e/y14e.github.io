@@ -30,10 +30,7 @@ cleanups.push(createSplitter(document.querySelector('[data-splitter="5"]'), { co
 const cleanup = document.querySelector('#cleanup');
 
 cleanup.addEventListener('click', () => {
-  cleanups.forEach((cleanup) => {
-    cleanup();
-  });
-
+  cleanups.map((cleanup) => cleanup());
   cleanup.disabled = true;
   cleanup.textContent = 'Cleaned up';
 });
