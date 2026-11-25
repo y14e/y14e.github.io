@@ -12,7 +12,7 @@
     <li><a href="https://www.example.com" target="_blank">Link 2</a></li>
   </ul>
   <p class="placeholder">Portal 1</p>
-  <div class="host" id="host-1">
+  <div class="host">
     <p class="label">Portal 1</p>
     <ul>
       <li><a href="https://www.example.com" target="_blank">Portal link 1-1</a></li>
@@ -25,7 +25,7 @@
     <li><a href="https://www.example.com" target="_blank">Between link 2</a></li>
   </ul>
   <p class="placeholder">Portal 2</p>
-  <div class="host" id="host-2">
+  <div class="host">
     <p class="label">Portal 2</p>
     <ul>
       <li><a href="https://www.example.com" target="_blank">Portal link 2-1</a></li>
@@ -34,12 +34,12 @@
     <p><button class="cleanup-or-destroy" type="button">Cleanup this portal</button></p>
   </div>
   <p class="placeholder">Portal 3</p>
-  <div class="host" id="host-3">
+  <div class="host">
     <p class="label">Portal 3</p>
     <p><button class="cleanup-or-destroy" type="button">Cleanup this portal</button></p>
   </div>
   <p class="placeholder">Portal 4</p>
-  <div class="host" id="host-4">
+  <div class="host">
     <p class="label">Portal 4</p>
     <p><button class="cleanup-or-destroy" type="button">Cleanup this portal</button></p>
   </div>
@@ -52,14 +52,16 @@
 <script type="module">
 import { createPortal } from 'https://esm.sh/@y14e/portal';
 
+const cleanups = [];
 const container = document.getElementById('container');
 
 for (const host of document.querySelectorAll('.host')) {
-  const cleanup = createPortal(host, container);
+  cleanups.push(createPortal(host, container));
+}
 
-  host.querySelector('.cleanup-or-destroy').addEventListener('click', (event) => {
-    cleanup();
-    const button = event.target;
+for (const [i, button] of document.querySelectorAll('.cleanup-or-destroy').entries()) {
+  button.addEventListener('click', () => {
+    cleanups[i]();
     button.disabled = true;
     button.textContent = 'Cleaned up';
   });
