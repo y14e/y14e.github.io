@@ -52,20 +52,18 @@
 <script type="module">
 import { createPortal } from 'https://esm.sh/@y14e/portal';
 
-const hosts = document.querySelectorAll('.host');
-const cleanups = [];
 const container = document.getElementById('container');
 
-hosts.forEach((host, i) => {
-  cleanups.push(createPortal(host, container));
+for (const host of document.querySelectorAll('.host')) {
+  const cleanup = createPortal(host, container);
 
   host.querySelector('.cleanup-or-destroy').addEventListener('click', (event) => {
-    cleanups[i]();
+    cleanup();
     const button = event.target;
     button.disabled = true;
     button.textContent = 'Cleaned up';
   });
-});
+}
 </script>
 </body>
 </html>
