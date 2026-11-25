@@ -146,9 +146,7 @@ cleanups.push(createRovingTabIndex(document.getElementById('nomemory'), {
 }));
 cleanups.push(createRovingTabIndex(document.getElementById('no-options')));
 
-const buttons = document.querySelectorAll('.cleanup-or-destroy');
-
-for (const [i, button] of buttons.entries()) {
+for (const [i, button] of document.querySelectorAll('.cleanup-or-destroy').entries()) {
   button.addEventListener('click', () => {
     cleanups[i]();
     button.disabled = true;
